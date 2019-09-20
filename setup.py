@@ -8,7 +8,7 @@ Package installation setup
 import os
 import sys
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 if sys.argv[-1] == 'publish':
