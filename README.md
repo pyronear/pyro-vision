@@ -38,6 +38,13 @@ git clone https://github.com/frgfm/PyroNear.git
 ## Usage
 
 
+
+## Contributing
+
+Please refer to `CONTRIBUTING` if you wish to contribute to this project.
+
+
+
 ## Credits
 
 This project is developed and maintained by the repo owner and volunteers from [Data for Good](https://dataforgood.fr/).
