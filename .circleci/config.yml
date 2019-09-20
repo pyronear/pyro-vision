@@ -1,0 +1,39 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.1
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Cached build dependencies
+      - restore_cache:
+          keys:
+            - requirements-{{ .Branch }}-{{ checksum "requirements.txt" }}
+            - requirements-{{ .Branch }}
+            - requirements
+
+      - run:
+          name: Package installation
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python -m pip install --upgrade pip
+            pip install -e .
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: requirements-{{ .Branch }}-{{ checksum "requirements.txt" }}
+
+
+workflows:
+  version: 2.1
+  build_and_test:
+    jobs:
+      - build
