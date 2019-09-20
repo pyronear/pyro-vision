@@ -34,6 +34,13 @@ Clone the repository
 git clone https://github.com/frgfm/PyroNear.git
 ```
 
+Install the python package
+
+```bash
+pip install -e PyroNear/
+```
+
+
 
 ## Usage
 
