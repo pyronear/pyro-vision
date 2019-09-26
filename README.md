@@ -28,16 +28,10 @@ PyroNear aims at offering an wildfire early detection system with state-of-the-a
 
 ### Installation
 
-Clone the repository
+Use pip to install the package from git
 
 ```shell
-git clone https://github.com/frgfm/PyroNear.git
-```
-
-Install the python package
-
-```bash
-pip install -e PyroNear/
+pip install git+https://github.com/frgfm/PyroNear@master
 ```
 
 
