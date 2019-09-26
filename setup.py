@@ -7,8 +7,9 @@ Package installation setup
 
 import os
 import sys
+from setuptools import setup, find_packages
 
-from setuptools import setup
+
 
 
 if sys.argv[-1] == 'publish':
@@ -43,7 +44,7 @@ setup(
     keywords='pytorch deep learning vision models',
 
     # Package info
-    packages=['pyronear'],
+    packages=find_packages(exclude=('test',)),
     zip_safe=True,
     python_requires='>=3.6.0',
     include_package_data=True,
