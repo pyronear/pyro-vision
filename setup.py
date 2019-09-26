@@ -36,12 +36,14 @@ setup(
         'Development Status :: 1 - Planning',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Natural Language :: English',
         'Topic :: Scientific/Engineering :: Artificial Intelligence'
     ],
-    keywords='pytorch deep learning vision models',
+    keywords=['pytorch', 'deep learning', 'vision', 'models',
+              'wildifre', 'object detection'],
 
     # Package info
     packages=find_packages(exclude=('test',)),
