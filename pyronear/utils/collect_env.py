@@ -397,6 +397,11 @@ def pretty_str(envinfo):
 
 
 def get_pretty_env_info():
+    """Collects environment information for debugging purposes
+
+    Returns:
+        str: environment information
+    """
     return pretty_str(get_env_info())
 
 
