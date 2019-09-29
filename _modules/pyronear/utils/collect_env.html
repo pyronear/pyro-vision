@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyronear.utils.collect_env &mdash; pyronear 0.1.0a0+0bb04eb-git documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom_theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> pyronear
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0a0+0bb04eb
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">pyronear.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyronear</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyronear.utils.collect_env</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyronear.utils.collect_env</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!usr/bin/python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Based on https://github.com/pytorch/pytorch/blob/master/torch/utils/collect_env.py</span>
+<span class="sd">This script outputs relevant system environment info</span>
+<span class="sd">Run it with `python collect_env.py`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">torch</span>
+    <span class="n">TORCH_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+    <span class="n">TORCH_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">torchvision</span>
+    <span class="n">VISION_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+    <span class="n">VISION_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># System Environment Information</span>
+<span class="n">SystemEnv</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SystemEnv&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;torch_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;torchvision_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;is_debug_build&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cuda_compiled_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gcc_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cmake_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;os&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;python_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;is_cuda_available&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cuda_runtime_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nvidia_driver_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nvidia_gpu_models&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cudnn_version&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pip_version&#39;</span><span class="p">,</span>  <span class="c1"># &#39;pip&#39; or &#39;pip3&#39;</span>
+    <span class="s1">&#39;pip_packages&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;conda_packages&#39;</span><span class="p">,</span>
+<span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns (return-code, stdout, stderr)&quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                         <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">returncode</span>
+    <span class="k">if</span> <span class="n">PY3</span><span class="p">:</span>
+        <span class="n">enc</span> <span class="o">=</span> <span class="n">locale</span><span class="o">.</span><span class="n">getpreferredencoding</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">enc</span><span class="p">)</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">enc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rc</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">err</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">run_and_read_all</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Runs command using run_lambda; reads and returns entire output if rc is 0&quot;&quot;&quot;</span>
+    <span class="n">rc</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run_lambda</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span> <span class="nf">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">regex</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Runs command using run_lambda, returns the first regex match if it exists&quot;&quot;&quot;</span>
+    <span class="n">rc</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run_lambda</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_conda_packages</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+        <span class="n">grep_cmd</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;findstr /R &quot;torchvision torch soumith mkl magma&quot;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">grep_cmd</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;grep &quot;torchvision\|torch\|soumith\|mkl\|magma&quot;&#39;</span>
+    <span class="n">conda</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONDA_EXE&#39;</span><span class="p">,</span> <span class="s1">&#39;conda&#39;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">run_and_read_all</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="n">conda</span> <span class="o">+</span> <span class="s1">&#39; list | &#39;</span> <span class="o">+</span> <span class="n">grep_cmd</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">out</span>
+    <span class="c1"># Comment starting at beginning of line</span>
+    <span class="n">comment_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^#.*\n&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">comment_regex</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_gcc_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;gcc --version&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;gcc (.*)&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_cmake_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;cmake --version&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;cmake (.*)&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_nvidia_driver_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;kextstat | grep -i cuda&#39;</span>
+        <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span>
+                                         <span class="sa">r</span><span class="s1">&#39;com[.]nvidia[.]CUDA [(](.*?)[)]&#39;</span><span class="p">)</span>
+    <span class="n">smi</span> <span class="o">=</span> <span class="n">get_nvidia_smi</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="n">smi</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Driver Version: (.*?) &#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_gpu_info</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">TORCH_AVAILABLE</span> <span class="ow">and</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_name</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">smi</span> <span class="o">=</span> <span class="n">get_nvidia_smi</span><span class="p">()</span>
+    <span class="n">uuid_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39; \(UUID: .+?\)&#39;</span><span class="p">)</span>
+    <span class="n">rc</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run_lambda</span><span class="p">(</span><span class="n">smi</span> <span class="o">+</span> <span class="s1">&#39; -L&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># Anonymize GPUs by removing their UUID</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">uuid_regex</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_running_cuda_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;nvcc --version&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;V(.*)$&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_cudnn_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This will return a list of libcudnn.so; it&#39;s hard to tell which one is being used&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+        <span class="n">cudnn_cmd</span> <span class="o">=</span> <span class="s1">&#39;where /R &quot;%CUDA_PATH%</span><span class="se">\\</span><span class="s1">bin&quot; cudnn*.dll&#39;</span>
+    <span class="k">elif</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+        <span class="c1"># CUDA libraries and drivers can be found in /usr/local/cuda/. See</span>
+        <span class="c1"># https://docs.nvidia.com/cuda/cuda-installation-guide-mac-os-x/index.html#install</span>
+        <span class="c1"># https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#installmac</span>
+        <span class="c1"># Use CUDNN_LIBRARY when cudnn library is installed elsewhere.</span>
+        <span class="n">cudnn_cmd</span> <span class="o">=</span> <span class="s1">&#39;ls /usr/local/cuda/lib/libcudnn*&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cudnn_cmd</span> <span class="o">=</span> <span class="s1">&#39;ldconfig -p | grep libcudnn | rev | cut -d&quot; &quot; -f1 | rev&#39;</span>
+    <span class="n">rc</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run_lambda</span><span class="p">(</span><span class="n">cudnn_cmd</span><span class="p">)</span>
+    <span class="c1"># find will return 1 if there are permission errors or if not found</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CUDNN_LIBRARY&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>  <span class="c1"># eliminate symbolic links</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># Alphabetize the result because the order is non-deterministic otherwise</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">files</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;Probably one of the following:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_nvidia_smi</span><span class="p">():</span>
+    <span class="c1"># Note: nvidia-smi is currently available only on Windows and Linux</span>
+    <span class="n">smi</span> <span class="o">=</span> <span class="s1">&#39;nvidia-smi&#39;</span>
+    <span class="k">if</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+        <span class="n">smi</span> <span class="o">=</span> <span class="s1">&#39;&quot;C:</span><span class="se">\\</span><span class="s1">Program Files</span><span class="se">\\</span><span class="s1">NVIDIA Corporation</span><span class="se">\\</span><span class="s1">NVSMI</span><span class="se">\\</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">smi</span>
+    <span class="k">return</span> <span class="n">smi</span>
+
+
+<span class="k">def</span> <span class="nf">get_platform</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;linux&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;linux&#39;</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;win32&#39;</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;cygwin&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;cygwin&#39;</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;darwin&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span>
+
+
+<span class="k">def</span> <span class="nf">get_mac_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;sw_vers -productVersion&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;(.*)&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_windows_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_read_all</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;wmic os get Caption | findstr /v Caption&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_lsb_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;lsb_release -a&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Description:\t(.*)&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">check_release_file</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_and_parse_first_match</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="s1">&#39;cat /etc/*-release&#39;</span><span class="p">,</span>
+                                     <span class="sa">r</span><span class="s1">&#39;PRETTY_NAME=&quot;(.*)&quot;&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_os</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="n">platform</span> <span class="o">=</span> <span class="n">get_platform</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;cygwin&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_windows_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">get_mac_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="s1">&#39;Mac OSX </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;linux&#39;</span><span class="p">:</span>
+        <span class="c1"># Ubuntu/Debian based</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="n">get_lsb_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">desc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">desc</span>
+
+        <span class="c1"># Try reading /etc/*-release</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="n">check_release_file</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">desc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">desc</span>
+
+        <span class="k">return</span> <span class="n">platform</span>
+
+    <span class="c1"># Unknown platform</span>
+    <span class="k">return</span> <span class="n">platform</span>
+
+
+<span class="k">def</span> <span class="nf">get_pip_packages</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">):</span>
+    <span class="c1"># People generally have `pip` as `pip` or `pip3`</span>
+    <span class="k">def</span> <span class="nf">run_with_pip</span><span class="p">(</span><span class="n">pip</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">get_platform</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+            <span class="n">grep_cmd</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;findstr /R &quot;numpy torch torchvision&quot;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">grep_cmd</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;grep &quot;torchvision\|torch\|numpy&quot;&#39;</span>
+        <span class="k">return</span> <span class="n">run_and_read_all</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">,</span> <span class="n">pip</span> <span class="o">+</span> <span class="s1">&#39; list --format=freeze | &#39;</span> <span class="o">+</span> <span class="n">grep_cmd</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PY3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="n">run_with_pip</span><span class="p">(</span><span class="s1">&#39;pip&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Try to figure out if the user is running pip or pip3.</span>
+    <span class="n">out2</span> <span class="o">=</span> <span class="n">run_with_pip</span><span class="p">(</span><span class="s1">&#39;pip&#39;</span><span class="p">)</span>
+    <span class="n">out3</span> <span class="o">=</span> <span class="n">run_with_pip</span><span class="p">(</span><span class="s1">&#39;pip3&#39;</span><span class="p">)</span>
+
+    <span class="n">num_pips</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">out2</span><span class="p">,</span> <span class="n">out3</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">num_pips</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="n">out2</span>
+
+    <span class="k">if</span> <span class="n">num_pips</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">out2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="n">out2</span>
+        <span class="k">return</span> <span class="s1">&#39;pip3&#39;</span><span class="p">,</span> <span class="n">out3</span>
+
+    <span class="c1"># num_pips is 2. Return pip3 by default b/c that most likely</span>
+    <span class="c1"># is the one associated with Python 3</span>
+    <span class="k">return</span> <span class="s1">&#39;pip3&#39;</span><span class="p">,</span> <span class="n">out3</span>
+
+
+<span class="k">def</span> <span class="nf">get_env_info</span><span class="p">():</span>
+    <span class="n">run_lambda</span> <span class="o">=</span> <span class="n">run</span>
+    <span class="n">pip_version</span><span class="p">,</span> <span class="n">pip_list_output</span> <span class="o">=</span> <span class="n">get_pip_packages</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">TORCH_AVAILABLE</span><span class="p">:</span>
+        <span class="n">torch_str</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">__version__</span>
+        <span class="n">debug_mode_str</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">debug</span>
+        <span class="n">cuda_available_str</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+        <span class="n">cuda_version_str</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">cuda</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">torch_str</span> <span class="o">=</span> <span class="n">debug_mode_str</span> <span class="o">=</span> <span class="n">cuda_available_str</span> <span class="o">=</span> <span class="n">cuda_version_str</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+
+    <span class="k">if</span> <span class="n">VISION_AVAILABLE</span><span class="p">:</span>
+        <span class="n">torchvision_str</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">__version__</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">torchvision_str</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+
+    <span class="k">return</span> <span class="n">SystemEnv</span><span class="p">(</span>
+        <span class="n">torch_version</span><span class="o">=</span><span class="n">torch_str</span><span class="p">,</span>
+        <span class="n">torchvision_version</span><span class="o">=</span><span class="n">torchvision_str</span><span class="p">,</span>
+        <span class="n">is_debug_build</span><span class="o">=</span><span class="n">debug_mode_str</span><span class="p">,</span>
+        <span class="n">python_version</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">is_cuda_available</span><span class="o">=</span><span class="n">cuda_available_str</span><span class="p">,</span>
+        <span class="n">cuda_compiled_version</span><span class="o">=</span><span class="n">cuda_version_str</span><span class="p">,</span>
+        <span class="n">cuda_runtime_version</span><span class="o">=</span><span class="n">get_running_cuda_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">nvidia_gpu_models</span><span class="o">=</span><span class="n">get_gpu_info</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">nvidia_driver_version</span><span class="o">=</span><span class="n">get_nvidia_driver_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">cudnn_version</span><span class="o">=</span><span class="n">get_cudnn_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">pip_version</span><span class="o">=</span><span class="n">pip_version</span><span class="p">,</span>
+        <span class="n">pip_packages</span><span class="o">=</span><span class="n">pip_list_output</span><span class="p">,</span>
+        <span class="n">conda_packages</span><span class="o">=</span><span class="n">get_conda_packages</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">=</span><span class="n">get_os</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">gcc_version</span><span class="o">=</span><span class="n">get_gcc_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+        <span class="n">cmake_version</span><span class="o">=</span><span class="n">get_cmake_version</span><span class="p">(</span><span class="n">run_lambda</span><span class="p">),</span>
+    <span class="p">)</span>
+
+<span class="n">env_info_fmt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">PyTorch version: </span><span class="si">{torch_version}</span><span class="s2"></span>
+<span class="s2">Is debug build: </span><span class="si">{is_debug_build}</span><span class="s2"></span>
+<span class="s2">CUDA used to build PyTorch: </span><span class="si">{cuda_compiled_version}</span><span class="s2"></span>
+<span class="s2">Torchvision version: </span><span class="si">{torchvision_version}</span><span class="s2"></span>
+
+<span class="s2">OS: </span><span class="si">{os}</span><span class="s2"></span>
+<span class="s2">GCC version: </span><span class="si">{gcc_version}</span><span class="s2"></span>
+<span class="s2">CMake version: </span><span class="si">{cmake_version}</span><span class="s2"></span>
+
+<span class="s2">Python version: </span><span class="si">{python_version}</span><span class="s2"></span>
+<span class="s2">Is CUDA available: </span><span class="si">{is_cuda_available}</span><span class="s2"></span>
+<span class="s2">CUDA runtime version: </span><span class="si">{cuda_runtime_version}</span><span class="s2"></span>
+<span class="s2">GPU models and configuration: </span><span class="si">{nvidia_gpu_models}</span><span class="s2"></span>
+<span class="s2">Nvidia driver version: </span><span class="si">{nvidia_driver_version}</span><span class="s2"></span>
+<span class="s2">cuDNN version: </span><span class="si">{cudnn_version}</span><span class="s2"></span>
+
+<span class="s2">Versions of relevant libraries:</span>
+<span class="si">{pip_packages}</span><span class="s2"></span>
+<span class="si">{conda_packages}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">pretty_str</span><span class="p">(</span><span class="n">envinfo</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">replace_nones</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="s1">&#39;Could not collect&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">replacement</span>
+        <span class="k">return</span> <span class="n">dct</span>
+
+    <span class="k">def</span> <span class="nf">replace_bools</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">true</span><span class="o">=</span><span class="s1">&#39;Yes&#39;</span><span class="p">,</span> <span class="n">false</span><span class="o">=</span><span class="s1">&#39;No&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">true</span>
+            <span class="k">elif</span> <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">false</span>
+        <span class="k">return</span> <span class="n">dct</span>
+
+    <span class="k">def</span> <span class="nf">prepend</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;[prepend]&#39;</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">updated_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span> <span class="o">+</span> <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">updated_lines</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">replace_if_empty</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="s1">&#39;No relevant packages&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">replacement</span>
+        <span class="k">return</span> <span class="n">text</span>
+
+    <span class="k">def</span> <span class="nf">maybe_start_on_next_line</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="c1"># If `string` is multiline, prepend a \n to it.</span>
+        <span class="k">if</span> <span class="n">string</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span>
+
+    <span class="n">mutable_dict</span> <span class="o">=</span> <span class="n">envinfo</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+
+    <span class="c1"># If nvidia_gpu_models is multiline, start on the next line</span>
+    <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;nvidia_gpu_models&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">maybe_start_on_next_line</span><span class="p">(</span><span class="n">envinfo</span><span class="o">.</span><span class="n">nvidia_gpu_models</span><span class="p">)</span>
+
+    <span class="c1"># If the machine doesn&#39;t have CUDA, report some fields as &#39;No CUDA&#39;</span>
+    <span class="n">dynamic_cuda_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;cuda_runtime_version&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nvidia_gpu_models&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nvidia_driver_version&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">all_cuda_fields</span> <span class="o">=</span> <span class="n">dynamic_cuda_fields</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;cudnn_version&#39;</span><span class="p">]</span>
+    <span class="n">all_dynamic_cuda_fields_missing</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">mutable_dict</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dynamic_cuda_fields</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">TORCH_AVAILABLE</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">all_dynamic_cuda_fields_missing</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">all_cuda_fields</span><span class="p">:</span>
+            <span class="n">mutable_dict</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;No CUDA&#39;</span>
+        <span class="k">if</span> <span class="n">envinfo</span><span class="o">.</span><span class="n">cuda_compiled_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;cuda_compiled_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+
+    <span class="c1"># Replace True with Yes, False with No</span>
+    <span class="n">mutable_dict</span> <span class="o">=</span> <span class="n">replace_bools</span><span class="p">(</span><span class="n">mutable_dict</span><span class="p">)</span>
+
+    <span class="c1"># Replace all None objects with &#39;Could not collect&#39;</span>
+    <span class="n">mutable_dict</span> <span class="o">=</span> <span class="n">replace_nones</span><span class="p">(</span><span class="n">mutable_dict</span><span class="p">)</span>
+
+    <span class="c1"># If either of these are &#39;&#39;, replace with &#39;No relevant packages&#39;</span>
+    <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;pip_packages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_if_empty</span><span class="p">(</span><span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;pip_packages&#39;</span><span class="p">])</span>
+    <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;conda_packages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_if_empty</span><span class="p">(</span><span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;conda_packages&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Tag conda and pip packages with a prefix</span>
+    <span class="c1"># If they were previously None, they&#39;ll show up as ie &#39;[conda] Could not collect&#39;</span>
+    <span class="k">if</span> <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;pip_packages&#39;</span><span class="p">]:</span>
+        <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;pip_packages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prepend</span><span class="p">(</span><span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;pip_packages&#39;</span><span class="p">],</span>
+                                               <span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">] &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">envinfo</span><span class="o">.</span><span class="n">pip_version</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;conda_packages&#39;</span><span class="p">]:</span>
+        <span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;conda_packages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prepend</span><span class="p">(</span><span class="n">mutable_dict</span><span class="p">[</span><span class="s1">&#39;conda_packages&#39;</span><span class="p">],</span>
+                                                 <span class="s1">&#39;[conda] &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">env_info_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">mutable_dict</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_pretty_env_info"><a class="viewcode-back" href="../../../utils.html#pyronear.utils.get_pretty_env_info">[docs]</a><span class="k">def</span> <span class="nf">get_pretty_env_info</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Collects environment information for debugging purposes</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: environment information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pretty_str</span><span class="p">(</span><span class="n">get_env_info</span><span class="p">())</span></div>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Collecting environment information...&quot;</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">get_pretty_env_info</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019, PyroNear Contibutors
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
