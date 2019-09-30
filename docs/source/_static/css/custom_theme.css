@@ -114,7 +114,7 @@ a {
 
 /* Use our red for literals (it's very similar to the original color) */
 .rst-content tt.literal, .rst-content tt.literal, .rst-content code.literal {
-    color: #F05732;
+    color: #B91444;
 }
 
 .rst-content tt.xref, a .rst-content tt, .rst-content tt.xref,
