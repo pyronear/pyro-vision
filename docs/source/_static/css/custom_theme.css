@@ -1,11 +1,16 @@
+h1, h2, .rst-content .toctree-wrapper p.caption, h3, h4, h5, h6, legend, p.caption {
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-weight: normal;
+}
+
+h1 {
+    text-transform: uppercase;
+    letter-spacing: 1.78px
+}
+
 body {
     font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
     background: #fff;
-}
-
-
-h1, h2, .rst-content .toctree-wrapper p.caption, h3, h4, h5, h6, legend, p.caption {
-    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
 }
 
 /* Use white for docs background */
