@@ -32,12 +32,18 @@ Use Github [issues](https://github.com/frgfm/PyroNear/issues) for feature reques
 
 ## Code contribution
 
-In order to contribute to the project,
+In order to contribute to  project, we will first **set up the development environment**, then describe the **contributing workflow**.
 
-- Fork the repository
-- Create a new branch with the name of your feature
-- Make your commits (remember to add unit tests for your code)
-- When satisfied with your branch, open a [PR](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork) from your fork
+* [Project Setup](project-setup)
+
+    _How to set up a forked project and install its dependencies in a well-encapsulated development environment_
+    1. [Create a virtual environment](#create-a-virtual-environment)
+    2. [Fork the project](#fork-the-repository)
+* [Contributing workflow](contributing-workflow)
+
+   _How to pull remote changes/new contributions and push your contributions to the original project_
+
+* [Code & commit guidelines](#commits)
 
 ### Commits
 
