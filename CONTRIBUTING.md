@@ -45,6 +45,43 @@ In order to contribute to  project, we will first **set up the development envir
 
 * [Code & commit guidelines](#commits)
 
+### Project Setup
+---
+In order to enable every one to fluently contribute to the project, we are going
+to set up the project properly following some steps:
+1. **Create a virtual environment** to avoid collision with our OS and other projects
+2. **Fork the project** to be able to start working on a local copy of the project
+
+#### 1. Create a virtual environment
+We are going to create an python3.6 environment with dedicated to Pyro project. We'll use [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/).
+
+Please open a terminal and follow the instructions.
+```shell
+# install package
+pip install virtualenvwrapper
+
+# add at the end of your .bashrc
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /usr/local/bin/virtualenvwrapper.sh
+
+# list available virtual environments
+workon
+
+# create new environment dubbed "pyro36" using python 3.6
+mkvirtualenv -p $(which python3.6) pyro36
+
+# activate pyro36 environment
+workon pyro36
+
+# deactivate the current environment
+deactivate
+
+# delete virtual environment (only do it if needed)
+rmvirtualenv pyro36
+```
+
+
 ### Commits
 
 - **Code**: ensure to provide docstrings to your Python code. In doing so, please follow [Google-style](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) so it can ease the process of documentation later.
