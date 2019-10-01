@@ -123,6 +123,63 @@ pip install -e .
 ```
 
 
+
+### Contributing workflow
+---
+Once the project is well set up, we are going to detail step by step a usual contributing workflow.
+
+1.  Merge recent contributions onto master (do this frequently to stay up-to-date)
+```shell
+# fetch all changes from the upstream repository
+git fetch upstream
+
+# switch to the master branch of your fork
+git checkout master
+
+# merge changes from the upstream repository into your fork
+git merge upstream/master
+```
+
+Note: Since, we are going to create features on separate local branches so they'll be merged onto **original project remote master** via pull requests, we may use **pulling** instead of fetching & merging. This way our **_local_ master branch** will reflect **_remote_ original project**. We don't expect to make changes on local master in this workflow so no conflict should arise when merging:
+```shell
+# switch to local master
+git checkout master
+
+#  merge remote master of original project onto local master
+git pull upstream/master
+```
+
+2. Create a local feature branch to work on
+
+```shell
+# Create a new branch with the name of your feature
+git checkout -b pioneering-feature-branch
+```
+
+3. Commit your changes (remember to add unit tests for your code). Feel free to interactively rebase your history to improve readability. See [Commits section](#commits) to follow guidelines.
+
+4. Rebase your feature branch so that merging it will be a simple fast-forward that won't require any conflict resolution work.
+```shell
+# Switch to feature branch
+git checkout pioneering-feature-branch
+
+# Rebase on master
+git rebase master
+```
+
+5. Push your changes on remote feature branch.
+```shell
+git checkout pioneering-feature-branch
+
+# Push first time (we create remote branch at the same time)
+git push -u origin pioneering-feature-branch
+
+# Next times, we simply push commits
+git push origin
+```
+
+6. When satisfied with your branch, open a [PR](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork) from your fork in order to integrate your contribution to original project.
+
 ### Commits
 
 - **Code**: ensure to provide docstrings to your Python code. In doing so, please follow [Google-style](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) so it can ease the process of documentation later.
