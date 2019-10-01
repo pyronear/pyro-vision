@@ -81,6 +81,47 @@ deactivate
 rmvirtualenv pyro36
 ```
 
+#### 2. Fork the repository
+We are going to get a local copy of the remote project (_fork_) and set remotes so we stay up to date to recent contributions.
+
+1. Create a fork by clicking on the **fork button** on the current repository page
+2. Clone _your_ fork locally.
+```shell
+# change directory to one for the project
+cd /path/to/local/pyronear/project/
+
+# clone your fork. replace YOUR_USERNAME accordingly
+git clone https://github.com/YOUR_USERNAME/PyroNear.git
+```
+
+3. Set remotes to original project and merge new contributions onto master.
+```shell
+# add the original repository as remote repository called "upstream"
+git remote add upstream https://github.com/frgfm/PyroNear.git
+
+# verify repository has been correctly added
+git remote -v
+
+# fetch all changes from the upstream repository
+git fetch upstream
+
+# switch to the master branch of your fork
+git checkout master
+
+# merge changes from the upstream repository into your fork
+git merge upstream/master
+```
+
+4. install the project dependencies
+```shell
+# install dependencies
+pip install -r requirements.txt
+
+# install current project in editable mode,
+# so local changes will be reflected locally (ie:at import)
+pip install -e .
+```
+
 
 ### Commits
 
