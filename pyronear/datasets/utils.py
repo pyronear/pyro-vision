@@ -1,8 +1,9 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
-from torchvision.datasets.utils import makedir_exist_ok, check_integrity, gen_bar_updater
+from pathlib import Path
+from six.moves import urllib
+from torchvision.datasets.utils import check_integrity, gen_bar_updater
 
 
 def download_url(url, root, filename=None, md5=None, verbose=True):
@@ -15,14 +16,16 @@ def download_url(url, root, filename=None, md5=None, verbose=True):
         md5 (str, optional): MD5 checksum of the download. If None, do not check
         verbose (bool, optional): Should download progress and verbose be displayed in console
     """
-    from six.moves import urllib
 
-    root = os.path.expanduser(root)
+    if not isinstance(url, str):
+        raise TypeError('expected argument url to be of type <str>')
+
+    root = Path(root).expanduser()
     if not filename:
-        filename = os.path.basename(url)
-    fpath = os.path.join(root, filename)
+        filename = url.rpartition('/')[-1]
+    fpath = root.joinpath(filename)
 
-    makedir_exist_ok(root)
+    root.mkdir(parents=True, exist_ok=True)
 
     # downloads file
     if check_integrity(fpath, md5):
