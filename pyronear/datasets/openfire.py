@@ -14,6 +14,7 @@ from .utils import download_url
 
 class OpenFire(VisionDataset):
     """Wildfire image Dataset.
+
     Args:
         root (string): Root directory of dataset where ``OpenFire/processed/training.pt``
             and  ``OpenFire/processed/test.pt`` exist.
@@ -54,12 +55,14 @@ class OpenFire(VisionDataset):
 
     def __getitem__(self, idx):
         """ Getter function
+
         Args:
             index (int): Index
         Returns:
             img (torch.Tensor<float>): image tensor
             target (dict<torch.Tensor>): dictionary of bboxes and labels' tensors
         """
+
         # Load image
         img = Image.open(self._root.joinpath(self.data[idx]['path']), mode='r').convert('RGB')
         # Load bboxes & encode label
