@@ -12,3 +12,9 @@ The following datasets are available:
     :local:
 
 .. currentmodule:: pyronear.datasets
+
+
+OpenFire
+~~~~~~~~
+
+.. autoclass:: OpenFire
