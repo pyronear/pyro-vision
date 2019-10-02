@@ -23,7 +23,7 @@ class TestCollectEnv(unittest.TestCase):
 
         # Working case
         datasets.utils.download_url(url, root, verbose=True)
-        self.assertTrue(Path(root, url.split('/')[-1]).is_file())
+        self.assertTrue(Path(root, url.rpartition('/')[-1]).is_file())
 
 
 if __name__ == '__main__':
