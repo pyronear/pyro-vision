@@ -1,5 +1,9 @@
 import unittest
 from pathlib import Path
+import json
+from PIL.Image import Image
+from torchvision.datasets import VisionDataset
+
 from pyronear import datasets
 
 
@@ -24,6 +28,27 @@ class TestCollectEnv(unittest.TestCase):
         # Working case
         datasets.utils.download_url(url, root, verbose=True)
         self.assertTrue(Path(root, url.rpartition('/')[-1]).is_file())
+
+    def test_openfire(self):
+
+        root = '/tmp'
+
+        # Working case
+        # Check inherited properties
+        dataset = datasets.OpenFire(root=root, train=True, download=True)
+        self.assertTrue(isinstance(dataset, VisionDataset))
+
+        # Check against number of samples in extract
+        datasets.utils.download_url(dataset.url, root, filename='extract.json', verbose=False)
+        with open(Path(root, 'extract.json'), 'rb') as f:
+            extract = json.load(f)
+        self.assertEqual(len(dataset), len(extract))
+
+        # Check integrity of samples
+        img, target = dataset[0]
+        self.assertTrue(isinstance(img, Image))
+        self.assertTrue(isinstance(target, int))
+        self.assertEqual(dataset.class_to_idx[extract[0]['target']], target)
 
 
 if __name__ == '__main__':
