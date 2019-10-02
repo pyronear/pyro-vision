@@ -8,7 +8,7 @@ from PIL import Image
 from tqdm import tqdm
 
 import torch
-from torchvision.datasets.vision import VisionDataset
+from torchvision.datasets import VisionDataset
 from .utils import download_url
 
 
@@ -60,13 +60,13 @@ class OpenFire(VisionDataset):
             index (int): Index
         Returns:
             img (torch.Tensor<float>): image tensor
-            target (dict<torch.Tensor>): dictionary of bboxes and labels' tensors
+            target (int): dictionary of bboxes and labels' tensors
         """
 
         # Load image
         img = Image.open(self._root.joinpath(self.data[idx]['path']), mode='r').convert('RGB')
         # Load bboxes & encode label
-        target = torch.tensor(self.data[idx]['target'], dtype=torch.long)
+        target = self.data[idx]['target']
         if self.transforms is not None:
             img, target = self.transforms(img, target)
 
@@ -83,6 +83,10 @@ class OpenFire(VisionDataset):
     @property
     def _processed(self):
         return Path(self.__class__.__name__, 'processed')
+
+    @property
+    def class_to_idx(self):
+        return {_class: i for i, _class in enumerate(self.classes)}
 
     def _check_exists(self, train=True):
         if train:
@@ -114,7 +118,7 @@ class OpenFire(VisionDataset):
                 # Download image to raw
                 download_url(img_url, img_folder, filename=img_url.rpartition('/')[-1], verbose=False)
                 # Encode target
-                target = self.classes.index(annotations[idx]['target'])
+                target = self.class_to_idx[annotations[idx]['target']]
                 # Aggregate img path and annotations
                 data = dict(path=self._raw.joinpath('images', img_url.rpartition('/')[-1]),
                             target=target)
