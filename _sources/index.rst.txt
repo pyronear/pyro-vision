@@ -1,5 +1,5 @@
-pyronear
-========
+Pyronear documentation
+======================
 
 The :mod:`pyronear` package provides datasets and deep learning models
 for wildfire detection tasks.
@@ -8,6 +8,7 @@ for wildfire detection tasks.
    :maxdepth: 2
    :caption: Package Reference
 
+   datasets
    utils
 
 
