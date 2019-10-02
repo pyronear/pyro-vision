@@ -111,7 +111,7 @@ class OpenFire(VisionDataset):
         training_set, test_set = [], []
         img_folder = self._root.joinpath(self._raw, 'images')
         img_folder.mkdir(parents=True, exist_ok=True)
-        unavailable_idxs = 0
+        unavailable_idxs, prev_error = 0, None
         for idx in tqdm(range(len(annotations))):
             img_url = annotations[idx]['url']
             try:
@@ -129,10 +129,11 @@ class OpenFire(VisionDataset):
                     training_set.append(data)
             except Exception as e:
                 unavailable_idxs += 1
+                prev_error = e
         # HTTP Errors
         if unavailable_idxs > 0:
             warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'
-                f'Last raised error was:\n{e}'))
+                f'Last raised error was:\n{prev_error}'))
         # save as torch files
         with open(self._root.joinpath(self._processed, self.training_file), 'wb') as f:
             torch.save(training_set, f)
