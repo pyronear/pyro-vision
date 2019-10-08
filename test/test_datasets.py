@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 import json
+import requests
 from PIL.Image import Image
 from torchvision.datasets import VisionDataset
 
@@ -14,7 +15,8 @@ class TestCollectEnv(unittest.TestCase):
 
         with Path('/tmp') as root:
             # URL error cases
-            self.assertRaises(ValueError, datasets.utils.download_url, 'url', root, verbose=False)
+            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url, 'url', root, verbose=False)
+            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url, 'https://url', root, verbose=False)
             self.assertRaises(TypeError, datasets.utils.download_url, 0, root, verbose=False)
 
             # Root error cases
