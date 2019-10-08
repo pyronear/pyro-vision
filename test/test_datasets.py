@@ -26,6 +26,21 @@ class TestCollectEnv(unittest.TestCase):
             datasets.utils.download_url(url, root, verbose=True)
             self.assertTrue(Path(root, url.rpartition('/')[-1]).is_file())
 
+    def test_downloadurls(self):
+        # Valid input
+        urls = ['https://arxiv.org/pdf/1910.01108.pdf', 'https://arxiv.org/pdf/1810.04805.pdf',
+                'https://arxiv.org/pdf/1905.11946.pdf', 'https://arxiv.org/pdf/1910.01271.pdf']
+
+        with Path('/tmp') as root:
+            # URL error cases
+            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls, ['url'] * 4, root, silent=False)
+            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls, ['https://url'] * 4, root, silent=False)
+            self.assertRaises(TypeError, datasets.utils.download_url, [0] * 4, root, silent=False)
+
+            # Working case
+            datasets.utils.download_urls(urls, root, silent=False)
+            self.assertTrue(all(Path(root, url.rpartition('/')[-1]).is_file() for url in urls))
+
     def test_openfire(self):
 
         with Path('/tmp') as root:
