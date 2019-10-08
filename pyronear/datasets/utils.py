@@ -136,7 +136,7 @@ def parallel(func, arr, threads=None, leave=False):
         return results
 
 
-def download_urls(entries, root, timeout=4, retries=4, threads=None):
+def download_urls(entries, root, timeout=4, retries=4, threads=None, silent=True):
     """Download multiple URLs a file accessible via URL with mutiple retries
 
     Args:
@@ -145,6 +145,7 @@ def download_urls(entries, root, timeout=4, retries=4, threads=None):
         timeout (float, optional): number of seconds before the request times out
         retries (int, optional): number of additional allowed download attempts
         threads (int, optional): number of threads to be used for multiprocessing
+        silent (bool, optional): whether Exception should be raised upon download failure
     """
 
-    parallel(partial(download_url, root=root, timeout=timeout, retries=retries, silent=True), entries, threads=threads)
+    parallel(partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent), entries, threads=threads)
