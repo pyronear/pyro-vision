@@ -99,8 +99,8 @@ def download_url(url, root, filename=None, md5=None, timeout=4,
                     try:
                         url_retrieve(url.replace('https:', 'http:'), fpath, timeout)
                         success = True
-                    except:
-                        pass
+                    except Exception:
+                        success = False
                 # Handle exception
                 if not success and (idx == retries):
                     if not silent:
