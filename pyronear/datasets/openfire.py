@@ -27,8 +27,8 @@ class OpenFire(VisionDataset):
         download (bool, optional): If true, downloads the dataset from the internet and
             puts it in root directory. If dataset is already downloaded, it is not
             downloaded again.
-        threads (int, optional): If download is set to True, use this amount of threads 
-            for downloading the dataset. 
+        threads (int, optional): If download is set to True, use this amount of threads
+            for downloading the dataset.
     """
 
     url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/378a4c653ec7fac099a3aa8fc9e2b862a5e49a8e/openfire_binary.json'
