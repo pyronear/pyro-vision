@@ -29,7 +29,7 @@ class OpenFire(VisionDataset):
             downloaded again.
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/5814d6a46f05714118377a81b75a7fd4/raw/9dc9839844e557acc42157a4e3bc6569dfb1d2c3/openfire_dataset_v1.json'
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/378a4c653ec7fac099a3aa8fc9e2b862a5e49a8e/openfire_binary.json'
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
