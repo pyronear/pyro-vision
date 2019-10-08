@@ -140,7 +140,7 @@ def download_urls(entries, root, timeout=4, retries=4, threads=None):
     """Download multiple URLs a file accessible via URL with mutiple retries
 
     Args:
-        urls (list<str, str>): URL and destination filen
+        entries (list<str, str>): URL and destination filen
         root (pathlib.Path): folder where the files will be saved in
         timeout (float, optional): number of seconds before the request times out
         retries (int, optional): number of additional allowed download attempts
