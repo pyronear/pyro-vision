@@ -7,7 +7,6 @@ from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from functools import partial
 from tqdm import tqdm
-import warnings
 from urllib.parse import urlparse
 
 from torchvision.datasets.utils import check_integrity
