@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyronear.datasets.openfire &mdash; pyronear 0.1.0a0+c472675-git documentation</title>
+  <title>pyronear.datasets.openfire &mdash; pyronear 0.1.0a0+932ef78-git documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0a0+c472675
+                0.1.0a0+932ef78
               </div>
             
           
@@ -167,7 +167,7 @@
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torchvision.datasets</span> <span class="k">import</span> <span class="n">VisionDataset</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">download_url</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">download_url</span><span class="p">,</span> <span class="n">download_urls</span><span class="p">,</span> <span class="n">get_fname</span>
 
 
 <div class="viewcode-block" id="OpenFire"><a class="viewcode-back" href="../../../datasets.html#pyronear.datasets.OpenFire">[docs]</a><span class="k">class</span> <span class="nc">OpenFire</span><span class="p">(</span><span class="n">VisionDataset</span><span class="p">):</span>
@@ -185,21 +185,23 @@
 <span class="sd">        download (bool, optional): If true, downloads the dataset from the internet and</span>
 <span class="sd">            puts it in root directory. If dataset is already downloaded, it is not</span>
 <span class="sd">            downloaded again.</span>
+<span class="sd">        threads (int, optional): If download is set to True, use this amount of threads</span>
+<span class="sd">            for downloading the dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://gist.githubusercontent.com/frgfm/5814d6a46f05714118377a81b75a7fd4/raw/9dc9839844e557acc42157a4e3bc6569dfb1d2c3/openfire_dataset_v1.json&#39;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/378a4c653ec7fac099a3aa8fc9e2b862a5e49a8e/openfire_binary.json&#39;</span>
     <span class="n">training_file</span> <span class="o">=</span> <span class="s1">&#39;training.pt&#39;</span>
     <span class="n">test_file</span> <span class="o">=</span> <span class="s1">&#39;test.pt&#39;</span>
     <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">OpenFire</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span>
                                     <span class="n">target_transform</span><span class="o">=</span><span class="n">target_transform</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">train</span>  <span class="c1"># training set or test set</span>
 
         <span class="k">if</span> <span class="n">download</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">threads</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">(</span><span class="n">train</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Dataset not found.&#39;</span> <span class="o">+</span>
@@ -252,8 +254,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_file</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Download the OpenFire data if it doesn&#39;t exist in processed_folder already.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Download the OpenFire data if it doesn&#39;t exist in processed_folder already.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            threads (int, optional): number of threads to use for dataset downloading</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="k">return</span>
@@ -265,33 +271,36 @@
         <span class="n">download_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw</span><span class="p">),</span> <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">annotations</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="c1"># Download images</span>
+
+        <span class="c1"># Download actual images</span>
         <span class="n">training_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="n">img_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">)</span>
         <span class="n">img_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">unavailable_idxs</span><span class="p">,</span> <span class="n">prev_error</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">annotations</span><span class="p">))):</span>
-            <span class="n">img_url</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="c1"># Download image to raw</span>
-                <span class="n">download_url</span><span class="p">(</span><span class="n">img_url</span><span class="p">,</span> <span class="n">img_folder</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">img_url</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">unavailable_idxs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Prepare URL and filenames for multi-processing</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{idx:06}</span><span class="s2">.{get_fname(a[&#39;url&#39;]).rpartition(&#39;.&#39;)[-1]}&quot;</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">annotations</span><span class="p">)]</span>
+        <span class="c1"># Use multiple threads to speed up download</span>
+        <span class="n">download_urls</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">img_folder</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+        <span class="c1"># Verify downloads</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">annotation</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">annotations</span><span class="p">):</span>
+            <span class="n">img_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="n">entries</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="c1"># Encode target</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_to_idx</span><span class="p">[</span><span class="n">annotations</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;target&#39;</span><span class="p">]]</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_to_idx</span><span class="p">[</span><span class="n">annotation</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]]</span>
                 <span class="c1"># Aggregate img path and annotations</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="n">img_url</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
-                            <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">img_path</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
                 <span class="c1"># Add it to the proper set</span>
-                <span class="k">if</span> <span class="n">annotations</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_test&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">annotation</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_test&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                     <span class="n">test_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">training_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">else</span><span class="p">:</span>
                 <span class="n">unavailable_idxs</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">prev_error</span> <span class="o">=</span> <span class="n">e</span>
         <span class="c1"># HTTP Errors</span>
         <span class="k">if</span> <span class="n">unavailable_idxs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{unavailable_idxs}</span><span class="s1">/{len(annotations)} samples could not be downloaded. Please retry later.&#39;</span>
-                <span class="n">f</span><span class="s1">&#39;Last raised error was:</span><span class="se">\n</span><span class="si">{prev_error}</span><span class="s1">&#39;</span><span class="p">))</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{unavailable_idxs}</span><span class="s1">/{len(annotations)} samples could not be downloaded. Please retry later.&#39;</span><span class="p">))</span>
+
         <span class="c1"># save as torch files</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_file</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">training_set</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
