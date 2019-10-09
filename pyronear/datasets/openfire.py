@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 import torch
 from torchvision.datasets import VisionDataset
-from .utils import download_url
+from .utils import download_url, download_urls, get_fname
 
 
 class OpenFire(VisionDataset):
@@ -27,21 +27,23 @@ class OpenFire(VisionDataset):
         download (bool, optional): If true, downloads the dataset from the internet and
             puts it in root directory. If dataset is already downloaded, it is not
             downloaded again.
+        threads (int, optional): If download is set to True, use this amount of threads
+            for downloading the dataset.
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/5814d6a46f05714118377a81b75a7fd4/raw/9dc9839844e557acc42157a4e3bc6569dfb1d2c3/openfire_dataset_v1.json'
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/378a4c653ec7fac099a3aa8fc9e2b862a5e49a8e/openfire_binary.json'
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
 
     def __init__(self, root, train=True, transform=None, target_transform=None,
-                 download=False):
+                 download=False, threads=16):
         super(OpenFire, self).__init__(root, transform=transform,
                                     target_transform=target_transform)
         self.train = train  # training set or test set
 
         if download:
-            self.download()
+            self.download(threads)
 
         if not self._check_exists(train):
             raise RuntimeError('Dataset not found.' +
@@ -94,8 +96,12 @@ class OpenFire(VisionDataset):
         else:
             return self._root.joinpath(self._processed, self.test_file).is_file()
 
-    def download(self):
-        """Download the OpenFire data if it doesn't exist in processed_folder already."""
+    def download(self, threads=None):
+        """Download the OpenFire data if it doesn't exist in processed_folder already.
+
+        Args:
+            threads (int, optional): number of threads to use for dataset downloading
+        """
 
         if self._check_exists(train=True) and self._check_exists(train=False):
             return
@@ -107,33 +113,36 @@ class OpenFire(VisionDataset):
         download_url(self.url, self._root.joinpath(self._raw), filename=self.url.rpartition('/')[-1], verbose=False)
         with open(self._root.joinpath(self._raw, self.url.rpartition('/')[-1]), 'rb') as f:
             annotations = json.load(f)
-        # Download images
+
+        # Download actual images
         training_set, test_set = [], []
         img_folder = self._root.joinpath(self._raw, 'images')
         img_folder.mkdir(parents=True, exist_ok=True)
-        unavailable_idxs, prev_error = 0, None
-        for idx in tqdm(range(len(annotations))):
-            img_url = annotations[idx]['url']
-            try:
-                # Download image to raw
-                download_url(img_url, img_folder, filename=img_url.rpartition('/')[-1], verbose=False)
+        unavailable_idxs = 0
+        # Prepare URL and filenames for multi-processing
+        entries = [(a['url'], f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}")
+                   for idx, a in enumerate(annotations)]
+        # Use multiple threads to speed up download
+        download_urls(entries, img_folder, threads=threads)
+        # Verify downloads
+        for idx, annotation in enumerate(annotations):
+            img_path = self._raw.joinpath('images', entries[idx][1])
+            if self._root.joinpath(img_path).is_file():
                 # Encode target
-                target = self.class_to_idx[annotations[idx]['target']]
+                target = self.class_to_idx[annotation['target']]
                 # Aggregate img path and annotations
-                data = dict(path=self._raw.joinpath('images', img_url.rpartition('/')[-1]),
-                            target=target)
+                data = dict(path=img_path, target=target)
                 # Add it to the proper set
-                if annotations[idx].get('is_test', False):
+                if annotation.get('is_test', False):
                     test_set.append(data)
                 else:
                     training_set.append(data)
-            except Exception as e:
+            else:
                 unavailable_idxs += 1
-                prev_error = e
         # HTTP Errors
         if unavailable_idxs > 0:
-            warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'
-                f'Last raised error was:\n{prev_error}'))
+            warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'))
+
         # save as torch files
         with open(self._root.joinpath(self._processed, self.training_file), 'wb') as f:
             torch.save(training_set, f)
