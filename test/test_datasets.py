@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 from pathlib import Path
 import json
 import requests
@@ -13,7 +14,7 @@ class TestCollectEnv(unittest.TestCase):
         # Valid input
         url = 'https://gist.githubusercontent.com/yrevar/942d3a0ac09ec9e5eb3a/raw/238f720ff059c1f82f368259d1ca4ffa5dd8f9f5/imagenet1000_clsidx_to_labels.txt'
 
-        with Path('/tmp') as root:
+        with tempfile.TemporaryDirectory() as root:
             # URL error cases
             self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url, 'url', root, verbose=False)
             self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url, 'https://url', root, verbose=False)
@@ -31,7 +32,7 @@ class TestCollectEnv(unittest.TestCase):
         urls = ['https://arxiv.org/pdf/1910.01108.pdf', 'https://arxiv.org/pdf/1810.04805.pdf',
                 'https://arxiv.org/pdf/1905.11946.pdf', 'https://arxiv.org/pdf/1910.01271.pdf']
 
-        with Path('/tmp') as root:
+        with tempfile.TemporaryDirectory() as root:
             # URL error cases
             self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls, ['url'] * 4, root, silent=False)
             self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls, ['https://url'] * 4, root, silent=False)
@@ -43,7 +44,7 @@ class TestCollectEnv(unittest.TestCase):
 
     def test_openfire(self):
 
-        with Path('/tmp') as root:
+        with tempfile.TemporaryDirectory() as root:
             # Working case
             # Check inherited properties
             dataset = datasets.OpenFire(root=root, train=True, download=True)
