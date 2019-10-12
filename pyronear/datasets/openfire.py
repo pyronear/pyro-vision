@@ -39,6 +39,7 @@ class OpenFire(VisionDataset):
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
+    seed = 42
 
     def __init__(self, root, train=True, transform=None, target_transform=None,
                  download=False, threads=16, valid_pct=None):
@@ -151,7 +152,8 @@ class OpenFire(VisionDataset):
         # Override current train/test split
         if isinstance(valid_pct, float):
             full_set = training_set + test_set
-            random.shuffle(full_set)
+            # Local seed to avoid disturbing global functions
+            random.Random(self.seed).shuffle(full_set)
             valid_size = int(valid_pct * len(full_set))
             training_set, test_set = full_set[:-valid_size], full_set[-valid_size:]
 
