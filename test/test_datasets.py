@@ -45,10 +45,14 @@ class TestCollectEnv(unittest.TestCase):
     def test_openfire(self):
 
         with Path(tempfile.TemporaryDirectory().name) as root:
+
+            # Warning for missing train/test split
+            self.assertWarns(UserWarning, datasets.OpenFire, root=root, download=True, valid_pct=None)
+
             # Working case
             # Check inherited properties
             dataset = datasets.OpenFire(root=root, train=True, download=True)
-            self.assertTrue(isinstance(dataset, VisionDataset))
+            self.assertIsInstance(dataset, VisionDataset)
 
             # Check against number of samples in extract
             datasets.utils.download_url(dataset.url, root, filename='extract.json', verbose=False)
@@ -59,9 +63,17 @@ class TestCollectEnv(unittest.TestCase):
 
             # Check integrity of samples
             img, target = dataset[0]
-            self.assertTrue(isinstance(img, Image))
-            self.assertTrue(isinstance(target, int))
+            self.assertIsInstance(img, Image)
+            self.assertIsInstance(target, int)
             self.assertEqual(dataset.class_to_idx[extract[0]['target']], target)
+
+            # Check train/test split
+            train_set = datasets.OpenFire(root=root, train=True, download=True, valid_pct=0.2)
+            test_set = datasets.OpenFire(root=root, train=False, download=True, valid_pct=0.2)
+            self.assertIsInstance(train_set, VisionDataset)
+            # Check unicity of sample across all splits
+            train_paths = [sample['path'] for sample in train_set.data]
+            self.assertTrue(all(sample['path'] not in train_paths for sample in test_set.data))
 
 
 if __name__ == '__main__':
