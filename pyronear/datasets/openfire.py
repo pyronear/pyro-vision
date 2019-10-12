@@ -31,7 +31,7 @@ class OpenFire(VisionDataset):
             for downloading the dataset.
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/378a4c653ec7fac099a3aa8fc9e2b862a5e49a8e/openfire_binary.json'
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/99e5be2afd957b2da841f0adf8c5dfa47fe57166/openfire_binary.json'
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
