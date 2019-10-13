@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyronear.datasets.openfire &mdash; pyronear 0.1.0a0+722f3e2-git documentation</title>
+  <title>pyronear.datasets.openfire &mdash; pyronear 0.1.0a0+1f42aeb-git documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0a0+722f3e2
+                0.1.0a0+1f42aeb
               </div>
             
           
@@ -159,15 +159,18 @@
 <span></span><span class="ch">#!usr/bin/python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
+<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageFile</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torchvision.datasets</span> <span class="k">import</span> <span class="n">VisionDataset</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">download_url</span><span class="p">,</span> <span class="n">download_urls</span><span class="p">,</span> <span class="n">get_fname</span>
+
+<span class="n">ImageFile</span><span class="o">.</span><span class="n">LOAD_TRUNCATED_IMAGES</span> <span class="o">=</span> <span class="kc">True</span>
 
 
 <div class="viewcode-block" id="OpenFire"><a class="viewcode-back" href="../../../datasets.html#pyronear.datasets.OpenFire">[docs]</a><span class="k">class</span> <span class="nc">OpenFire</span><span class="p">(</span><span class="n">VisionDataset</span><span class="p">):</span>
@@ -187,21 +190,23 @@
 <span class="sd">            downloaded again.</span>
 <span class="sd">        threads (int, optional): If download is set to True, use this amount of threads</span>
 <span class="sd">            for downloading the dataset.</span>
+<span class="sd">        valid_pct (float, optional): Percentage of training set used for validation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/378a4c653ec7fac099a3aa8fc9e2b862a5e49a8e/openfire_binary.json&#39;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/99e5be2afd957b2da841f0adf8c5dfa47fe57166/openfire_binary.json&#39;</span>
     <span class="n">training_file</span> <span class="o">=</span> <span class="s1">&#39;training.pt&#39;</span>
     <span class="n">test_file</span> <span class="o">=</span> <span class="s1">&#39;test.pt&#39;</span>
     <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+                 <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">valid_pct</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">OpenFire</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span>
                                     <span class="n">target_transform</span><span class="o">=</span><span class="n">target_transform</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">train</span>  <span class="c1"># training set or test set</span>
 
         <span class="k">if</span> <span class="n">download</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">threads</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">threads</span><span class="p">,</span> <span class="n">valid_pct</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">(</span><span class="n">train</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Dataset not found.&#39;</span> <span class="o">+</span>
@@ -254,11 +259,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_file</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valid_pct</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Download the OpenFire data if it doesn&#39;t exist in processed_folder already.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            threads (int, optional): number of threads to use for dataset downloading</span>
+<span class="sd">            threads (int, optional): Number of threads to use for dataset downloading.</span>
+<span class="sd">            valid_pct (float, optional): Percentage of training set used for validation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -300,6 +306,14 @@
         <span class="c1"># HTTP Errors</span>
         <span class="k">if</span> <span class="n">unavailable_idxs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">((</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{unavailable_idxs}</span><span class="s1">/{len(annotations)} samples could not be downloaded. Please retry later.&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Override current train/test split</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid_pct</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">full_set</span> <span class="o">=</span> <span class="n">training_set</span> <span class="o">+</span> <span class="n">test_set</span>
+            <span class="c1"># Local seed to avoid disturbing global functions</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">full_set</span><span class="p">)</span>
+            <span class="n">valid_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">valid_pct</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_set</span><span class="p">))</span>
+            <span class="n">training_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="o">=</span> <span class="n">full_set</span><span class="p">[:</span><span class="o">-</span><span class="n">valid_size</span><span class="p">],</span> <span class="n">full_set</span><span class="p">[</span><span class="o">-</span><span class="n">valid_size</span><span class="p">:]</span>
 
         <span class="c1"># save as torch files</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_file</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
