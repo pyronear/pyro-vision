@@ -39,6 +39,15 @@ pip install git+https://github.com/frgfm/PyroNear@master
 
 ## Usage
 
+### datasets
+
+Access all PyroNear datasets just like any `torchvision.datasets.VisionDataset`:
+
+```python
+from pyronear.datasets import OpenFire
+dataset = OpenFire('./data', download=True)
+```
+
 
 
 ## Documentation
