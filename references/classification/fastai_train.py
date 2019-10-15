@@ -15,19 +15,22 @@ def main(args):
     path = Path(args.data_path)
 
     # Aggregate path and labels into list for fastai ImageDataBunch
-    fnames, labels = [], []
+    fnames, labels, is_valid = [], [], []
     for sample in OpenFire(root=args.data_path, train=True, download=True).data:
-        fnames.append(path.joinpath(sample['path']))
+        fnames.append(sample['path'])
         labels.append(sample['target'])
+        is_valid.append(False)
     for sample in OpenFire(root=args.data_path, train=False, download=True).data:
-        fnames.append(path.joinpath(sample['path']))
+        fnames.append(sample['path'])
         labels.append(sample['target'])
+        is_valid.append(True)
 
-    data = vision.ImageDataBunch.from_lists(args.data_path, fnames=fnames, labels=labels,
-                                            valid_pct=0.2, bs=args.batch_size, ds_tfms=vision.get_transforms(),
-                                            size=224, num_workers=args.workers).normalize(vision.imagenet_stats)
+    df = pd.DataFrame.from_dict(dict(name=fnames, label=labels, is_valid=is_valid))
 
-    # # Train & test sets
+
+    il = vision.ImageList.from_df(df, path=args.data_path).split_from_df('is_valid').label_from_df(cols='label')
+    data = il.transform(vision.get_transforms(), size=args.resize).databunch(bs=args.batch_size, num_workers=args.workers).normalize(vision.imagenet_stats)
+
     learn = vision.cnn_learner(data, vision.models.__dict__[args.model],
                                pretrained=args.pretrained,
                                wd=args.weight_decay,
@@ -47,6 +50,7 @@ if __name__ == "__main__":
     parser.add_argument('--data-path', default='./data', help='dataset')
     parser.add_argument('--model', default='resnet18', type=str, help='model')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
+    parser.add_argument('-s', '--resize', default=224, type=int)
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run')
     parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
