@@ -1,6 +1,9 @@
 import datetime
 import time
 
+import os
+import random
+import numpy as np
 from pathlib import Path
 import math
 import torch
@@ -18,6 +21,22 @@ from pyronear.datasets import OpenFire
 import PIL
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="PIL.Image")
+
+
+def set_seed(seed):
+    """Set the seed for pseudo-random number generations
+    Args:
+        seed (int): seed to set for reproducibility
+    """
+
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
 
 
 def train_batch(model, x, target, optimizer, criterion):
@@ -111,6 +130,9 @@ def evaluate(model, test_loader, criterion):
 
 
 def main(args):
+
+    if args.deterministic:
+        set_seed(42)
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -220,6 +242,12 @@ if __name__ == "__main__":
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
+    parser.add_argument(
+        "--deterministic",
+        dest="deterministic",
+        help="Should the training be performed in deterministic mode",
+        action="store_true",
+    )
     parser.add_argument(
         "--pretrained",
         dest="pretrained",
