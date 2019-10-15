@@ -11,8 +11,6 @@ from urllib.parse import urlparse
 
 from torchvision.datasets.utils import check_integrity
 
-IMG_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif']
-
 
 def url_retrieve(url, outfile, timeout=4):
     """Download the content of an URL request to a specified location
@@ -44,7 +42,7 @@ def get_fname(url, default_extension='jpg', max_base_length=50):
 
     name_split = urlparse(url).path.rpartition('/')[-1].split('.')
     # Check if viable extension
-    if len(name_split) > 1 and name_split[-1].lower() in IMG_EXTENSIONS:
+    if len(name_split) > 1 and all(c.isalpha() for c in name_split[-1].lower()):
         base, extension = '.'.join(name_split[:-1]), name_split[-1].lower()
     # Fallback on default extension
     else:
