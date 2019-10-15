@@ -55,7 +55,7 @@ class TestCollectEnv(unittest.TestCase):
             self.assertIsInstance(dataset, VisionDataset)
 
             # Assert valid extensions of every image
-            self.assertTrue(all(sample['path'].rpartition('.')[-1] in datasets.utils.IMG_EXTENSIONS
+            self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
                                 for sample in dataset.data))
 
             # Check against number of samples in extract
