@@ -79,6 +79,17 @@ class TestCollectEnv(unittest.TestCase):
             train_paths = [sample['path'] for sample in train_set.data]
             self.assertTrue(all(sample['path'] not in train_paths for sample in test_set.data))
 
+    def test_openfire_validation(self):
+        """Check if Exception is raised when providing incorrect split ratio for validation"""
+
+        with Path(tempfile.TemporaryDirectory().name) as root:
+
+            incorrect_valid_ratios = [-25, -0.01, 1.01, 15, True, list()]
+
+            for incorrect_valid_ratio in incorrect_valid_ratios:
+                with self.assertRaises(ValueError):
+                    datasets.OpenFire(root=root, train=True, download=True, valid_ratio=incorrect_valid_ratio)
+
 
 if __name__ == '__main__':
     unittest.main()
