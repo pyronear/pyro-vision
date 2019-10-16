@@ -63,7 +63,7 @@ def train_batch(model, x, target, optimizer, criterion):
 
 
 def train_epoch(model, train_loader, optimizer, criterion, master_bar,
-                epoch=0, scheduler=None):
+                epoch=0, scheduler=None, device='cpu'):
     """Train a model for one epoch
     Args:
         model (torch.nn.Module): model to train
@@ -72,7 +72,8 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
         criterion (torch.nn.Module): criterion object
         master_bar (fastprogress.MasterBar): master bar of training progress
         epoch (int): current epoch index
-        scheduler (torch.optim._LRScheduler, optional): learning rate scheduler 
+        scheduler (torch.optim._LRScheduler, optional): learning rate scheduler
+        device (str): device hosting tensor data
     Returns:
         batch_loss (float): latch batch loss
     """
@@ -84,7 +85,7 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
     for _ in progress_bar(range(len(train_loader)), parent=master_bar):
 
         x, target = next(loader_iter)
-        if torch.cuda.is_available():
+        if device.startswith('cuda'):
             x, target = x.cuda(non_blocking=True), target.cuda(non_blocking=True)
 
         batch_loss = train_batch(model, x, target, optimizer, criterion)
@@ -99,12 +100,13 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
     return train_loss
 
 
-def evaluate(model, test_loader, criterion):
+def evaluate(model, test_loader, criterion, device='cpu'):
     """Evaluation a model on a dataloader
     Args:
         model (torch.nn.Module): model to train
         train_loader (torch.utils.data.DataLoader): validation dataloader
         criterion (torch.nn.Module): criterion object
+        device (str): device hosting tensor data
     Returns:
         val_loss (float): validation loss
         acc (float): top1 accuracy
@@ -114,7 +116,7 @@ def evaluate(model, test_loader, criterion):
     with torch.no_grad():
         for x, target in test_loader:
             # Work with tensors on GPU
-            if torch.cuda.is_available():
+            if device.startswith('cuda'):
                 x, target = x.cuda(), target.cuda()
 
             # Forward + Backward & optimize
@@ -134,6 +136,13 @@ def main(args):
 
     if args.deterministic:
         set_seed(42)
+
+    # Set device
+    if args.device is None:
+        if torch.cuda.is_available():
+            args.device = 'cuda:0'
+        else:
+            args.device = 'cpu'
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -194,10 +203,12 @@ def main(args):
     mb = master_bar(range(args.epochs))
     for epoch_idx in mb:
         # Training
-        train_loss = train_epoch(model, train_loader, optimizer, criterion, mb, epoch=epoch_idx, scheduler=lr_scheduler)
+        train_loss = train_epoch(model, train_loader, optimizer, criterion,
+                                 master_bar=mb, epoch=epoch_idx, scheduler=lr_scheduler,
+                                 device=args.device)
 
         # Evaluation
-        val_loss, acc = evaluate(model, test_loader, criterion)
+        val_loss, acc = evaluate(model, test_loader, criterion, device=args.device)
 
         mb.first_bar.comment = f"Epoch {epoch_idx+1}/{args.epochs}"
         mb.write(f'Epoch {epoch_idx+1}/{args.epochs} - Training loss: {train_loss:.4} | Validation loss: {val_loss:.4} | Error rate: {1 - acc:.4}')
@@ -220,7 +231,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PyroNear Classification Training')
     parser.add_argument('--data-path', default='./data', help='dataset')
     parser.add_argument('--model', default='resnet18', help='model')
-    parser.add_argument('--device', default='cuda', help='device')
+    parser.add_argument('--device', default=None, help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
     parser.add_argument('-s', '--resize', default=224, type=int)
     parser.add_argument('--epochs', default=20, type=int, metavar='N',

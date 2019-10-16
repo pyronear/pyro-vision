@@ -19,6 +19,12 @@ warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.functio
 def main(args):
 
     # Set device
+    if args.device is None:
+        if torch.cuda.is_available():
+            args.device = 'cuda:0'
+        else:
+            args.device = 'cpu'
+
     defaults.device = torch.device(args.device)
 
     # Aggregate path and labels into list for fastai ImageDataBunch
