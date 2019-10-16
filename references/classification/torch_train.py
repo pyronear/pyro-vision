@@ -152,9 +152,9 @@ def main(args):
     ])
 
     # Train & test sets
-    train_set = OpenFire(root=args.data_path, train=True, download=True,
+    train_set = OpenFire(root=args.data_path, train=True, download=True, valid_pct=0.2,
                          transform=train_transforms)
-    val_set = OpenFire(root=args.data_path, train=False, download=True,
+    val_set = OpenFire(root=args.data_path, train=False, download=True, valid_pct=0.2,
                        transform=test_transforms)
     num_classes = len(train_set.classes)
     # Samplers
