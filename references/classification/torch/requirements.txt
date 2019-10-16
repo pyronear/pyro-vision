@@ -1,3 +1,2 @@
 pyronear
-tqdm>=4.36.1
 fastprogress>=0.1.21

@@ -1,7 +1,9 @@
+#!usr/bin/python
+# -*- coding: utf-8 -*-
+
 import numpy as np
 from pathlib import Path
 
-import torch
 import warnings
 from fastai import vision
 from pyronear.datasets import OpenFire
@@ -12,7 +14,6 @@ warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.functio
 
 
 def main(args):
-    path = Path(args.data_path)
 
     # Aggregate path and labels into list for fastai ImageDataBunch
     fnames, labels, is_valid = [], [], []

@@ -1,5 +1,5 @@
-import datetime
-import time
+#!usr/bin/python
+# -*- coding: utf-8 -*-
 
 import os
 import random
@@ -13,12 +13,10 @@ from torch import optim
 import torchvision
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
-from tqdm import tqdm
 
 from pyronear.datasets import OpenFire
 
 # Disable warnings about RGBA images (discard transparency information)
-import PIL
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="PIL.Image")
 
