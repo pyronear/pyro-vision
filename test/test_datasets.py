@@ -84,7 +84,7 @@ class TestCollectEnv(unittest.TestCase):
 
         with Path(tempfile.TemporaryDirectory().name) as root:
 
-            incorrect_valid_ratios = [-25, -0.01, 1.01, 15, True, list()]
+            incorrect_valid_ratios = [-25, -0.01, 1.01, 15]
 
             for incorrect_valid_ratio in incorrect_valid_ratios:
                 with self.assertRaises(ValueError):

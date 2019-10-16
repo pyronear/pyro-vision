@@ -48,8 +48,7 @@ class OpenFire(VisionDataset):
         self.train = train  # training set or test set
 
         if download:
-            if (not isinstance(valid_ratio, (float, type(None))) or
-                not (0 <= valid_ratio <= 1)):
+            if isinstance(valid_ratio, (float, int)) and not (0 <= valid_ratio <= 1):
                 raise ValueError(f"ratio to create Validation set should be a floating number between 0 and 1. Ratio found = {valid_ratio}")
             else:
                 self.download(threads, valid_ratio)
