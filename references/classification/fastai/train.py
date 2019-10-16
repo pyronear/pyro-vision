@@ -5,7 +5,9 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
+import torch
 import warnings
+from fastai.torch_core import defaults
 from fastai import vision
 from pyronear.datasets import OpenFire
 
@@ -15,6 +17,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.functio
 
 
 def main(args):
+
+    # Set device
+    defaults.device = torch.device(args.device)
 
     # Aggregate path and labels into list for fastai ImageDataBunch
     fnames, labels, is_valid = [], [], []
@@ -51,6 +56,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PyroNear Classification Training with Fastai')
     parser.add_argument('--data-path', default='./data', help='dataset')
     parser.add_argument('--model', default='resnet18', type=str, help='model')
+    parser.add_argument('--device', default='cuda', help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
     parser.add_argument('-s', '--resize', default=224, type=int)
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
