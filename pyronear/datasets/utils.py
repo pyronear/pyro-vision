@@ -42,8 +42,9 @@ def get_fname(url, default_extension='jpg', max_base_length=50):
 
     name_split = urlparse(url).path.rpartition('/')[-1].split('.')
     # Check if viable extension
-    if len(name_split) > 1 and 1 < len(name_split[-1]) <= 4:
+    if len(name_split) > 1 and all(c.isalpha() for c in name_split[-1].lower()):
         base, extension = '.'.join(name_split[:-1]), name_split[-1].lower()
+    # Fallback on default extension
     else:
         base, extension = name_split[-1], default_extension
     # Check base length

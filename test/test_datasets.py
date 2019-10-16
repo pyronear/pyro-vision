@@ -54,6 +54,10 @@ class TestCollectEnv(unittest.TestCase):
             dataset = datasets.OpenFire(root=root, train=True, download=True)
             self.assertIsInstance(dataset, VisionDataset)
 
+            # Assert valid extensions of every image
+            self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
+                                for sample in dataset.data))
+
             # Check against number of samples in extract
             datasets.utils.download_url(dataset.url, root, filename='extract.json', verbose=False)
             with open(root.joinpath('extract.json'), 'rb') as f:
