@@ -188,7 +188,6 @@ def main(args):
                                               div_factor=args.div_factor, final_div_factor=args.final_div_factor)
 
     best_loss = math.inf
-    best_acc = 0
     mb = master_bar(range(args.epochs))
     for epoch_idx in mb:
         # Training
@@ -204,7 +203,6 @@ def main(args):
         if val_loss < best_loss:
             print(f"Validation loss decreased {best_loss:.4} --> {val_loss:.4}: saving state...")
             best_loss = val_loss
-            best_acc = acc
             if args.output_dir:
                 torch.save(dict(model=model.state_dict(),
                                 optimizer=optimizer.state_dict(),
