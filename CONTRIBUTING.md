@@ -92,6 +92,9 @@ cd /path/to/local/pyronear/project/
 
 # clone your fork. replace YOUR_USERNAME accordingly
 git clone https://github.com/YOUR_USERNAME/PyroNear.git
+
+# cd to PyroNear
+cd PyroNear
 ```
 
 3. Set remotes to original project and merge new contributions onto master.
