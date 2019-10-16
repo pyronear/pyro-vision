@@ -212,7 +212,6 @@ def main(args):
                                 epoch=epoch_idx,
                                 args=args),
                            Path(args.output_dir, f"{args.checkpoint}.pth"))
-        lr_scheduler.step(val_loss)
 
 
 if __name__ == "__main__":
