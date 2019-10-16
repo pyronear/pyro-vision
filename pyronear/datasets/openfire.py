@@ -48,7 +48,12 @@ class OpenFire(VisionDataset):
         self.train = train  # training set or test set
 
         if download:
-            self.download(threads, valid_ratio)
+            if (not isinstance(valid_ratio, (float, type(None))) or
+                not (0 <= valid_ratio <= 1)):
+                raise ValueError(f"ratio to create Validation set should be a floating number between 0 and 1. Ratio found = {valid_ratio}")
+            else:
+                pass
+                self.download(threads, valid_ratio)
 
         if not self._check_exists(train):
             raise RuntimeError('Dataset not found.' +
@@ -150,7 +155,7 @@ class OpenFire(VisionDataset):
             warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'))
 
         # Override current train/test split
-        if isinstance(valid_pct, float):
+        if valid_ratio is not None:
             full_set = training_set + test_set
             # Local seed to avoid disturbing global functions
             random.Random(self.seed).shuffle(full_set)
