@@ -185,7 +185,7 @@ def main(args):
     lr_scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=args.lr,
                                               epochs=args.epochs, steps_per_epoch=len(train_loader),
                                               cycle_momentum=(not isinstance(optimizer, optim.Adam)),
-                                              div_factor=25., final_div_factor=1e4)
+                                              div_factor=args.div_factor, final_div_factor=args.final_div_factor)
 
     best_loss = math.inf
     best_acc = 0
