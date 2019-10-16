@@ -46,7 +46,6 @@ def train_batch(model, x, target, optimizer, criterion):
         criterion (torch.nn.Module): criterion object
     Returns:
         batch_loss (float): training loss
-        acc (float): top1 accuracy on batch
     """
 
     # Forward
@@ -54,17 +53,13 @@ def train_batch(model, x, target, optimizer, criterion):
 
     # Loss computation
     batch_loss = criterion(outputs, target)
-    # Topk predictions
-    pred = outputs.topk(1, dim=1)[1]
-    correct = pred.eq(target.view(-1, 1).expand_as(pred))
-    acc = correct[:, 0].sum().item() / target.size(0)
 
     # Backprop
     optimizer.zero_grad()
     batch_loss.backward()
     optimizer.step()
 
-    return batch_loss.item(), acc
+    return batch_loss.item()
 
 
 def train_epoch(model, train_loader, optimizer, criterion, master_bar,
@@ -77,23 +72,31 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
         criterion (torch.nn.Module): criterion object
         master_bar (fastprogress.MasterBar): master bar of training progress
         epoch (int): current epoch index
+        scheduler (torch.optim._LRScheduler, optional): learning rate scheduler 
+    Returns:
+        batch_loss (float): latch batch loss
     """
 
     # Training
     model.train()
     loader_iter = iter(train_loader)
-    running_loss = 0
-    for batch_idx in progress_bar(range(len(train_loader)), parent=master_bar):
+    train_loss = 0
+    for _ in progress_bar(range(len(train_loader)), parent=master_bar):
 
         x, target = next(loader_iter)
         if torch.cuda.is_available():
             x, target = x.cuda(non_blocking=True), target.cuda(non_blocking=True)
 
-        batch_loss, acc = train_batch(model, x, target, optimizer, criterion)
+        batch_loss = train_batch(model, x, target, optimizer, criterion)
+        train_loss += batch_loss
         if scheduler:
             scheduler.step()
 
-        master_bar.child.comment = f"Training loss: {batch_loss:.4} (Acc@1: {acc:.2%})"
+        master_bar.child.comment = f"Batch loss: {batch_loss:.4}"
+
+    train_loss /= len(train_loader)
+
+    return train_loss
 
 
 def evaluate(model, test_loader, criterion):
@@ -191,13 +194,13 @@ def main(args):
     mb = master_bar(range(args.epochs))
     for epoch_idx in mb:
         # Training
-        train_epoch(model, train_loader, optimizer, criterion, mb, epoch=epoch_idx, scheduler=lr_scheduler)
+        train_loss = train_epoch(model, train_loader, optimizer, criterion, mb, epoch=epoch_idx, scheduler=lr_scheduler)
 
         # Evaluation
         val_loss, acc = evaluate(model, test_loader, criterion)
 
         mb.first_bar.comment = f"Epoch {epoch_idx+1}/{args.epochs}"
-        mb.write(f'Epoch {epoch_idx+1}/{args.epochs} - Validation loss: {val_loss:.4} (Acc@1: {acc:.2%})')
+        mb.write(f'Epoch {epoch_idx+1}/{args.epochs} - Training loss: {train_loss:.4} | Validation loss: {val_loss:.4} | Error rate: {1 - acc:.4}')
 
         # State saving
         if val_loss < best_loss:
