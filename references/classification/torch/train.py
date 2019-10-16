@@ -218,7 +218,7 @@ def main(args):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyroNear Classification Training')
-    parser.add_argument('--data-path', default='./tmp_data', help='dataset')
+    parser.add_argument('--data-path', default='./data', help='dataset')
     parser.add_argument('--model', default='resnet18', help='model')
     parser.add_argument('--device', default='cuda', help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
