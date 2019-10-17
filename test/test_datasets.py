@@ -48,7 +48,7 @@ class TestCollectEnv(unittest.TestCase):
 
             # Warning for missing train/test split
             self.assertWarns(UserWarning, datasets.OpenFire, root=root, download=True, valid_pct=None, max_files=100)
-            
+
             # max_files error cases
             self.assertRaises(ValueError, datasets.OpenFire, root=root, train=True, download=True, max_files=[4] )
 

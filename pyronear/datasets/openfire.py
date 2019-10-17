@@ -60,7 +60,7 @@ class OpenFire(VisionDataset):
         self.train = train  # training set or test set
         
         if not (self._check_exists(train=True) and self._check_exists(train=False)):
-          self.create_datatree(max_files=max_files)
+          self.create_directories(max_files=max_files)
           if download:
               self.download(threads)
           self.check_images(valid_pct=valid_pct)
@@ -74,7 +74,16 @@ class OpenFire(VisionDataset):
         else:
             data_file = self.test_file
         self.data = torch.load(self._root.joinpath(self._processed, data_file))
-
+    
+    @classmethod
+    def from_directory(root, image_path, transform=None, target_transform=None, 
+                       valid_pct=0.2):
+        """
+        """
+        
+        self.create_directories()
+        
+    
     def __getitem__(self, idx):
         """ Getter function
 
@@ -116,10 +125,10 @@ class OpenFire(VisionDataset):
         else:
             return self._root.joinpath(self._processed, self.test_file).is_file()
     
-    def create_datatree(self, max_files=None):
+    def create_directories(self, max_files=None):
         """
         Create the directory structure to hold the images and training_file/test_file.
-        Download the json file with annotations, add 'fname' and 'is_test' to each file
+        Download the json file with annotations, add 'fname' with local filenames
         
         Args:
             valid_pct (float, optional): Percentage of training set used for validation.
@@ -151,7 +160,7 @@ class OpenFire(VisionDataset):
         img_folder = self._root.joinpath(self._raw, 'images')
         img_folder.mkdir(parents=True, exist_ok=True)
 
-        # Prepare URL and filenames for multi-processing        
+        # Prepare URL and filenames for multi-processing
         entries = [(a['url'], a['fname']) for a in self.annotations]
         # Use multiple threads to speed up download
         download_urls(entries, img_folder, threads=threads)
@@ -161,9 +170,9 @@ class OpenFire(VisionDataset):
         and test_file
         """
         training_set, test_set = [], []
-        unavailable_idxs = 0        
+        unavailable_idxs = 0
         
-        for idx, annotation in enumerate(self.annotations):
+        for annotation in self.annotations:
             img_path = self._raw.joinpath('images', annotation['fname'])
             if self._root.joinpath(img_path).is_file():
                 # Encode target
@@ -179,7 +188,7 @@ class OpenFire(VisionDataset):
                 unavailable_idxs += 1
         # HTTP Errors
         if unavailable_idxs > 0:
-            warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'))
+            warnings.warn((f'{unavailable_idxs}/{len(self.annotations)} samples could not be downloaded. Please retry later.'))
 
         # Override current train/test split
         if isinstance(valid_pct, float):
