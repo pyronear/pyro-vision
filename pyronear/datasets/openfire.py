@@ -28,7 +28,7 @@ class OpenFire(VisionDataset):
     | | |  - training.pl
     | | - raw/
     | | | - images/
-    
+
 
     Args:
         root (string): Root directory of dataset where ``OpenFire/processed/training.pt``
