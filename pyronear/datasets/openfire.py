@@ -74,16 +74,7 @@ class OpenFire(VisionDataset):
         else:
             data_file = self.test_file
         self.data = torch.load(self._root.joinpath(self._processed, data_file))
-    
-    @classmethod
-    def from_directory(root, image_path, transform=None, target_transform=None, 
-                       valid_pct=0.2):
-        """
-        """
-        
-        self.create_directories()
-        
-    
+
     def __getitem__(self, idx):
         """ Getter function
 
@@ -124,7 +115,7 @@ class OpenFire(VisionDataset):
             return self._root.joinpath(self._processed, self.training_file).is_file()
         else:
             return self._root.joinpath(self._processed, self.test_file).is_file()
-    
+
     def create_directories(self, max_files=None):
         """
         Create the directory structure to hold the images and training_file/test_file.
@@ -144,11 +135,11 @@ class OpenFire(VisionDataset):
                 self.annotations = json.load(f)[:max_files]
             except TypeError:
                 raise ValueError("max_files must an int between -1 and len(dataset)")
-        
+
         # Add the local filename to the annotations
         for idx, a in enumerate(self.annotations):
           a['fname'] = f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}"
-        
+
 
     def download(self, threads=None):
         """Download the OpenFire data if it doesn't exist in processed_folder already.
@@ -171,7 +162,7 @@ class OpenFire(VisionDataset):
         """
         training_set, test_set = [], []
         unavailable_idxs = 0
-        
+
         for annotation in self.annotations:
             img_path = self._raw.joinpath('images', annotation['fname'])
             if self._root.joinpath(img_path).is_file():
