@@ -17,6 +17,18 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 class OpenFire(VisionDataset):
     """Wildfire image Dataset.
+    Creates the directory structure below and downloads the dataset or use the existing
+    files
+    
+    - root/
+    | - extract.json
+    | - OpenFire/
+    | | - processed/
+    | | |  - test.pl
+    | | |  - training.pl
+    | | - raw/
+    | | | - images/
+    
 
     Args:
         root (string): Root directory of dataset where ``OpenFire/processed/training.pt``
@@ -42,13 +54,16 @@ class OpenFire(VisionDataset):
     seed = 42
 
     def __init__(self, root, train=True, transform=None, target_transform=None,
-                 download=False, threads=16, valid_pct=None):
+                 download=False, threads=16, valid_pct=0.2, max_files=-1):
         super(OpenFire, self).__init__(root, transform=transform,
                                     target_transform=target_transform)
         self.train = train  # training set or test set
-
-        if download:
-            self.download(threads, valid_pct)
+        
+        if not (self._check_exists(train=True) and self._check_exists(train=False)):
+          self.create_datatree(max_files=max_files)
+          if download:
+              self.download(threads)
+          self.check_images(valid_pct=valid_pct)
 
         if not self._check_exists(train):
             raise RuntimeError('Dataset not found.' +
@@ -100,39 +115,56 @@ class OpenFire(VisionDataset):
             return self._root.joinpath(self._processed, self.training_file).is_file()
         else:
             return self._root.joinpath(self._processed, self.test_file).is_file()
-
-    def download(self, threads=None, valid_pct=None):
-        """Download the OpenFire data if it doesn't exist in processed_folder already.
-
-        Args:
-            threads (int, optional): Number of threads to use for dataset downloading.
-            valid_pct (float, optional): Percentage of training set used for validation.
+    
+    def create_datatree(self, max_files=None):
         """
-
-        if self._check_exists(train=True) and self._check_exists(train=False):
-            return
-
+        Create the directory structure to hold the images and training_file/test_file.
+        Download the json file with annotations, add 'fname' and 'is_test' to each file
+        
+        Args:
+            valid_pct (float, optional): Percentage of training set used for validation.
+            max_files (int, optional): maximum number of files to use. Default: None (all)
+        """
         self._root.joinpath(self._raw).mkdir(parents=True, exist_ok=True)
         self._root.joinpath(self._processed).mkdir(parents=True, exist_ok=True)
 
         # Download annotations
         download_url(self.url, self._root.joinpath(self._raw), filename=self.url.rpartition('/')[-1], verbose=False)
         with open(self._root.joinpath(self._raw, self.url.rpartition('/')[-1]), 'rb') as f:
-            annotations = json.load(f)
+            try:
+                self.annotations = json.load(f)[:max_files]
+            except TypeError:
+                raise ValueError("max_files must an int between -1 and len(dataset)")
+        
+        # Add the local filename to the annotations
+        for idx, a in enumerate(self.annotations):
+          a['fname'] = f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}"
+        
 
-        # Download actual images
-        training_set, test_set = [], []
+    def download(self, threads=None):
+        """Download the OpenFire data if it doesn't exist in processed_folder already.
+
+        Args:
+            threads (int, optional): Number of threads to use for dataset downloading.
+        """
+        # Create image folder
         img_folder = self._root.joinpath(self._raw, 'images')
         img_folder.mkdir(parents=True, exist_ok=True)
-        unavailable_idxs = 0
-        # Prepare URL and filenames for multi-processing
-        entries = [(a['url'], f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}")
-                   for idx, a in enumerate(annotations)]
+
+        # Prepare URL and filenames for multi-processing        
+        entries = [(a['url'], a['fname']) for a in self.annotations]
         # Use multiple threads to speed up download
         download_urls(entries, img_folder, threads=threads)
-        # Verify downloads
-        for idx, annotation in enumerate(annotations):
-            img_path = self._raw.joinpath('images', entries[idx][1])
+
+    def check_images(self, valid_pct=None):
+        """Verify downloads, construct training and test sets and save training_file
+        and test_file
+        """
+        training_set, test_set = [], []
+        unavailable_idxs = 0        
+        
+        for idx, annotation in enumerate(self.annotations):
+            img_path = self._raw.joinpath('images', annotation['fname'])
             if self._root.joinpath(img_path).is_file():
                 # Encode target
                 target = self.class_to_idx[annotation['target']]
