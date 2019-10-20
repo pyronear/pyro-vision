@@ -178,6 +178,10 @@ def main(args):
     in_features = getattr(model, 'fc').in_features
     setattr(model, 'fc', nn.Linear(in_features, num_classes))
 
+    # Resume
+    if args.resume:
+        model.load_state_dict(torch.load(args.resume)['model'])
+
     # Freeze layers
     if not args.unfreeze:
         # Model is sequential
@@ -252,7 +256,7 @@ if __name__ == "__main__":
     parser.add_argument('--final-div-factor', default=1e4, type=float, help='final div factor of OneCycle policy')
     parser.add_argument('--output-dir', default=None, help='path where to save')
     parser.add_argument('--checkpoint', default='checkpoint', type=str, help='name of output file')
-    parser.add_argument('--resume', default='', help='resume from checkpoint')
+    parser.add_argument('--resume', default=None, help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
     parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
