@@ -16,8 +16,10 @@ class TestCollectEnv(unittest.TestCase):
 
         with Path(tempfile.TemporaryDirectory().name) as root:
             # URL error cases
-            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url, 'url', root, verbose=False)
-            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url, 'https://url', root, verbose=False)
+            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url,
+                              'url', root, verbose=False)
+            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url,
+                              'https://url', root, verbose=False)
             self.assertRaises(TypeError, datasets.utils.download_url, 0, root, verbose=False)
 
             # Root error cases
@@ -34,8 +36,10 @@ class TestCollectEnv(unittest.TestCase):
 
         with Path(tempfile.TemporaryDirectory().name) as root:
             # URL error cases
-            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls, ['url'] * 4, root, silent=False)
-            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls, ['https://url'] * 4, root, silent=False)
+            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls,
+                              ['url'] * 4, root, silent=False)
+            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls,
+                              ['https://url'] * 4, root, silent=False)
             self.assertRaises(TypeError, datasets.utils.download_url, [0] * 4, root, silent=False)
 
             # Working case
