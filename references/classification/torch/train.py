@@ -173,9 +173,9 @@ def main(args):
 
     # Data loader
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, sampler=train_sampler,
-                                             num_workers=args.workers, pin_memory=True)
+                                               num_workers=args.workers, pin_memory=True)
     test_loader = torch.utils.data.DataLoader(val_set, batch_size=args.batch_size, sampler=test_sampler,
-                                            num_workers=args.workers, pin_memory=True)
+                                              num_workers=args.workers, pin_memory=True)
 
     # Model definition
     model = torchvision.models.__dict__[args.model](pretrained=args.pretrained)
@@ -204,9 +204,9 @@ def main(args):
 
     # Scheduler
     lr_scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=args.lr,
-                                              epochs=args.epochs, steps_per_epoch=len(train_loader),
-                                              cycle_momentum=(not isinstance(optimizer, optim.Adam)),
-                                              div_factor=args.div_factor, final_div_factor=args.final_div_factor)
+                                                 epochs=args.epochs, steps_per_epoch=len(train_loader),
+                                                 cycle_momentum=(not isinstance(optimizer, optim.Adam)),
+                                                 div_factor=args.div_factor, final_div_factor=args.final_div_factor)
 
     best_loss = math.inf
     mb = master_bar(range(args.epochs))
@@ -220,7 +220,8 @@ def main(args):
         val_loss, acc = evaluate(model, test_loader, criterion, device=args.device)
 
         mb.first_bar.comment = f"Epoch {epoch_idx+1}/{args.epochs}"
-        mb.write(f'Epoch {epoch_idx+1}/{args.epochs} - Training loss: {train_loss:.4} | Validation loss: {val_loss:.4} | Error rate: {1 - acc:.4}')
+        mb.write(f"Epoch {epoch_idx+1}/{args.epochs} - Training loss: {train_loss:.4} | "
+                 f"Validation loss: {val_loss:.4} | Error rate: {1 - acc:.4}")
 
         # State saving
         if val_loss < best_loss:

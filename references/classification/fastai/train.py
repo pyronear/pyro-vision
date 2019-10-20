@@ -40,21 +40,21 @@ def main(args):
 
     df = pd.DataFrame.from_dict(dict(name=fnames, label=labels, is_valid=is_valid))
 
-
     il = vision.ImageList.from_df(df, path=args.data_path).split_from_df('is_valid').label_from_df(cols='label')
-    data = il.transform(vision.get_transforms(), size=args.resize).databunch(bs=args.batch_size, num_workers=args.workers).normalize(vision.imagenet_stats)
+    il = il.transform(vision.get_transforms(), size=args.resize)
+    data = il.databunch(bs=args.batch_size, num_workers=args.workers).normalize(vision.imagenet_stats)
 
     learner = vision.cnn_learner(data, vision.models.__dict__[args.model],
-                               pretrained=args.pretrained,
-                               wd=args.weight_decay,
-                               ps=args.dropout_prob,
-                               concat_pool=args.concat_pool,
-                               metrics=vision.error_rate)
+                                 pretrained=args.pretrained,
+                                 wd=args.weight_decay,
+                                 ps=args.dropout_prob,
+                                 concat_pool=args.concat_pool,
+                                 metrics=vision.error_rate)
     if args.unfreeze:
         learner.unfreeze()
 
     learner.fit_one_cycle(args.epochs, max_lr=slice(None, args.lr, None),
-                        div_factor=args.div_factor)
+                          div_factor=args.div_factor)
 
     learner.save(args.checkpoint)
 
