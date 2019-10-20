@@ -183,6 +183,13 @@ def main(args):
     # Change fc
     in_features = getattr(model, 'fc').in_features
     setattr(model, 'fc', nn.Linear(in_features, num_classes))
+
+    # Freeze layers
+    for n, p in model.named_parameters():
+        if not n.startswith('fc'):
+            p.requires_grad = False
+
+    # Send to device
     model.to(args.device)
 
     # Loss function
