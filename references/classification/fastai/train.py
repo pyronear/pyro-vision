@@ -50,6 +50,8 @@ def main(args):
                                ps=args.dropout_prob,
                                concat_pool=args.concat_pool,
                                metrics=vision.error_rate)
+    if args.unfreeze:
+        learner.unfreeze()
 
     learner.fit_one_cycle(args.epochs, max_lr=slice(None, args.lr, None),
                         div_factor=args.div_factor)
@@ -71,21 +73,19 @@ if __name__ == "__main__":
                         help='number of data loading workers (default: 16)')
     parser.add_argument('--lr', default=3e-3, type=float, help='initial learning rate')
     parser.add_argument("--concat-pool", dest="concat_pool",
-        help="Use pre-trained models from the modelzoo",
-        action="store_true"
-    )
+                        help="Use pre-trained models from the modelzoo",
+                        action="store_true")
     parser.add_argument('--dropout-prob', default=0.5, type=float, help='dropout rate of last FC layer')
     parser.add_argument('--wd', '--weight-decay', default=1e-2, type=float,
                         metavar='W', help='weight decay (default: 1e-2)',
                         dest='weight_decay')
     parser.add_argument('--div-factor', default=25., type=float, help='div factor of OneCycle policy')
     parser.add_argument('--checkpoint', default='checkpoint', type=str, help='name of output file')
-    parser.add_argument(
-        "--pretrained",
-        dest="pretrained",
-        help="Use pre-trained models from the modelzoo",
-        action="store_true",
-    )
+    parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
+                        action="store_true")
+    parser.add_argument("--pretrained", dest="pretrained",
+                        help="Use pre-trained models from the modelzoo",
+                        action="store_true")
     args = parser.parse_args()
 
     main(args)

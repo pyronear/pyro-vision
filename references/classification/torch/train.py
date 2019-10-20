@@ -185,9 +185,11 @@ def main(args):
     setattr(model, 'fc', nn.Linear(in_features, num_classes))
 
     # Freeze layers
-    for n, p in model.named_parameters():
-        if not n.startswith('fc'):
-            p.requires_grad = False
+    if not args.unfreeze:
+        # Model is sequential
+        for n, p in model.named_parameters():
+            if not n.startswith('fc'):
+                p.requires_grad = False
 
     # Send to device
     model.to(args.device)
@@ -258,15 +260,13 @@ if __name__ == "__main__":
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
-    parser.add_argument(
-        "--deterministic",
-        dest="deterministic",
+    parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
+                        action="store_true")
+    parser.add_argument("--deterministic", dest="deterministic",
         help="Should the training be performed in deterministic mode",
         action="store_true",
     )
-    parser.add_argument(
-        "--pretrained",
-        dest="pretrained",
+    parser.add_argument("--pretrained", dest="pretrained",
         help="Use pre-trained models from the modelzoo",
         action="store_true",
     )
