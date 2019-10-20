@@ -147,7 +147,7 @@ def main(args):
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
-    train_transforms = transforms.Compose([
+    data_transforms = transforms.Compose([
         transforms.RandomResizedCrop((args.resize, args.resize)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
@@ -155,17 +155,11 @@ def main(args):
         normalize
     ])
 
-    test_transforms = transforms.Compose([
-        transforms.Resize((args.resize, args.resize)),
-        transforms.ToTensor(),
-        normalize
-    ])
-
     # Train & test sets
     train_set = OpenFire(root=args.data_path, train=True, download=True, valid_pct=0.2,
-                         transform=train_transforms)
+                         transform=data_transforms)
     val_set = OpenFire(root=args.data_path, train=False, download=True, valid_pct=0.2,
-                       transform=test_transforms)
+                       transform=data_transforms)
     num_classes = len(train_set.classes)
     # Samplers
     train_sampler = torch.utils.data.RandomSampler(train_set)
