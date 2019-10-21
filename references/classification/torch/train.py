@@ -41,9 +41,10 @@ def train_batch(model, x, target, optimizer, criterion):
     """Train a model for one iteration
     Args:
         model (torch.nn.Module): model to train
-        loader_iter (iter(torch.utils.data.DataLoader)): training dataloader iterator
+        x (torch.Tensor): input sample
+        target (torch.Tensor): output target
         optimizer (torch.optim.Optimizer): parameter optimizer
-        criterion (torch.nn.Module): criterion object
+        criterion (torch.nn.Module): loss used for backpropagation
     Returns:
         batch_loss (float): training loss
     """
@@ -104,7 +105,7 @@ def evaluate(model, test_loader, criterion, device='cpu'):
     """Evaluation a model on a dataloader
     Args:
         model (torch.nn.Module): model to train
-        train_loader (torch.utils.data.DataLoader): validation dataloader
+        test_loader (torch.utils.data.DataLoader): validation dataloader
         criterion (torch.nn.Module): criterion object
         device (str): device hosting tensor data
     Returns:
