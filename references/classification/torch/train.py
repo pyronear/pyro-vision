@@ -223,9 +223,9 @@ def main(args):
 
         # State saving
         if val_loss < best_loss:
-            print(f"Validation loss decreased {best_loss:.4} --> {val_loss:.4}: saving state...")
             best_loss = val_loss
             if args.output_dir:
+                print(f"Validation loss decreased {best_loss:.4} --> {val_loss:.4}: saving state...")
                 torch.save(dict(model=model.state_dict(),
                                 optimizer=optimizer.state_dict(),
                                 lr_scheduler=lr_scheduler.state_dict(),
