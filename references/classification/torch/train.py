@@ -64,7 +64,7 @@ def train_batch(model, x, target, optimizer, criterion):
 
 
 def train_epoch(model, train_loader, optimizer, criterion, master_bar,
-                epoch=0, scheduler=None, device='cpu'):
+                epoch=0, scheduler=None, device='cpu', bin_classif=False):
     """Train a model for one epoch
     Args:
         model (torch.nn.Module): model to train
@@ -75,6 +75,7 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
         epoch (int): current epoch index
         scheduler (torch.optim._LRScheduler, optional): learning rate scheduler
         device (str): device hosting tensor data
+        bin_classif (bool, optional): should the target be considered as binary
     Returns:
         batch_loss (float): latch batch loss
     """
@@ -86,6 +87,8 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
     for _ in progress_bar(range(len(train_loader)), parent=master_bar):
 
         x, target = next(loader_iter)
+        if bin_classif:
+            target = target.to(dtype=torch.float).view(-1, 1)
         if device.startswith('cuda'):
             x, target = x.cuda(non_blocking=True), target.cuda(non_blocking=True)
 
@@ -101,13 +104,14 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
     return train_loss
 
 
-def evaluate(model, test_loader, criterion, device='cpu'):
+def evaluate(model, test_loader, criterion, device='cpu', bin_classif=False):
     """Evaluation a model on a dataloader
     Args:
         model (torch.nn.Module): model to train
         test_loader (torch.utils.data.DataLoader): validation dataloader
         criterion (torch.nn.Module): criterion object
         device (str): device hosting tensor data
+        bin_classif (bool, optional): should the target be considered as binary
     Returns:
         val_loss (float): validation loss
         acc (float): top1 accuracy
@@ -116,6 +120,8 @@ def evaluate(model, test_loader, criterion, device='cpu'):
     val_loss, correct, targets = 0, 0, 0
     with torch.no_grad():
         for x, target in test_loader:
+            if bin_classif:
+                target = target.to(dtype=torch.float).view(-1, 1)
             # Work with tensors on GPU
             if device.startswith('cuda'):
                 x, target = x.cuda(), target.cuda()
@@ -124,7 +130,11 @@ def evaluate(model, test_loader, criterion, device='cpu'):
             outputs = model.forward(x)
             val_loss += criterion(outputs, target).item()
             # Index of max log-probability
-            pred = outputs.max(1, keepdim=True)[1]
+            if bin_classif:
+                pred = torch.sigmoid(outputs).round()
+            else:
+                pred = outputs.argmax(1, keepdim=True)
+
             correct += pred.eq(target.view_as(pred)).sum().item()
             targets += x.size(0)
     val_loss /= len(test_loader)
@@ -162,6 +172,11 @@ def main(args):
     val_set = OpenFire(root=args.data_path, train=False, download=True, valid_pct=0.2,
                        transform=data_transforms)
     num_classes = len(train_set.classes)
+    if args.binary:
+        if num_classes == 2:
+            num_classes = 1
+        else:
+            raise ValueError('unable to cast number of classes to binary setting')
     # Samplers
     train_sampler = torch.utils.data.RandomSampler(train_set)
     test_sampler = torch.utils.data.SequentialSampler(val_set)
@@ -194,7 +209,10 @@ def main(args):
     model.to(args.device)
 
     # Loss function
-    criterion = nn.CrossEntropyLoss()
+    if args.binary:
+        criterion = nn.BCEWithLogitsLoss()
+    else:
+        criterion = nn.CrossEntropyLoss()
 
     # optimizer
     optimizer = optim.Adam(model.parameters(),
@@ -213,10 +231,11 @@ def main(args):
         # Training
         train_loss = train_epoch(model, train_loader, optimizer, criterion,
                                  master_bar=mb, epoch=epoch_idx, scheduler=lr_scheduler,
-                                 device=args.device)
+                                 device=args.device, bin_classif=args.binary)
 
         # Evaluation
-        val_loss, acc = evaluate(model, test_loader, criterion, device=args.device)
+        val_loss, acc = evaluate(model, test_loader, criterion, device=args.device,
+                                 bin_classif=args.binary)
 
         mb.first_bar.comment = f"Epoch {epoch_idx+1}/{args.epochs}"
         mb.write(f"Epoch {epoch_idx+1}/{args.epochs} - Training loss: {train_loss:.4} | "
@@ -258,6 +277,8 @@ if __name__ == "__main__":
     parser.add_argument('--output-dir', default=None, help='path where to save')
     parser.add_argument('--checkpoint', default=None, type=str, help='checkpoint file to resume from (default: None)')
     parser.add_argument('--resume', default=None, help='resume from checkpoint')
+    parser.add_argument("--binary", dest="binary", help="Should the task be considered as binary Classification",
+                        action="store_true")
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
     parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
