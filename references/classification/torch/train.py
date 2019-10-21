@@ -255,7 +255,7 @@ if __name__ == "__main__":
     parser.add_argument('--div-factor', default=25., type=float, help='div factor of OneCycle policy')
     parser.add_argument('--final-div-factor', default=1e4, type=float, help='final div factor of OneCycle policy')
     parser.add_argument('--output-dir', default=None, help='path where to save')
-    parser.add_argument('--checkpoint', default='checkpoint', type=str, help='name of output file')
+    parser.add_argument('--checkpoint', default=None, type=str, help='checkpoint file to resume from (default: None)')
     parser.add_argument('--resume', default=None, help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')

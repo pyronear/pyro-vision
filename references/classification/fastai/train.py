@@ -83,7 +83,7 @@ if __name__ == "__main__":
                         dest='weight_decay')
     parser.add_argument('--div-factor', default=25., type=float, help='div factor of OneCycle policy')
     parser.add_argument('--checkpoint', default='checkpoint', type=str, help='name of output file')
-    parser.add_argument('--resume', default=None, help='resume from checkpoint')
+    parser.add_argument('--resume', default=None, help='checkpoint name to resume from (default: None)')
     parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
                         action="store_true")
     parser.add_argument("--pretrained", dest="pretrained",
