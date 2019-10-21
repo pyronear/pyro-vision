@@ -47,14 +47,14 @@ class TestCollectEnv(unittest.TestCase):
         with Path(tempfile.TemporaryDirectory().name) as root:
 
             # Warning for missing train/test split
-            self.assertWarns(UserWarning, datasets.OpenFire, root=root, download=True, valid_pct=None, max_files=100)
+            self.assertWarns(UserWarning, datasets.OpenFire, root=root, download=True, valid_pct=None, num_samples=100)
 
-            # max_files error cases
-            self.assertRaises(ValueError, datasets.OpenFire, root=root, train=True, download=True, max_files=[4] )
+            # num_samples error cases
+            self.assertRaises(ValueError, datasets.OpenFire, root=root, train=True, download=True, num_samples=[4] )
 
             # Working case
             # Check inherited properties
-            dataset = datasets.OpenFire(root=root, train=True, download=True, max_files=100)
+            dataset = datasets.OpenFire(root=root, train=True, download=True, num_samples=100)
             self.assertIsInstance(dataset, VisionDataset)
 
             # Assert valid extensions of every image
@@ -75,8 +75,8 @@ class TestCollectEnv(unittest.TestCase):
             self.assertEqual(dataset.class_to_idx[extract[0]['target']], target)
 
             # Check train/test split
-            train_set = datasets.OpenFire(root=root, train=True, download=True, valid_pct=0.2, max_files=100)
-            test_set = datasets.OpenFire(root=root, train=False, download=True, valid_pct=0.2, max_files=100)
+            train_set = datasets.OpenFire(root=root, train=True, download=True, valid_pct=0.2, num_samples=100)
+            test_set = datasets.OpenFire(root=root, train=False, download=True, valid_pct=0.2, num_samples=100)
             self.assertIsInstance(train_set, VisionDataset)
             # Check unicity of sample across all splits
             train_paths = [sample['path'] for sample in train_set.data]
