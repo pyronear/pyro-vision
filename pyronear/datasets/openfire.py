@@ -1,7 +1,6 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
-import random
 from pathlib import Path
 import warnings
 import json
@@ -10,7 +9,7 @@ from tqdm import tqdm
 
 import torch
 from torchvision.datasets import VisionDataset
-from .utils import download_url, download_urls, get_fname
+from .utils import download_url, download_urls
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -38,7 +37,6 @@ class OpenFire(VisionDataset):
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
-    seed = 42
 
     def __init__(self, root, train=True, download=False, threads=16, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
