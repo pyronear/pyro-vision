@@ -19,7 +19,7 @@ class OpenFire(VisionDataset):
     """Wildfire image Dataset.
     Creates the directory structure below and downloads the dataset or use the existing
     files
-    
+
     - root/
     | - extract.json
     | - OpenFire/
@@ -58,7 +58,7 @@ class OpenFire(VisionDataset):
         super(OpenFire, self).__init__(root, transform=transform,
                                     target_transform=target_transform)
         self.train = train  # training set or test set
-        
+
         if not (self._check_exists(train=True) and self._check_exists(train=False)):
             self.create_directories(max_files=max_files)
             if download:
