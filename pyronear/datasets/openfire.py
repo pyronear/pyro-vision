@@ -34,7 +34,7 @@ class OpenFire(VisionDataset):
             for downloading the dataset.
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/bf2430074a7de1005534d8cd1fa158e185e43000/openfire_binary.json'
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
@@ -122,8 +122,7 @@ class OpenFire(VisionDataset):
         img_folder.mkdir(parents=True, exist_ok=True)
         unavailable_idxs = 0
         # Prepare URL and filenames for multi-processing
-        entries = [(a['url'], f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}")
-                   for idx, a in enumerate(annotations)]
+        entries = [(a['url'], a['name']) for idx, a in enumerate(annotations)]
         # Use multiple threads to speed up download
         download_urls(entries, img_folder, threads=threads)
         # Verify downloads
