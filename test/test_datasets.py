@@ -12,7 +12,7 @@ from pyronear import datasets
 class TestCollectEnv(unittest.TestCase):
     def test_downloadurl(self):
         # Valid input
-        url = 'https://www.mdpi.com/2076-3417/9/14/2862/pdf'
+        url = 'https://arxiv.org/pdf/1910.02940.pdf'
 
         with Path(tempfile.TemporaryDirectory().name) as root:
             # URL error cases
