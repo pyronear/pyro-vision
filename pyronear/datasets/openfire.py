@@ -54,7 +54,7 @@ class OpenFire(VisionDataset):
     seed = 42
 
     def __init__(self, root, train=True, transform=None, target_transform=None,
-                 download=False, threads=16, valid_pct=0.2, max_files=-1):
+                 download=False, threads=16, valid_pct=0.2, max_files=None):
         super(OpenFire, self).__init__(root, transform=transform,
                                     target_transform=target_transform)
         self.train = train  # training set or test set
