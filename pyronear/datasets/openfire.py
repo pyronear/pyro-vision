@@ -24,8 +24,8 @@ class OpenFire(VisionDataset):
     | - extract.json
     | - OpenFire/
     | | - processed/
-    | | |  - test.pl
-    | | |  - training.pl
+    | | |  - test.pt
+    | | |  - training.pt
     | | - raw/
     | | | - images/
 
@@ -60,10 +60,10 @@ class OpenFire(VisionDataset):
         self.train = train  # training set or test set
         
         if not (self._check_exists(train=True) and self._check_exists(train=False)):
-          self.create_directories(max_files=max_files)
-          if download:
-              self.download(threads)
-          self.check_images(valid_pct=valid_pct)
+            self.create_directories(max_files=max_files)
+            if download:
+                self.download(threads)
+            self.check_images(valid_pct=valid_pct)
 
         if not self._check_exists(train):
             raise RuntimeError('Dataset not found.' +
@@ -120,7 +120,7 @@ class OpenFire(VisionDataset):
         """
         Create the directory structure to hold the images and training_file/test_file.
         Download the json file with annotations, add 'fname' with local filenames
-        
+
         Args:
             valid_pct (float, optional): Percentage of training set used for validation.
             max_files (int, optional): maximum number of files to use. Default: None (all)
@@ -138,7 +138,7 @@ class OpenFire(VisionDataset):
 
         # Add the local filename to the annotations
         for idx, a in enumerate(self.annotations):
-          a['fname'] = f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}"
+            a['fname'] = f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}"
 
 
     def download(self, threads=None):
