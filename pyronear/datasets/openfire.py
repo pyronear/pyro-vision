@@ -40,10 +40,8 @@ class OpenFire(VisionDataset):
     classes = [False, True]
     seed = 42
 
-    def __init__(self, root, train=True, transform=None, target_transform=None,
-                 download=False, threads=16):
-        super(OpenFire, self).__init__(root, transform=transform,
-                                    target_transform=target_transform)
+    def __init__(self, root, train=True, download=False, threads=16, **kwargs):
+        super(OpenFire, self).__init__(root, **kwargs)
         self.train = train  # training set or test set
 
         if download:
