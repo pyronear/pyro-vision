@@ -123,8 +123,7 @@ class OpenFire(VisionDataset):
 
         Args:
             valid_pct (float, optional): Percentage of training set used for validation.
-            num_samples (int, optional): maximum number of files to use. Default: None (all)
-        """
+            num_samples (int, optional): maximum number of files to use. Default: None"""
         self._root.joinpath(self._raw).mkdir(parents=True, exist_ok=True)
         self._root.joinpath(self._processed).mkdir(parents=True, exist_ok=True)
 
