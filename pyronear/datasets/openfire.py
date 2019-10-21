@@ -150,12 +150,8 @@ class OpenFire(VisionDataset):
         # save as torch files
         with open(self._root.joinpath(self._processed, self.training_file), 'wb') as f:
             torch.save(training_set, f)
-        # in case test split if not available
-        if len(test_set) > 0:
-            with open(self._root.joinpath(self._processed, self.test_file), 'wb') as f:
-                torch.save(test_set, f)
-        else:
-            warnings.warn("Unable to find train/test split! All samples were assigned to train set.")
+        with open(self._root.joinpath(self._processed, self.test_file), 'wb') as f:
+            torch.save(test_set, f)
 
         print('Done!')
 
