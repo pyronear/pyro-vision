@@ -43,12 +43,13 @@ class TestCollectEnv(unittest.TestCase):
             self.assertTrue(all(Path(root, url.rpartition('/')[-1]).is_file() for url in urls))
 
     def test_openfire(self):
+        num_samples = 200
 
         with Path(tempfile.TemporaryDirectory().name) as root:
 
             # Working case
-            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=200)
-            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=200)
+            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples)
+            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=num_samples)
             # Check inherited properties
             self.assertIsInstance(train_set, VisionDataset)
 
@@ -58,10 +59,10 @@ class TestCollectEnv(unittest.TestCase):
             self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
                                 for sample in test_set.data))
 
-            # Check against number of samples in extract (limit to 200)
+            # Check against number of samples in extract (limit to num_samples)
             datasets.utils.download_url(train_set.url, root, filename='extract.json', verbose=False)
             with open(root.joinpath('extract.json'), 'rb') as f:
-                extract = json.load(f)[:200]
+                extract = json.load(f)[:num_samples]
             # Uncomment when download issues are resolved
             # self.assertEqual(len(train_set) + len(test_set), len(extract))
 
