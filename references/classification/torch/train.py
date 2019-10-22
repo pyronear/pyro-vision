@@ -243,7 +243,6 @@ def main(args):
 
         # State saving
         if val_loss < best_loss:
-            best_loss = val_loss
             if args.output_dir:
                 print(f"Validation loss decreased {best_loss:.4} --> {val_loss:.4}: saving state...")
                 torch.save(dict(model=model.state_dict(),
@@ -252,6 +251,7 @@ def main(args):
                                 epoch=epoch_idx,
                                 args=args),
                            Path(args.output_dir, f"{args.checkpoint}.pth"))
+            best_loss = val_loss
 
 
 if __name__ == "__main__":
