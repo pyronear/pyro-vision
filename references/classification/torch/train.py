@@ -284,13 +284,11 @@ if __name__ == "__main__":
     parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
                         action="store_true")
     parser.add_argument("--deterministic", dest="deterministic",
-        help="Should the training be performed in deterministic mode",
-        action="store_true",
-    )
+                        help="Should the training be performed in deterministic mode",
+                        action="store_true")
     parser.add_argument("--pretrained", dest="pretrained",
-        help="Use pre-trained models from the modelzoo",
-        action="store_true",
-    )
+                        help="Use pre-trained models from the modelzoo",
+                        action="store_true")
     args = parser.parse_args()
 
     main(args)
