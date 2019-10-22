@@ -1,7 +1,6 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
-import random
 from pathlib import Path
 import warnings
 import json
@@ -10,7 +9,7 @@ from tqdm import tqdm
 
 import torch
 from torchvision.datasets import VisionDataset
-from .utils import download_url, download_urls, get_fname
+from .utils import download_url, download_urls
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -32,23 +31,19 @@ class OpenFire(VisionDataset):
             downloaded again.
         threads (int, optional): If download is set to True, use this amount of threads
             for downloading the dataset.
-        valid_pct (float, optional): Percentage of training set used for validation.
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/99e5be2afd957b2da841f0adf8c5dfa47fe57166/openfire_binary.json'
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
-    seed = 42
 
-    def __init__(self, root, train=True, transform=None, target_transform=None,
-                 download=False, threads=16, valid_pct=None):
-        super(OpenFire, self).__init__(root, transform=transform,
-                                    target_transform=target_transform)
+    def __init__(self, root, train=True, download=False, threads=16, **kwargs):
+        super(OpenFire, self).__init__(root, **kwargs)
         self.train = train  # training set or test set
 
         if download:
-            self.download(threads, valid_pct)
+            self.download(threads)
 
         if not self._check_exists(train):
             raise RuntimeError('Dataset not found.' +
@@ -101,12 +96,11 @@ class OpenFire(VisionDataset):
         else:
             return self._root.joinpath(self._processed, self.test_file).is_file()
 
-    def download(self, threads=None, valid_pct=None):
+    def download(self, threads=None):
         """Download the OpenFire data if it doesn't exist in processed_folder already.
 
         Args:
             threads (int, optional): Number of threads to use for dataset downloading.
-            valid_pct (float, optional): Percentage of training set used for validation.
         """
 
         if self._check_exists(train=True) and self._check_exists(train=False):
@@ -126,8 +120,7 @@ class OpenFire(VisionDataset):
         img_folder.mkdir(parents=True, exist_ok=True)
         unavailable_idxs = 0
         # Prepare URL and filenames for multi-processing
-        entries = [(a['url'], f"{idx:06}.{get_fname(a['url']).rpartition('.')[-1]}")
-                   for idx, a in enumerate(annotations)]
+        entries = [(a['url'], a['name']) for idx, a in enumerate(annotations)]
         # Use multiple threads to speed up download
         download_urls(entries, img_folder, threads=threads)
         # Verify downloads
@@ -139,7 +132,7 @@ class OpenFire(VisionDataset):
                 # Aggregate img path and annotations
                 data = dict(path=img_path, target=target)
                 # Add it to the proper set
-                if annotation.get('is_test', False):
+                if annotation['is_test']:
                     test_set.append(data)
                 else:
                     training_set.append(data)
@@ -149,23 +142,11 @@ class OpenFire(VisionDataset):
         if unavailable_idxs > 0:
             warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'))
 
-        # Override current train/test split
-        if isinstance(valid_pct, float):
-            full_set = training_set + test_set
-            # Local seed to avoid disturbing global functions
-            random.Random(self.seed).shuffle(full_set)
-            valid_size = int(valid_pct * len(full_set))
-            training_set, test_set = full_set[:-valid_size], full_set[-valid_size:]
-
         # save as torch files
         with open(self._root.joinpath(self._processed, self.training_file), 'wb') as f:
             torch.save(training_set, f)
-        # in case test split if not available
-        if len(test_set) > 0:
-            with open(self._root.joinpath(self._processed, self.test_file), 'wb') as f:
-                torch.save(test_set, f)
-        else:
-            warnings.warn("Unable to find train/test split! All samples were assigned to train set.")
+        with open(self._root.joinpath(self._processed, self.test_file), 'wb') as f:
+            torch.save(test_set, f)
 
         print('Done!')
 
