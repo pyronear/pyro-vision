@@ -32,6 +32,7 @@ class OpenFire(VisionDataset):
         threads (int, optional): If download is set to True, use this amount of threads
             for downloading the dataset.
         num_samples (int, optional): Number of samples to download (all by default)
+        img_folder (str or Path, optional): Location of image folder. Default: <root>/OpenFire/images
     """
 
     url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'
@@ -39,9 +40,11 @@ class OpenFire(VisionDataset):
     test_file = 'test.pt'
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=16, num_samples=None, **kwargs):
+    def __init__(self, root, train=True, download=False, threads=16, num_samples=None, img_folder=None, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train  # training set or test set
+        self.img_folder = self._root.joinpath(self.__class__.__name__, 'images') \
+          if img_folder is None else Path(img_folder)
 
         if download:
             self.download(threads, num_samples)
@@ -118,17 +121,16 @@ class OpenFire(VisionDataset):
 
         # Download actual images
         training_set, test_set = [], []
-        img_folder = self._root.joinpath(self._raw, 'images')
-        img_folder.mkdir(parents=True, exist_ok=True)
+        self.img_folder.mkdir(parents=True, exist_ok=True)
         unavailable_idxs = 0
         # Prepare URL and filenames for multi-processing
         entries = [(a['url'], a['name']) for idx, a in enumerate(annotations)]
         # Use multiple threads to speed up download
-        download_urls(entries, img_folder, threads=threads)
+        download_urls(entries, self.img_folder, threads=threads)
         # Verify downloads
         for idx, annotation in enumerate(annotations):
-            img_path = self._raw.joinpath('images', entries[idx][1])
-            if self._root.joinpath(img_path).is_file():
+            img_path = self.img_folder.joinpath(entries[idx][1])
+            if img_path.is_file():
                 # Encode target
                 target = self.class_to_idx[annotation['target']]
                 # Aggregate img path and annotations
