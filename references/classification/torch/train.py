@@ -167,9 +167,9 @@ def main(args):
     ])
 
     # Train & test sets
-    train_set = OpenFire(root=args.data_path, train=True, download=True, valid_pct=0.2,
+    train_set = OpenFire(root=args.data_path, train=True, download=True,
                          transform=data_transforms)
-    val_set = OpenFire(root=args.data_path, train=False, download=True, valid_pct=0.2,
+    val_set = OpenFire(root=args.data_path, train=False, download=True,
                        transform=data_transforms)
     num_classes = len(train_set.classes)
     if args.binary:
