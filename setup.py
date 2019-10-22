@@ -28,10 +28,12 @@ elif sha != 'Unknown':
     version += '+' + sha[:7]
 print("Building wheel {}-{}".format(package_name, version))
 
+
 def write_version_file():
     version_path = os.path.join(cwd, 'pyronear', 'version.py')
     with open(version_path, 'w') as f:
         f.write("__version__ = '{}'\n".format(version))
+
 
 if sys.argv[-1] == 'publish':
     os.system('python3 setup.py sdist upload')

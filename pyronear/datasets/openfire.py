@@ -147,7 +147,8 @@ class OpenFire(VisionDataset):
                 unavailable_idxs += 1
         # HTTP Errors
         if unavailable_idxs > 0:
-            warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'))
+            warnings.warn(f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. '
+                          'Please retry later.')
 
         # Override current train/test split
         if isinstance(valid_pct, float):
