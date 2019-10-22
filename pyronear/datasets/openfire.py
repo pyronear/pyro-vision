@@ -31,6 +31,7 @@ class OpenFire(VisionDataset):
             downloaded again.
         threads (int, optional): If download is set to True, use this amount of threads
             for downloading the dataset.
+        num_samples (int, optional): Number of samples to download (all by default)
     """
 
     url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'
@@ -38,12 +39,12 @@ class OpenFire(VisionDataset):
     test_file = 'test.pt'
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=16, **kwargs):
+    def __init__(self, root, train=True, download=False, threads=16, num_samples=None, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train  # training set or test set
 
         if download:
-            self.download(threads)
+            self.download(threads, num_samples)
 
         if not self._check_exists(train):
             raise RuntimeError('Dataset not found.' +
@@ -96,11 +97,12 @@ class OpenFire(VisionDataset):
         else:
             return self._root.joinpath(self._processed, self.test_file).is_file()
 
-    def download(self, threads=None):
+    def download(self, threads=None, num_samples=None):
         """Download the OpenFire data if it doesn't exist in processed_folder already.
 
         Args:
             threads (int, optional): Number of threads to use for dataset downloading.
+            num_samples (int, optional): Number of samples to download (all by default)
         """
 
         if self._check_exists(train=True) and self._check_exists(train=False):
@@ -112,7 +114,7 @@ class OpenFire(VisionDataset):
         # Download annotations
         download_url(self.url, self._root.joinpath(self._raw), filename=self.url.rpartition('/')[-1], verbose=False)
         with open(self._root.joinpath(self._raw, self.url.rpartition('/')[-1]), 'rb') as f:
-            annotations = json.load(f)
+            annotations = json.load(f)[:num_samples]
 
         # Download actual images
         training_set, test_set = [], []
