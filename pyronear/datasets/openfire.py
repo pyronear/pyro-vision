@@ -40,11 +40,14 @@ class OpenFire(VisionDataset):
     test_file = 'test.pt'
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=16, num_samples=None, img_folder=None, **kwargs):
+    def __init__(self, root, train=True, download=False, threads=16, num_samples=None,
+                 img_folder=None, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train  # training set or test set
-        self.img_folder = self._root.joinpath(self.__class__.__name__, 'images') \
-          if img_folder is None else Path(img_folder)
+        if img_folder is None:
+            self.img_folder = self._root.joinpath(self.__class__.__name__, 'images')
+        else:
+            self.img_folder = Path(img_folder)
 
         if download:
             self.download(threads, num_samples)

@@ -44,12 +44,16 @@ class TestCollectEnv(unittest.TestCase):
 
     def test_openfire(self):
         num_samples = 200
-        img_folder = tempfile.TemporaryDirectory().name # N.B.: different from root
 
-        with Path(tempfile.TemporaryDirectory().name) as root:
-
-            # Test img_folder argument: wrong type
+        # Test img_folder argument: wrong type and default (None)
+        with tempfile.TemporaryDirectory() as root:
             self.assertRaises(TypeError, datasets.OpenFire, root, download=True, img_folder=1)
+            ds = datasets.OpenFire(root=root, download=True, num_samples=num_samples,
+                                   img_folder=None)
+            self.assertIsInstance(ds.img_folder, Path)
+
+        with tempfile.TemporaryDirectory() as root, \
+             tempfile.TemporaryDirectory() as img_folder:
 
             # Working case
             # Test img_folder as Path and str
@@ -66,7 +70,7 @@ class TestCollectEnv(unittest.TestCase):
 
             # Check against number of samples in extract (limit to num_samples)
             datasets.utils.download_url(train_set.url, root, filename='extract.json', verbose=False)
-            with open(root.joinpath('extract.json'), 'rb') as f:
+            with open(Path(root).joinpath('extract.json'), 'rb') as f:
                 extract = json.load(f)[:num_samples]
             # Test if not more than 10 downloads failed.
             # Change to assertEqual when download issues are resolved
