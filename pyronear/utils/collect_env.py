@@ -147,8 +147,8 @@ def get_cudnn_version(run_lambda):
     rc, out, _ = run_lambda(cudnn_cmd)
     # find will return 1 if there are permission errors or if not found
     if len(out) == 0 or (rc != 1 and rc != 0):
-        l = os.environ.get('CUDNN_LIBRARY')
-        if l is not None and os.path.isfile(l):
+        lib = os.environ.get('CUDNN_LIBRARY')
+        if lib is not None and os.path.isfile(lib):
             return os.path.realpath(l)
         return None
     files = set()
@@ -298,6 +298,7 @@ def get_env_info():
         gcc_version=get_gcc_version(run_lambda),
         cmake_version=get_cmake_version(run_lambda),
     )
+
 
 env_info_fmt = """
 PyTorch version: {torch_version}
