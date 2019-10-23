@@ -9,6 +9,7 @@ for wildfire detection tasks.
    :caption: Package Reference
 
    datasets
+   models
    utils
 
 
