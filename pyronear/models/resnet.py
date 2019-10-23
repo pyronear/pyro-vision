@@ -15,7 +15,7 @@ resnet_layers = {
 }
 
 model_urls = {
-	18: 'https://srv-file4.gofile.io/download/zE0DJG/resnet18-binary-classification.pth'
+    18: 'https://srv-file4.gofile.io/download/zE0DJG/resnet18-binary-classification.pth'
 }
 
 
