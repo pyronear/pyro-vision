@@ -21,8 +21,8 @@ import sphinx_rtd_theme
 
 master_doc = 'index'
 project = 'pyronear'
-copyright = '2019, PyroNear Contibutors'
-author = 'PyroNear Contibutors'
+copyright = '2019, PyroNear Contributors'
+author = 'PyroNear Contributors'
 
 # The full version, including alpha/beta/rc tags
 version = pyronear.__version__
