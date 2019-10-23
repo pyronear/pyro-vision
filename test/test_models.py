@@ -16,10 +16,10 @@ class ModelsTester(unittest.TestCase):
 
         # Non-binary classification
         self.assertRaises(NotImplementedError, models.resnet,
-                          depth=18, pretrained=True, bin_classif=False)
+                          depth=18, bin_classif=False)
 
         # Working case
-        model = models.resnet(depth=18, pretrained=True, bin_classif=True).eval()
+        model = models.resnet(depth=18, bin_classif=bin_classif).eval()
         with torch.no_grad():
             out = model(img_tensor.unsqueeze(0))
 
