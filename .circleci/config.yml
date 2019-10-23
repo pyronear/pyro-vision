@@ -75,6 +75,42 @@ jobs:
       - codecov/upload:
           file: coverage.xml
           flags: unittests
+
+  pkg-style:
+    docker:
+      - image: circleci/python:3.6.1
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Cached CI dependencies
+      - restore_cache:
+          keys:
+            - v1-deps-{{ .Branch }}-{{ checksum ".circleci/requirements.txt" }}
+            - v1-deps-{{ .Branch }}
+            - v1-deps-
+      - run:
+          name: CI dependencies installation
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python -m pip install --upgrade pip
+            pip install -r .circleci/requirements.txt
+      - save_cache:
+          when: always
+          paths:
+            - "venv"
+          key: v1-deps-{{ .Branch }}-{{ checksum ".circleci/requirements.txt" }}
+
+      - run:
+          name: Flake8
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            flake8 ./
+
   docs-build:
     # Preserve same environement to restore cache
     docker:
@@ -142,6 +178,9 @@ workflows:
           requires:
             - pkg-build
       - pkg-test:
+          requires:
+            - pkg-build
+      - pkg-style:
           requires:
             - pkg-build
       - docs-deploy:

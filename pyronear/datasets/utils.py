@@ -148,4 +148,5 @@ def download_urls(entries, root, timeout=4, retries=4, threads=None, silent=True
         silent (bool, optional): whether Exception should be raised upon download failure
     """
 
-    parallel(partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent), entries, threads=threads)
+    parallel(partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent),
+             entries, threads=threads)
