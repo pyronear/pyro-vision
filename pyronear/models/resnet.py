@@ -41,7 +41,7 @@ def resnet(depth, pretrained=False, progress=True, bin_classif=True, **kwargs):
 
     # Model creation
     block = Bottleneck if depth >= 50 else BasicBlock
-    model = ResNet(block, resnet_layers[depth], num_classes=1, **kwargs)
+    model = ResNet(block, resnet_layers[depth], num_classes=num_classes, **kwargs)
 
     # Parameter loading
     if pretrained:
