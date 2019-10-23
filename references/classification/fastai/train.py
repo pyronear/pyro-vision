@@ -29,11 +29,13 @@ def main(args):
 
     # Aggregate path and labels into list for fastai ImageDataBunch
     fnames, labels, is_valid = [], [], []
-    for sample in OpenFire(root=args.data_path, train=True, download=True).data:
+    for sample in OpenFire(root=args.data_path, train=True, download=True,
+                           img_folder=args.img_folder).data:
         fnames.append(sample['path'])
         labels.append(sample['target'])
         is_valid.append(False)
-    for sample in OpenFire(root=args.data_path, train=False, download=True).data:
+    for sample in OpenFire(root=args.data_path, train=False, download=True,
+                           img_folder=args.img_folder).data:
         fnames.append(sample['path'])
         labels.append(sample['target'])
         is_valid.append(True)
@@ -61,6 +63,8 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyroNear Classification Training with Fastai')
     parser.add_argument('--data-path', default='./data', help='dataset')
+    parser.add_argument('--img-folder', default=None,
+        help='Folder containing images. Default: <data_path>/OpenFire/images')
     parser.add_argument('--model', default='resnet18', type=str, help='model')
     parser.add_argument('--device', default='cuda', help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)

@@ -163,9 +163,9 @@ def main(args):
 
     # Train & test sets
     train_set = OpenFire(root=args.data_path, train=True, download=True,
-                         transform=train_transforms)
+                         transform=train_transforms, img_folder=args.img_folder)
     val_set = OpenFire(root=args.data_path, train=False, download=True,
-                       transform=test_transforms)
+                       transform=test_transforms, img_folder=args.img_folder)
     num_classes = len(train_set.classes)
     # Samplers
     train_sampler = torch.utils.data.RandomSampler(train_set)
@@ -230,6 +230,8 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyroNear Classification Training')
     parser.add_argument('--data-path', default='./data', help='dataset')
+    parser.add_argument('--img-folder', default=None,
+        help='Folder containing images. Default: <data_path>/OpenFire/images')
     parser.add_argument('--model', default='resnet18', help='model')
     parser.add_argument('--device', default=None, help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
