@@ -9,7 +9,7 @@ from torchvision.datasets import VisionDataset
 from pyronear import datasets
 
 
-class TestCollectEnv(unittest.TestCase):
+class DatasetsTester(unittest.TestCase):
     def test_downloadurl(self):
         # Valid input
         url = 'https://arxiv.org/pdf/1910.02940.pdf'

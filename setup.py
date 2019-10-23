@@ -11,7 +11,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 
-version = '0.1.0b0'
+version = '0.1.0rc1'
 sha = 'Unknown'
 package_name = 'pyronear'
 
@@ -51,24 +51,27 @@ setup(
     # Metadata
     name=package_name,
     version=version,
-    author='François-Guillaume Fernandez',
-    description='Modules, operations and models for wildfire detection in PyTorch',
+    author='PyroNear Contributors',
+    author_email='pyronear.d4g@gmail.com',
+    maintainer='François-Guillaume Fernandez',
+    description='Datasets and models for wildfire detection in PyTorch',
     long_description=readme,
     long_description_content_type="text/markdown",
     url='https://github.com/frgfm/PyroNear',
     license='MIT',
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Intended Audience :: Developers',
-        'Operating System :: OS Independent',
-        'Natural Language :: English',
         'Topic :: Scientific/Engineering :: Artificial Intelligence'
     ],
     keywords=['pytorch', 'deep learning', 'vision', 'models',
-              'wildifre', 'object detection'],
+              'wildfire', 'object detection'],
 
     # Package info
     packages=find_packages(exclude=('test',)),
