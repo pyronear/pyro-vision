@@ -29,12 +29,15 @@ def main(args):
 
     # Aggregate path and labels into list for fastai ImageDataBunch
     fnames, labels, is_valid = [], [], []
-    for sample in OpenFire(root=args.data_path, train=True, download=True).data:
-        fnames.append(sample['path'])
+    dataset = OpenFire(root=args.data_path, train=True, download=True)
+    for sample in dataset.data:
+        fnames.append(dataset._images.joinpath(sample['name']).relative_to(dataset.root))
         labels.append(sample['target'])
         is_valid.append(False)
-    for sample in OpenFire(root=args.data_path, train=False, download=True).data:
-        fnames.append(sample['path'])
+    dataset = OpenFire(root=args.data_path, train=False, download=True)
+    for sample in dataset.data:
+        fnames.append(dataset._images.joinpath(sample['name']).relative_to(dataset.root))
+
         labels.append(sample['target'])
         is_valid.append(True)
 
