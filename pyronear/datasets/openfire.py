@@ -34,7 +34,7 @@ class OpenFire(VisionDataset):
         num_samples (int, optional): Number of samples to download (all by default)
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'  # noqa
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'  # noqa: E501
     training_file = 'training.pt'
     test_file = 'test.pt'
     classes = [False, True]
