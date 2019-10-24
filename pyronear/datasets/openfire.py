@@ -39,7 +39,7 @@ class OpenFire(VisionDataset):
     test_file = 'test.pt'
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=16, num_samples=None, **kwargs):
+    def __init__(self, root, train=True, download=False, threads=None, num_samples=None, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train  # training set or test set
 
