@@ -11,7 +11,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 
-version = '0.1.0rc1'
+version = '0.1.0rc2'
 sha = 'Unknown'
 package_name = 'pyronear'
 
@@ -35,10 +35,6 @@ def write_version_file():
         f.write("__version__ = '{}'\n".format(version))
 
 
-if sys.argv[-1] == 'publish':
-    os.system('python3 setup.py sdist upload')
-    sys.exit()
-
 write_version_file()
 
 with open('README.md') as f:
@@ -58,17 +54,24 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     url='https://github.com/frgfm/PyroNear',
+    download_url='https://github.com/frgfm/PyroNear/tags',
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Topic :: Scientific/Engineering :: Artificial Intelligence'
+        'Topic :: Scientific/Engineering',
+        'Topic :: Scientific/Engineering :: Mathematics',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords=['pytorch', 'deep learning', 'vision', 'models',
               'wildfire', 'object detection'],
