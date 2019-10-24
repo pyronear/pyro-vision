@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyronear.datasets &mdash; pyronear 0.1.0rc1+d02e4e6-git documentation</title>
+  <title>pyronear.datasets &mdash; pyronear 0.1.0rc2+c63adb6-git documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.1.0rc1+d02e4e6
+                0.1.0rc2+c63adb6
               </div>
             
           
@@ -180,25 +180,21 @@ which can load multiple samples parallelly using <code class="docutils literal n
 <h2><a class="toc-backref" href="#id1">OpenFire</a><a class="headerlink" href="#openfire" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyronear.datasets.OpenFire">
-<em class="property">class </em><code class="sig-prename descclassname">pyronear.datasets.</code><code class="sig-name descname">OpenFire</code><span class="sig-paren">(</span><em class="sig-param">root</em>, <em class="sig-param">train=True</em>, <em class="sig-param">download=False</em>, <em class="sig-param">threads=16</em>, <em class="sig-param">num_samples=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyronear/datasets/openfire.html#OpenFire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyronear.datasets.OpenFire" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyronear.datasets.</code><code class="sig-name descname">OpenFire</code><span class="sig-paren">(</span><em class="sig-param">root</em>, <em class="sig-param">train=True</em>, <em class="sig-param">download=False</em>, <em class="sig-param">threads=None</em>, <em class="sig-param">num_samples=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyronear/datasets/openfire.html#OpenFire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyronear.datasets.OpenFire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wildfire image Dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>root</strong> (<em>string</em>) – Root directory of dataset where <code class="docutils literal notranslate"><span class="pre">OpenFire/processed/training.pt</span></code>
-and  <code class="docutils literal notranslate"><span class="pre">OpenFire/processed/test.pt</span></code> exist.</p></li>
-<li><p><strong>train</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, creates dataset from <code class="docutils literal notranslate"><span class="pre">training.pt</span></code>,
-otherwise from <code class="docutils literal notranslate"><span class="pre">test.pt</span></code>.</p></li>
-<li><p><strong>transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function/transform that  takes in an PIL image
-and returns a transformed version. E.g, <code class="docutils literal notranslate"><span class="pre">transforms.RandomCrop</span></code></p></li>
-<li><p><strong>target_transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A function/transform that takes in the
-target and transforms it.</p></li>
+<li><p><strong>root</strong> (<em>string</em>) – Root directory of dataset where the <code class="docutils literal notranslate"><span class="pre">images</span></code>
+and  <code class="docutils literal notranslate"><span class="pre">annotations</span></code> folders exist.</p></li>
+<li><p><strong>train</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, returns training subset, else test set.</p></li>
 <li><p><strong>download</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, downloads the dataset from the internet and
 puts it in root directory. If dataset is already downloaded, it is not
 downloaded again.</p></li>
 <li><p><strong>threads</strong> (<em>int</em><em>, </em><em>optional</em>) – If download is set to True, use this amount of threads
 for downloading the dataset.</p></li>
 <li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to download (all by default)</p></li>
+<li><p><strong>**kwargs</strong> – optional arguments of torchvision.datasets.VisionDataset</p></li>
 </ul>
 </dd>
 </dl>
