@@ -157,8 +157,8 @@ class OpenFire(VisionDataset):
 
         valid_samples = []
         dl_issues, target_issues = 0, 0
-        # Verify downloads
-        for idx, sample in enumerate(extract):
+        # Verify samples in extract
+        for sample in extract:
 
             is_ok = True
             # Verify image
