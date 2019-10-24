@@ -18,8 +18,8 @@ class OpenFire(VisionDataset):
     """Wildfire image Dataset.
 
     Args:
-        root (string): Root directory of dataset where ``OpenFire/processed/training.pt``
-            and  ``OpenFire/processed/test.pt`` exist.
+        root (string): Root directory of dataset where the ``images``
+            and  ``annotations`` folders exist.
         train (bool, optional): If True, returns training subset, else test set.
         download (bool, optional): If true, downloads the dataset from the internet and
             puts it in root directory. If dataset is already downloaded, it is not
