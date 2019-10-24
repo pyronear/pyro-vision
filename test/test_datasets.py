@@ -14,7 +14,7 @@ class DatasetsTester(unittest.TestCase):
         # Valid input
         url = 'https://arxiv.org/pdf/1910.02940.pdf'
 
-        with Path(tempfile.TemporaryDirectory().name) as root:
+        with tempfile.TemporaryDirectory() as root:
             # URL error cases
             self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url,
                               'url', root, verbose=False)
@@ -34,7 +34,7 @@ class DatasetsTester(unittest.TestCase):
         urls = ['https://arxiv.org/pdf/1910.01108.pdf', 'https://arxiv.org/pdf/1810.04805.pdf',
                 'https://arxiv.org/pdf/1905.11946.pdf', 'https://arxiv.org/pdf/1910.01271.pdf']
 
-        with Path(tempfile.TemporaryDirectory().name) as root:
+        with tempfile.TemporaryDirectory() as root:
             # URL error cases
             self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls,
                               ['url'] * 4, root, silent=False)
@@ -49,7 +49,7 @@ class DatasetsTester(unittest.TestCase):
     def test_openfire(self):
         num_samples = 200
 
-        with Path(tempfile.TemporaryDirectory().name) as root:
+        with tempfile.TemporaryDirectory() as root:
 
             # Working case
             train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples)
@@ -65,7 +65,7 @@ class DatasetsTester(unittest.TestCase):
 
             # Check against number of samples in extract (limit to num_samples)
             datasets.utils.download_url(train_set.url, root, filename='extract.json', verbose=False)
-            with open(root.joinpath('extract.json'), 'rb') as f:
+            with open(Path(root).joinpath('extract.json'), 'rb') as f:
                 extract = json.load(f)[:num_samples]
             # Uncomment when download issues are resolved
             # self.assertEqual(len(train_set) + len(test_set), len(extract))
