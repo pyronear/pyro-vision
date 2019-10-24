@@ -58,9 +58,9 @@ class DatasetsTester(unittest.TestCase):
             self.assertIsInstance(train_set, VisionDataset)
 
             # Assert valid extensions of every image
-            self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
+            self.assertTrue(all(sample['name'].rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
                                 for sample in train_set.data))
-            self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
+            self.assertTrue(all(sample['name'].rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
                                 for sample in test_set.data))
 
             # Check against number of samples in extract (limit to num_samples)
@@ -79,8 +79,8 @@ class DatasetsTester(unittest.TestCase):
             # Check train/test split
             self.assertIsInstance(train_set, VisionDataset)
             # Check unicity of sample across all splits
-            train_paths = [sample['path'] for sample in train_set.data]
-            self.assertTrue(all(sample['path'] not in train_paths for sample in test_set.data))
+            train_paths = [sample['name'] for sample in train_set.data]
+            self.assertTrue(all(sample['name'] not in train_paths for sample in test_set.data))
 
 
 if __name__ == '__main__':
