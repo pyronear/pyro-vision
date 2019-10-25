@@ -11,9 +11,8 @@ class NNTester(unittest.TestCase):
         for numel in (2,):
             for pool_type in ('Concat',):
                 cls_name = 'Adaptive{}Pool{}d'.format(pool_type, numel)
-                module_cls = getattr(nn, cls_name)
                 output_size = (2,) * numel
-                module = module_cls(output_size)
+                module = nn.__dict__[cls_name](output_size)
 
                 x = torch.randn(output_size)
                 self.assertRaises(ValueError, lambda: module(x))
@@ -22,9 +21,8 @@ class NNTester(unittest.TestCase):
         for numel in (2,):
             for pool_type in ('Concat',):
                 cls_name = 'Adaptive{}Pool{}d'.format(pool_type, numel)
-                module_cls = getattr(nn, cls_name)
                 output_size = (2,) * (numel - 1) + (None,)
-                module = module_cls(output_size)
+                module = nn.__dict__[cls_name](output_size)
 
                 x = torch.randn((4,) * (numel + 1))
                 output = module(x)
