@@ -15,6 +15,7 @@ from torchvision import transforms
 from fastprogress import master_bar, progress_bar
 
 from pyronear.datasets import OpenFire
+from pyronear import models
 
 # Disable warnings about RGBA images (discard transparency information)
 import warnings
@@ -188,22 +189,18 @@ def main(args):
                                               num_workers=args.workers, pin_memory=True)
 
     # Model definition
-    model = torchvision.models.__dict__[args.model](pretrained=args.pretrained)
-
-    # Change fc
-    in_features = getattr(model, 'fc').in_features
-    setattr(model, 'fc', nn.Linear(in_features, num_classes))
-
-    # Resume
-    if args.resume:
-        model.load_state_dict(torch.load(args.resume)['model'])
+    model = models.__dict__[args.model](imagenet_pretrained=args.pretrained,
+                                        num_classes=num_classes)
 
     # Freeze layers
     if not args.unfreeze:
         # Model is sequential
-        for n, p in model.named_parameters():
-            if not n.startswith('fc'):
-                p.requires_grad = False
+        for p in model[1].parameters():
+            p.requires_grad = False
+
+    # Resume
+    if args.resume:
+        model.load_state_dict(torch.load(args.resume)['model'])
 
     # Send to device
     model.to(args.device)
@@ -258,7 +255,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyroNear Classification Training')
     parser.add_argument('--data-path', default='./data', help='dataset')
-    parser.add_argument('--model', default='resnet18', help='model')
+    parser.add_argument('--model', default='resnet18', type=str, help='model')
     parser.add_argument('--device', default=None, help='device')
     parser.add_argument('-b', '--batch-size', default=32, type=int)
     parser.add_argument('-s', '--resize', default=224, type=int)
