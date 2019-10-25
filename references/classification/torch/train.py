@@ -161,6 +161,7 @@ def main(args):
 
     data_transforms = transforms.Compose([
         transforms.RandomResizedCrop((args.resize, args.resize)),
+        transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1, hue=0.1),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
         transforms.ToTensor(),
