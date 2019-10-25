@@ -98,7 +98,7 @@ def create_body(model, cut):
 
 
 def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=None,
-              dropout_prob=0.5, custom_head=None, bn_final=False, concat_pool=None):
+              dropout_prob=0.5, custom_head=None, bn_final=False, concat_pool=True):
     """Create a model with standard high-level structure as a torch.nn.Sequential
 
     Args:

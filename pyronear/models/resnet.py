@@ -49,7 +49,7 @@ def _resnet(arch, block, layers, pretrained=False, progress=True,
 
     # Cut at last conv layers
     model = cnn_model(base_model, cut=-2, nb_features=base_model.fc.in_features,
-                      num_classes=num_classes)
+                      num_classes=num_classes, concat_pool=True, bn_final=False)
 
     # Parameter loading
     if pretrained:
