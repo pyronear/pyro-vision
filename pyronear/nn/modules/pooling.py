@@ -4,7 +4,6 @@
 # Based on https://github.com/fastai/fastai/blob/master/fastai/layers.py
 
 
-import torch
 import torch.nn as nn
 from .. import functional as F
 
@@ -39,9 +38,8 @@ class AdaptiveConcatPool2d(nn.Module):
         super(AdaptiveConcatPool2d, self).__init__()
         self.output_size = output_size
 
-    def forward(self, input):
-        # return torch.cat([self.mp(input), self.ap(input)], 1)
-        return F.adaptive_concat_pool2d(input, self.output_size)
+    def forward(self, x):
+        return F.adaptive_concat_pool2d(x, self.output_size)
 
     def extra_repr(self):
         return 'output_size={}'.format(self.output_size)

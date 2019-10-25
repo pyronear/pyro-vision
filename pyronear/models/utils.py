@@ -3,8 +3,7 @@
 
 # Based on https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
 
-import torch
-import numpy as np
+
 import torch.nn as nn
 from ..nn import AdaptiveConcatPool2d
 

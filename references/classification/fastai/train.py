@@ -21,9 +21,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="torch.nn.functio
 
 class CustomBCELogitsLoss(nn.BCEWithLogitsLoss):
 
-    def forward(self, input, target):
+    def forward(self, x, target):
         # Reshape output tensor for BCELoss
-        return super(CustomBCELogitsLoss, self).forward(input, target.view(-1, 1))
+        return super(CustomBCELogitsLoss, self).forward(x, target.view(-1, 1))
 
 
 def main(args):

@@ -10,7 +10,6 @@ import torch
 import torch.utils.data
 from torch import nn
 from torch import optim
-import torchvision
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
 
