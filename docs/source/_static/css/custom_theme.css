@@ -25,6 +25,10 @@ body {
 	background-color: #f3f4f7;
 }
 
+.wy-nav-content {
+    max-width: 900px;
+}
+
 .wy-nav-content-wrap, .wy-menu li.current > a  {
     background-color: #fff;
 }
