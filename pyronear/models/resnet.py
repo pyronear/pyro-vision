@@ -9,8 +9,11 @@ from .utils import cnn_model
 
 model_urls = {
     'resnet18': 'https://srv-file7.gofile.io/download/rG1vDJ/resnet18-binary-classification.pth',
-    'resnet34': 'https://srv-file7.gofile.io/download/W3gb2q/resnet34-binary-classification.pth'
+    'resnet34': 'https://srv-file7.gofile.io/download/W3gb2q/resnet34-binary-classification.pth',
+    'resnet50': 'https://srv-file4.gofile.io/download/R8xBvE/resnet50-binary-classification.pth'
 }
+
+model_cut = -2
 
 
 def _resnet(arch, block, layers, pretrained=False, progress=True,
@@ -48,7 +51,7 @@ def _resnet(arch, block, layers, pretrained=False, progress=True,
             raise KeyError(f"Missing parameters: {missing}\nUnexpected parameters: {unexpected}")
 
     # Cut at last conv layers
-    model = cnn_model(base_model, cut=-2, nb_features=base_model.fc.in_features,
+    model = cnn_model(base_model, cut=model_cut, nb_features=base_model.fc.in_features,
                       num_classes=num_classes, concat_pool=True, bn_final=False)
 
     # Parameter loading
