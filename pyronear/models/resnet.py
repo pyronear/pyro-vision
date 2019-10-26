@@ -147,6 +147,7 @@ def wide_resnet50_2(*args, **kwargs):
     which is twice larger in every block. The number of channels in outer 1x1
     convolutions is the same, e.g. last block in ResNet-50 has 2048-512-2048
     channels, and in Wide ResNet-50-2 has 2048-1024-2048.
+
     Args:
         **kwargs: optional arguments of _resnet
     """
@@ -161,6 +162,7 @@ def wide_resnet101_2(*args, **kwargs):
     which is twice larger in every block. The number of channels in outer 1x1
     convolutions is the same, e.g. last block in ResNet-50 has 2048-512-2048
     channels, and in Wide ResNet-50-2 has 2048-1024-2048.
+
     Args:
         **kwargs: optional arguments of _resnet
     """
