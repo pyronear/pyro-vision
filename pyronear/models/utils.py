@@ -19,15 +19,13 @@ def init_module(m, init=nn.init.kaiming_normal_):
         init (callable, optional): inplace initializer function
     """
 
-    for n, p in m.named_parameters():
-        # Check if parameter is learnable
-        if p.requires_grad:
-            # Apply init to weights
-            if n == 'weight':
-                init(p)
-            # Set biases to 0.
-            elif (n == 'bias') and hasattr(p, 'data'):
-                p.data.fill_(0.)
+    # Apply init to learnable weights
+    if hasattr(m, 'weight') and m.weight.requires_grad:
+        init(m.weight)
+
+    # Set learnable biases to 0.
+    if hasattr(m, 'bias') and m.bias.requires_grad and hasattr(m.bias, 'data'):
+        m.bias.data.fill_(0.)
 
 
 class Flatten(nn.Module):
