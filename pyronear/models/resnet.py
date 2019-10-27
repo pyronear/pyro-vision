@@ -20,7 +20,8 @@ model_cut = -2
 
 
 def _resnet(arch, block, layers, pretrained=False, progress=True,
-            imagenet_pretrained=False, num_classes=1, **kwargs):
+            imagenet_pretrained=False, num_classes=1, lin_features=None,
+            dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
     r"""Instantiate a ResNet model for image classification from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
 
@@ -32,6 +33,10 @@ def _resnet(arch, block, layers, pretrained=False, progress=True,
         progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters
         imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
         num_classes (int, optional): number of output classes
+        lin_features (list<int>, optional): number of nodes in intermediate layers of model's head
+        dropout_prob (float, optional): dropout probability of head FC layers
+        bn_final (bool, optional): should a batch norm be added after the last layer
+        concat_pool (bool, optional): should pooling be replaced by AdaptiveConcatPool2d
         **kwargs: optional arguments of torchvision.models.resnet.ResNet
 
     Returns:
@@ -54,8 +59,8 @@ def _resnet(arch, block, layers, pretrained=False, progress=True,
             raise KeyError(f"Missing parameters: {missing}\nUnexpected parameters: {unexpected}")
 
     # Cut at last conv layers
-    model = cnn_model(base_model, cut=model_cut, nb_features=base_model.fc.in_features,
-                      num_classes=num_classes)
+    model = cnn_model(base_model, model_cut, base_model.fc.in_features, num_classes,
+                      lin_features, dropout_prob, bn_final=bn_final, concat_pool=concat_pool)
 
     # Parameter loading
     if pretrained:
