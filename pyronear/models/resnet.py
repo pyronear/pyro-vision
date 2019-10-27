@@ -11,9 +11,7 @@ __all__ = ['resnet18', 'resnet34', 'resnet50', 'resnet101',
            'wide_resnet50_2', 'wide_resnet101_2']
 
 model_urls = {
-    'resnet18': 'https://srv-file7.gofile.io/download/rG1vDJ/resnet18-binary-classification.pth',
-    'resnet34': 'https://srv-file7.gofile.io/download/W3gb2q/resnet34-binary-classification.pth',
-    'resnet50': 'https://srv-file4.gofile.io/download/R8xBvE/resnet50-binary-classification.pth'
+    'resnet18': 'https://srv-file6.gofile.io/download/5WANbz/resnet18-binary-classification.pth',
 }
 
 model_cut = -2
