@@ -2,10 +2,32 @@
 # -*- coding: utf-8 -*-
 
 # Based on https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py
+# and https://github.com/fastai/fastai/blob/master/fastai/torch_core.py
 
 
 import torch.nn as nn
 from ..nn import AdaptiveConcatPool2d
+
+bn_types = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)
+
+
+def init_module(m, init=nn.init.kaiming_normal_):
+    """Initialize learnable parameters of a given module
+
+    Args:
+        m (torch.nn.Module): module to initialize
+        init (callable, optional): inplace initializer function
+    """
+
+    for n, p in m.named_parameters():
+        # Check if parameter is learnable
+        if p.requires_grad:
+            # Apply init to weights
+            if n == 'weight':
+                init(p)
+            # Set biases to 0.
+            elif (n == 'bias') and hasattr(p, 'data'):
+                p.data.fill_(0.)
 
 
 class Flatten(nn.Module):
@@ -98,7 +120,8 @@ def create_body(model, cut):
 
 
 def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=None,
-              dropout_prob=0.5, custom_head=None, bn_final=False, concat_pool=True):
+              dropout_prob=0.5, custom_head=None, bn_final=False, concat_pool=True,
+              init=nn.init.kaiming_normal_):
     """Create a model with standard high-level structure as a torch.nn.Sequential
 
     Args:
@@ -111,6 +134,7 @@ def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=
         custom_head (torch.nn.Module, optional): replacement for model's head
         bn_final (bool, optional): should a batch norm be added after the last layer
         concat_pool (bool, optional): should pooling be replaced by AdaptiveConcatPool2d
+        init (callable, optional): initializer to use for model's head
     Returns:
         torch.nn.Module: instantiated model
     """
@@ -123,5 +147,11 @@ def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=
         head = create_head(nb_features, num_classes, lin_features, dropout_prob, bn_final, concat_pool)
     else:
         head = custom_head
+
+    # Init all non-BN layers
+    if init:
+        for m in head:
+            if (not isinstance(m, bn_types)):
+                init_module(m, init)
 
     return nn.Sequential(body, head)
