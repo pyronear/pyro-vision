@@ -19,11 +19,16 @@ def get_available_classification_models():
 class ModelsTester(unittest.TestCase):
 
     def _test_classification_model(self, name, input_shape):
-        # passing num_class equal to a number other than 1000 helps in making the test
+        # passing num_class equal to a number other than default helps in making the test
         # more enforcing in nature
         set_rng_seed(0)
+        num_classes = 50
+
+        # Pretrained parameters
         self.assertRaises(ValueError, models.__dict__[name], pretrained=True, imagenet_pretrained=True)
-        model = models.__dict__[name](num_classes=50)
+
+        # Default case
+        model = models.__dict__[name](num_classes=num_classes)
         model.eval()
         x = torch.rand(input_shape)
         with torch.no_grad():
