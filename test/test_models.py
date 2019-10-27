@@ -49,7 +49,6 @@ class ModelsTester(unittest.TestCase):
         # No specified input features or number of classes
         self.assertRaises(ValueError, models.utils.cnn_model, model, -1)
 
-
     def _test_classification_model(self, name, input_shape):
         # passing num_class equal to a number other than default helps in making the test
         # more enforcing in nature
