@@ -9,7 +9,9 @@ from .utils import cnn_model
 __all__ = ['densenet121', 'densenet169', 'densenet201', 'densenet161']
 
 
-model_urls = {}
+model_urls = {
+    'densenet121': 'https://srv-file7.gofile.io/download/XqHLBB/densenet121-binary-classification.pth'
+}
 
 model_cut = -1
 
