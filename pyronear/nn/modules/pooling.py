@@ -13,11 +13,13 @@ class AdaptiveConcatPool2d(nn.Module):
     signal composed of several input planes and concatenates them.
     The output is of size H x W, for any input size.
     The number of output features is equal to twice the number of input planes.
+
     Args:
-        output_size: the target output size of the image of the form H x W.
-                     Can be a tuple (H, W) or a single H for a square image H x H.
-                     H and W can be either a ``int``, or ``None`` which means the size will
-                     be the same as that of the input.
+        output_size (Union[int, tuple<int>]): the target output size of the image of the form H x W.
+            Can be a tuple (H, W) or a single H for a square image H x H.
+            H and W can be either a ``int``, or ``None`` which means the size will
+            be the same as that of the input.
+
     Examples:
         >>> # target output size of 5x7
         >>> m = nn.AdaptiveConcatPool2d((5,7))
