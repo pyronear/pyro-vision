@@ -59,14 +59,14 @@ def head_stack(in_features, out_features, bn=True, p=0., actn=None):
     return layers
 
 
-def create_head(in_features, num_classes, lin_features=None, dropout_prob=0.5,
+def create_head(in_features, num_classes, lin_features=512, dropout_prob=0.5,
                 bn_final=False, concat_pool=True):
     """Instantiate a classifier head
 
     Args:
         in_features (int): number of input features
         num_classes (int): number of output classes
-        lin_features (list<int>, optional): number of nodes in intermediate layers
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers
         dropout_prob (float, optional): dropout probability
         bn_final (bool, optional): should a batch norm be added after the last layer
         concat_pool (bool, optional): should pooling be replaced by AdaptiveConcatPool2d
@@ -81,10 +81,12 @@ def create_head(in_features, num_classes, lin_features=None, dropout_prob=0.5,
         pool = nn.AdaptiveAvgPool2d((1, 1))
 
     # Nodes' layout
-    if isinstance(lin_features, list):
+    if isinstance(lin_features, int):
+        lin_features = [in_features, lin_features, num_classes]
+    elif isinstance(lin_features, list):
         lin_features = [in_features] + lin_features + [num_classes]
     else:
-        lin_features = [in_features, 512, num_classes]
+        raise TypeError('expected argument lin_features to be of type int or list.')
 
     # Add half dropout probabilities for penultimate FC
     dropout_prob = [dropout_prob]
@@ -117,7 +119,7 @@ def create_body(model, cut):
     return nn.Sequential(*list(model.children())[:cut])
 
 
-def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=None,
+def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=512,
               dropout_prob=0.5, custom_head=None, bn_final=False, concat_pool=True,
               init=nn.init.kaiming_normal_):
     """Create a model with standard high-level structure as a torch.nn.Sequential
@@ -127,7 +129,7 @@ def cnn_model(base_model, cut, nb_features=None, num_classes=None, lin_features=
         cut (int): index of the first non-convolutional layer
         nb_features (int): number of convolutional features
         num_classes (int): number of output classes
-        lin_features (list<int>, optional): number of nodes in intermediate layers
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers
         dropout_prob (float, optional): dropout probability
         custom_head (torch.nn.Module, optional): replacement for model's head
         bn_final (bool, optional): should a batch norm be added after the last layer

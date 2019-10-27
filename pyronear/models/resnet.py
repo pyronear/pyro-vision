@@ -33,7 +33,7 @@ def _resnet(arch, block, layers, pretrained=False, progress=True,
         progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters
         imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
         num_classes (int, optional): number of output classes
-        lin_features (list<int>, optional): number of nodes in intermediate layers of model's head
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
         dropout_prob (float, optional): dropout probability of head FC layers
         bn_final (bool, optional): should a batch norm be added after the last layer
         concat_pool (bool, optional): should pooling be replaced by AdaptiveConcatPool2d
