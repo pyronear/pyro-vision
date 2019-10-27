@@ -69,7 +69,7 @@ def _densenet(arch, growth_rate, block_config, num_init_features, pretrained=Fal
 
     # Cut at last conv layers
     model = cnn_model(base_model, cut=model_cut, nb_features=base_model.classifier.in_features,
-                      num_classes=num_classes, concat_pool=True, bn_final=False)
+                      num_classes=num_classes)
 
     # Parameter loading
     if pretrained:

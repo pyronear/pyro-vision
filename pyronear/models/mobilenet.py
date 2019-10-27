@@ -46,7 +46,7 @@ def mobilenet_v2(pretrained=False, progress=True, imagenet_pretrained=False,
 
     # Cut at last conv layers
     model = cnn_model(base_model, cut=model_cut, nb_features=base_model.classifier[1].in_features,
-                      num_classes=num_classes, concat_pool=True, bn_final=False)
+                      num_classes=num_classes)
 
     # Parameter loading
     if pretrained:
