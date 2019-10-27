@@ -18,6 +18,38 @@ def get_available_classification_models():
 
 class ModelsTester(unittest.TestCase):
 
+    def test_create_head(self):
+
+        # Test parameters
+        in_features = 512
+        num_classes = 50
+        args_to_test = {'lin_features': [None, [256]],
+                        'bn_final': [False, True],
+                        'concat_pool': [False, True]}
+
+        # Valid input
+        input_tensor = torch.rand((512, 7, 7))
+
+        # Test optional arguments
+        for arg, vals in args_to_test.items():
+            for val in vals:
+                kwargs = {arg: val}
+                head = models.utils.create_head(in_features, num_classes, **kwargs).eval()
+                with torch.no_grad():
+                    self.assertEqual(head(input_tensor.unsqueeze(0)).size(1), num_classes)
+
+    def test_cnn_model(self):
+
+        # Test parameters
+        num_classes = 50
+
+        # Valid input
+        model = models.__dict__['mobilenet_v2'](num_classes=num_classes)
+
+        # No specified input features or number of classes
+        self.assertRaises(ValueError, models.utils.cnn_model, model, -1)
+
+
     def _test_classification_model(self, name, input_shape):
         # passing num_class equal to a number other than default helps in making the test
         # more enforcing in nature
