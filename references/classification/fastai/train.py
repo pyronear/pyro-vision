@@ -16,7 +16,6 @@ from fastai import vision
 from fastai.data_block import CategoryList, FloatList
 from fastai.basic_train import Learner
 from fastai.vision.learner import model_meta, _default_meta
-from fastai.torch_core import apply_init
 
 from pyronear.datasets import OpenFire
 from pyronear import models
