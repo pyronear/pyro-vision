@@ -22,6 +22,7 @@ class ModelsTester(unittest.TestCase):
         # passing num_class equal to a number other than 1000 helps in making the test
         # more enforcing in nature
         set_rng_seed(0)
+        self.assertRaises(ValueError, models.__dict__[name], pretrained=True, imagenet_pretrained=True)
         model = models.__dict__[name](num_classes=50)
         model.eval()
         x = torch.rand(input_shape)
