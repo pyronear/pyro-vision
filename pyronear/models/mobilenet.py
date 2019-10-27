@@ -8,7 +8,9 @@ from .utils import cnn_model
 __all__ = ['mobilenet_v2']
 
 
-model_urls = {}
+model_urls = {
+    'mobilenet_v2': 'https://srv-file7.gofile.io/download/RKagNy/mobilenet_v2-binary-classification.pth'
+}
 
 model_cut = -1
 
