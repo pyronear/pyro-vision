@@ -23,12 +23,15 @@ class ModelsTester(unittest.TestCase):
         # Test parameters
         in_features = 512
         num_classes = 50
-        args_to_test = {'lin_features': [None, [256]],
+        args_to_test = {'lin_features': [256, [256]],
                         'bn_final': [False, True],
                         'concat_pool': [False, True]}
 
         # Valid input
         input_tensor = torch.rand((512, 7, 7))
+
+        # Invalid lin_features
+        self.assertRaises(TypeError, models.utils.create_head, in_features, num_classes, lin_features=None)
 
         # Test optional arguments
         for arg, vals in args_to_test.items():
