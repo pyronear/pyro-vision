@@ -16,9 +16,9 @@ model_cut = -1
 
 
 def mobilenet_v2(pretrained=False, progress=True, imagenet_pretrained=False,
-                 num_classes=1, lin_features=None, dropout_prob=0.5,
+                 num_classes=1, lin_features=512, dropout_prob=0.5,
                  bn_final=False, concat_pool=True, **kwargs):
-    r"""Constructs a MobileNetV2 architecture from
+    r"""MobileNetV2 model from
     `"MobileNetV2: Inverted Residuals and Linear Bottlenecks" <https://arxiv.org/abs/1801.04381>`_.
 
     Args:
@@ -26,14 +26,11 @@ def mobilenet_v2(pretrained=False, progress=True, imagenet_pretrained=False,
         progress (bool): If True, displays a progress bar of the download to stderr
         imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
         num_classes (int, optional): number of output classes
-        lin_features (list<int>, optional): number of nodes in intermediate layers of model's head
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
         dropout_prob (float, optional): dropout probability of head FC layers
         bn_final (bool, optional): should a batch norm be added after the last layer
-        concat_pool (bool, optional): should pooling be replaced by AdaptiveConcatPool2d
-        **kwargs: optional arguments of torchvision.models.mobilenet.MobileNetV2
-
-    Returns:
-        model (torch.nn.Module): loaded model
+        concat_pool (bool, optional): should pooling be replaced by :mod:`pyronear.nn.AdaptiveConcatPool2d`
+        **kwargs: optional arguments of :mod:`torchvision.models.mobilenet.MobileNetV2`
     """
 
     # Model creation

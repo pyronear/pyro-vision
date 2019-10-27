@@ -36,27 +36,6 @@ def _update_state_dict(state_dict):
 def _densenet(arch, growth_rate, block_config, num_init_features, pretrained=False,
               progress=True, imagenet_pretrained=False, num_classes=1, lin_features=512,
               dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
-    r"""Instantiate a DenseNet model for image classification from
-    `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>
-
-    Args:
-        arch (str): densenet architecture
-        growth_rate (int): growth rate of each dense block
-        block_config (list<int>): number of blocks in each layer
-        num_init_features (int): number of output channels in the first convolution
-        pretrained (bool, optional): should pretrained parameters be loaded (OpenFire training)
-        progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters
-        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
-        num_classes (int, optional): number of output classes
-        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
-        dropout_prob (float, optional): dropout probability of head FC layers
-        bn_final (bool, optional): should a batch norm be added after the last layer
-        concat_pool (bool, optional): should pooling be replaced by AdaptiveConcatPool2d
-        **kwargs: optional arguments of torchvision.models.densenet.DenseNet
-
-    Returns:
-        model (torch.nn.Module): loaded model
-    """
 
     # Model creation
     base_model = DenseNet(growth_rate, block_config, num_init_features, num_classes=num_classes, **kwargs)
@@ -87,53 +66,85 @@ def _densenet(arch, growth_rate, block_config, num_init_features, pretrained=Fal
     return model
 
 
-def densenet121(*args, **kwargs):
+def densenet121(pretrained=False, progress=True, imagenet_pretrained=False, num_classes=1,
+                lin_features=512, dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
     r"""Densenet-121 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
-        memory_efficient (bool) - If True, uses checkpointing. Much more memory efficient,
-          but slower. Default: *False*. See `"paper" <https://arxiv.org/pdf/1707.06990.pdf>`_
+        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
+        num_classes (int, optional): number of output classes
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
+        dropout_prob (float, optional): dropout probability of head FC layers
+        bn_final (bool, optional): should a batch norm be added after the last layer
+        concat_pool (bool, optional): should pooling be replaced by :mod:`pyronear.nn.AdaptiveConcatPool2d`
+        **kwargs: optional arguments of :mod:`torchvision.models.densenet.DenseNet`
     """
-    return _densenet('densenet121', 32, (6, 12, 24, 16), 64, *args, **kwargs)
+    return _densenet('densenet121', 32, (6, 12, 24, 16), 64, pretrained, progress,
+                     imagenet_pretrained, num_classes, lin_features, dropout_prob,
+                     bn_final, concat_pool, **kwargs)
 
 
-def densenet161(*args, **kwargs):
+def densenet161(pretrained=False, progress=True, imagenet_pretrained=False, num_classes=1,
+                lin_features=512, dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
     r"""Densenet-161 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
-        memory_efficient (bool) - If True, uses checkpointing. Much more memory efficient,
-          but slower. Default: *False*. See `"paper" <https://arxiv.org/pdf/1707.06990.pdf>`_
+        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
+        num_classes (int, optional): number of output classes
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
+        dropout_prob (float, optional): dropout probability of head FC layers
+        bn_final (bool, optional): should a batch norm be added after the last layer
+        concat_pool (bool, optional): should pooling be replaced by :mod:`pyronear.nn.AdaptiveConcatPool2d`
+        **kwargs: optional arguments of :mod:`torchvision.models.densenet.DenseNet`
     """
-    return _densenet('densenet161', 48, (6, 12, 36, 24), 96, *args, **kwargs)
+    return _densenet('densenet161', 48, (6, 12, 36, 24), 96, pretrained, progress,
+                     imagenet_pretrained, num_classes, lin_features, dropout_prob,
+                     bn_final, concat_pool, **kwargs)
 
 
-def densenet169(*args, **kwargs):
+def densenet169(pretrained=False, progress=True, imagenet_pretrained=False, num_classes=1,
+                lin_features=512, dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
     r"""Densenet-169 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
-        memory_efficient (bool) - If True, uses checkpointing. Much more memory efficient,
-          but slower. Default: *False*. See `"paper" <https://arxiv.org/pdf/1707.06990.pdf>`_
+        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
+        num_classes (int, optional): number of output classes
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
+        dropout_prob (float, optional): dropout probability of head FC layers
+        bn_final (bool, optional): should a batch norm be added after the last layer
+        concat_pool (bool, optional): should pooling be replaced by :mod:`pyronear.nn.AdaptiveConcatPool2d`
+        **kwargs: optional arguments of :mod:`torchvision.models.densenet.DenseNet`
     """
-    return _densenet('densenet169', 32, (6, 12, 32, 32), 64, *args, **kwargs)
+    return _densenet('densenet169', 32, (6, 12, 32, 32), 64, pretrained, progress,
+                     imagenet_pretrained, num_classes, lin_features, dropout_prob,
+                     bn_final, concat_pool, **kwargs)
 
 
-def densenet201(*args, **kwargs):
+def densenet201(pretrained=False, progress=True, imagenet_pretrained=False, num_classes=1,
+                lin_features=512, dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
     r"""Densenet-201 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
-        memory_efficient (bool) - If True, uses checkpointing. Much more memory efficient,
-          but slower. Default: *False*. See `"paper" <https://arxiv.org/pdf/1707.06990.pdf>`_
+        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)
+        num_classes (int, optional): number of output classes
+        lin_features (Union[int, list<int>], optional): number of nodes in intermediate layers of model's head
+        dropout_prob (float, optional): dropout probability of head FC layers
+        bn_final (bool, optional): should a batch norm be added after the last layer
+        concat_pool (bool, optional): should pooling be replaced by :mod:`pyronear.nn.AdaptiveConcatPool2d`
+        **kwargs: optional arguments of :mod:`torchvision.models.densenet.DenseNet`
     """
-    return _densenet('densenet201', 32, (6, 12, 48, 32), 64, *args, **kwargs)
+    return _densenet('densenet201', 32, (6, 12, 48, 32), 64, pretrained, progress,
+                     imagenet_pretrained, num_classes, lin_features, dropout_prob,
+                     bn_final, concat_pool, **kwargs)
