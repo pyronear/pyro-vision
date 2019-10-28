@@ -11,6 +11,8 @@
   		<img src="https://codecov.io/gh/frgfm/PyroNear/branch/master/graph/badge.svg" /></a>
     <a href="https://frgfm.github.io/PyroNear">
   		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
+    <a href="https://pypi.org/project/pyronear/" alt="Pypi">
+        <img src="https://img.shields.io/badge/pypi-v0.1.0-blue.svg" /></a>
 </p>
 
 
