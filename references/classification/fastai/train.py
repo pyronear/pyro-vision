@@ -121,48 +121,53 @@ def main(args):
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='PyroNear Classification Training with Fastai')
+    parser = argparse.ArgumentParser(description='PyroNear Classification Training with Fastai',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # Input / Output
-    parser.add_argument('--data-path', default='./data', help='dataset')
+    parser.add_argument('--data-path', default='./data', help='dataset root folder')
     parser.add_argument('--checkpoint', default='checkpoint', type=str, help='name of output file')
-    parser.add_argument('--resume', default=None, help='checkpoint name to resume from (default: None)')
+    parser.add_argument('--resume', default=None, help='checkpoint name to resume from')
     # Architecture
-    parser.add_argument('--model', default='resnet18', type=str, help='model')
+    parser.add_argument('--model', default='resnet18', type=str, help='model architecture')
     parser.add_argument("--concat-pool", dest="concat_pool",
-                        help="Replaces AdaptiveAvgPool2d with AdaptiveConcatPool2d",
+                        help="replaces AdaptiveAvgPool2d with AdaptiveConcatPool2d",
                         action="store_true")
-    parser.add_argument('--lin-feats', default=512, type=int, help='Number of nodes in intermediate head layers')
+    parser.add_argument('--lin-feats', default=512, type=int,
+                        help='number of nodes in intermediate head layers')
     parser.add_argument("--bn-final", dest="bn_final",
-                        help="Adds a batch norm layer after last FC",
+                        help="adds a batch norm layer after last FC",
                         action="store_true")
     parser.add_argument('--dropout-prob', default=0.5, type=float, help='dropout rate of last FC layer')
-    parser.add_argument("--binary", dest="binary", help="Should the task be considered as binary Classification",
+    parser.add_argument("--binary", dest="binary",
+                        help="should the task be considered as binary Classification",
                         action="store_true")
     parser.add_argument("--pretrained", dest="pretrained",
-                        help="Use pre-trained models from the modelzoo",
+                        help="use ImageNet pre-trained parameters",
                         action="store_true")
     # Device
-    parser.add_argument('--device', default='cuda', help='device')
+    parser.add_argument('--device', default=None, help='device')
     parser.add_argument("--deterministic", dest="deterministic",
-                        help="Should the training be performed in deterministic mode",
+                        help="should the training be performed in deterministic mode",
                         action="store_true")
     # Loader
-    parser.add_argument('-b', '--batch-size', default=32, type=int)
-    parser.add_argument('-s', '--resize', default=224, type=int)
+    parser.add_argument('-b', '--batch-size', default=32, type=int, help='batch size')
+    parser.add_argument('-s', '--resize', default=224, type=int, help='image size after resizing')
     parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
-                        help='number of data loading workers (default: 16)')
+                        help='number of data loading workers')
     # Optimizer
-    parser.add_argument('--lr', default=3e-3, type=float, help='initial learning rate')
+    parser.add_argument('--lr', default=3e-3, type=float, help='maximum learning rate')
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run')
     parser.add_argument('--wd', '--weight-decay', default=1e-2, type=float,
-                        metavar='W', help='weight decay (default: 1e-2)',
+                        metavar='W', help='weight decay',
                         dest='weight_decay')
-    parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
+    parser.add_argument("--unfreeze", dest="unfreeze", help="should all layers be unfrozen",
                         action="store_true")
     # Scheduler
-    parser.add_argument('--div-factor', default=25., type=float, help='div factor of OneCycle policy')
-    parser.add_argument('--final-div-factor', default=1e4, type=float, help='final div factor of OneCycle policy')
+    parser.add_argument('--div-factor', default=25., type=float,
+                        help='div factor of OneCycle policy')
+    parser.add_argument('--final-div-factor', default=1e4, type=float,
+                        help='final div factor of OneCycle policy')
     args = parser.parse_args()
 
     main(args)
