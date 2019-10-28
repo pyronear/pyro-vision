@@ -11,7 +11,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 
-version = '0.1.0rc2'
+version = '0.2.0a0'
 sha = 'Unknown'
 package_name = 'pyronear'
 
