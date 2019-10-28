@@ -10,6 +10,7 @@ for wildfire detection tasks.
 
    datasets
    models
+   nn
    utils
 
 

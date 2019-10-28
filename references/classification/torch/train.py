@@ -10,11 +10,11 @@ import torch
 import torch.utils.data
 from torch import nn
 from torch import optim
-import torchvision
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
 
 from pyronear.datasets import OpenFire
+from pyronear import models
 
 # Disable warnings about RGBA images (discard transparency information)
 import warnings
@@ -160,6 +160,7 @@ def main(args):
 
     data_transforms = transforms.Compose([
         transforms.RandomResizedCrop((args.resize, args.resize)),
+        transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1, hue=0.1),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
         transforms.ToTensor(),
@@ -188,22 +189,20 @@ def main(args):
                                               num_workers=args.workers, pin_memory=True)
 
     # Model definition
-    model = torchvision.models.__dict__[args.model](pretrained=args.pretrained)
-
-    # Change fc
-    in_features = getattr(model, 'fc').in_features
-    setattr(model, 'fc', nn.Linear(in_features, num_classes))
-
-    # Resume
-    if args.resume:
-        model.load_state_dict(torch.load(args.resume)['model'])
+    model = models.__dict__[args.model](imagenet_pretrained=args.pretrained,
+                                        num_classes=data.c, lin_features=args.lin_feats,
+                                        concat_pool=args.concat_pool, bn_final=args.bn_final,
+                                        dropout_prob=args.dropout_prob)
 
     # Freeze layers
     if not args.unfreeze:
         # Model is sequential
-        for n, p in model.named_parameters():
-            if not n.startswith('fc'):
-                p.requires_grad = False
+        for p in model[1].parameters():
+            p.requires_grad = False
+
+    # Resume
+    if args.resume:
+        model.load_state_dict(torch.load(args.resume)['model'])
 
     # Send to device
     model.to(args.device)
@@ -256,39 +255,56 @@ def main(args):
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='PyroNear Classification Training')
-    parser.add_argument('--data-path', default='./data', help='dataset')
-    parser.add_argument('--model', default='resnet18', help='model')
-    parser.add_argument('--device', default=None, help='device')
-    parser.add_argument('-b', '--batch-size', default=32, type=int)
-    parser.add_argument('-s', '--resize', default=224, type=int)
-    parser.add_argument('--epochs', default=20, type=int, metavar='N',
-                        help='number of total epochs to run')
-    parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
-                        help='number of data loading workers (default: 16)')
-    parser.add_argument('--lr', default=3e-4, type=float, help='initial learning rate')
-    parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
-                        help='momentum')
-    parser.add_argument('--wd', '--weight-decay', default=1e-2, type=float,
-                        metavar='W', help='weight decay (default: 1e-2)',
-                        dest='weight_decay')
-    parser.add_argument('--div-factor', default=25., type=float, help='div factor of OneCycle policy')
-    parser.add_argument('--final-div-factor', default=1e4, type=float, help='final div factor of OneCycle policy')
+    parser = argparse.ArgumentParser(description='PyroNear Classification Training',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    # Input / Output
+    parser.add_argument('--data-path', default='./data', help='dataset root folder')
+    parser.add_argument('--resume', default=None, help='checkpoint file to resume from')
     parser.add_argument('--output-dir', default=None, help='path for output saving')
     parser.add_argument('--checkpoint', default=None, type=str, help='name of output file')
-    parser.add_argument('--resume', default=None, help='checkpoint file to resume from (default: None)')
-    parser.add_argument("--binary", dest="binary", help="Should the task be considered as binary Classification",
-                        action="store_true")
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
-                        help='start epoch')
-    parser.add_argument("--unfreeze", dest="unfreeze", help="Should all layers be unfrozen",
+                        help='start epoch index')
+    # Architecture
+    parser.add_argument('--model', default='resnet18', type=str, help='model architecture')
+    parser.add_argument("--concat-pool", dest="concat_pool",
+                        help="replaces AdaptiveAvgPool2d with AdaptiveConcatPool2d",
                         action="store_true")
-    parser.add_argument("--deterministic", dest="deterministic",
-                        help="Should the training be performed in deterministic mode",
+    parser.add_argument('--lin-feats', default=512, type=int,
+                        help='number of nodes in intermediate head layers')
+    parser.add_argument("--bn-final", dest="bn_final",
+                        help="adds a batch norm layer after last FC",
+                        action="store_true")
+    parser.add_argument('--dropout-prob', default=0.5, type=float, help='dropout rate of last FC layer')
+    parser.add_argument("--binary", dest="binary",
+                        help="should the task be considered as binary Classification",
                         action="store_true")
     parser.add_argument("--pretrained", dest="pretrained",
-                        help="Use pre-trained models from the modelzoo",
+                        help="use ImageNet pre-trained parameters",
                         action="store_true")
+    # Device
+    parser.add_argument('--device', default=None, help='device')
+    parser.add_argument("--deterministic", dest="deterministic",
+                        help="should the training be performed in deterministic mode",
+                        action="store_true")
+    # Loader
+    parser.add_argument('-b', '--batch-size', default=32, type=int, help='batch size')
+    parser.add_argument('-s', '--resize', default=224, type=int, help='image size after resizing')
+    parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
+                        help='number of data loading workers')
+    # Optimizer
+    parser.add_argument('--lr', default=3e-4, type=float, help='maximum learning rate')
+    parser.add_argument('--epochs', default=20, type=int, metavar='N',
+                        help='number of total epochs to run')
+    parser.add_argument('--wd', '--weight-decay', default=1e-2, type=float,
+                        metavar='W', help='weight decay',
+                        dest='weight_decay')
+    parser.add_argument("--unfreeze", dest="unfreeze", help="should all layers be unfrozen",
+                        action="store_true")
+    # Scheduler
+    parser.add_argument('--div-factor', default=25., type=float,
+                        help='div factor of OneCycle policy')
+    parser.add_argument('--final-div-factor', default=1e4, type=float,
+                        help='final div factor of OneCycle policy')
     args = parser.parse_args()
 
     main(args)
