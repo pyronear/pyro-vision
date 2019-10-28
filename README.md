@@ -81,7 +81,7 @@ python references/classification/fastai/train.py --help
 You can then run the script with your own arguments:
 
 ```shell
-python references/classification/fastai/train.py --data-path ./data --lr 3e-3 --epochs 4 --pretrained --deterministic
+python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrained --deterministic
 ```
 
 *Please note that most tasks are provided with two training scripts (and their `requirements.txt`): one using [fastai](https://github.com/fastai/fastai) and the other without it.*
