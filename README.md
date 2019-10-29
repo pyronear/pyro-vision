@@ -17,11 +17,11 @@
 
 
 
-# PyroNear: early wildfire detection
+# PyroNear: wildfire early detection
 
 The increasing adoption of mobile phones have significantly shortened the time required for firefighting agents to be alerted of a starting wildfire. In less dense areas, limiting and minimizing this duration remains critical to preserve forest areas.
 
-PyroNear aims at offering an wildfire early detection system with state-of-the-art performances at minimal deployment costs.
+PyroNear aims at providing the means to create a wildfire early detection system with state-of-the-art performances at minimal deployment costs.
 
 
 
