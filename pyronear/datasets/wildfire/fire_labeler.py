@@ -1,8 +1,9 @@
 import re
-
 from itertools import combinations
+
 import numpy as np
 import pandas as pd
+
 
 class FireLabeler:
     """Automatically labelize WildFire dataset based on video descriptions
@@ -61,7 +62,7 @@ class FireLabeler:
         self.window_size = window_size or self.window_size
 
         self.n_videos_total = self.df.shape[0]
-        self.n_windows = self.n_videos_total - self.window_size + 1 # n_windows + windows_size < n_videos_total
+        self.n_windows = self.n_videos_total - self.window_size + 1  # n_windows + windows_size < n_videos_total
 
         # Store new column for fire ids starting at 0 (-1 for unassigned)
         self.fire_ids = np.full((self.n_videos_total), -1)
@@ -79,10 +80,10 @@ class FireLabeler:
 
         # sliding iterator over the video indexes. Example with window_size=4:
         # [[0, 1, 2, 3], [1, 2, 3, 4], [2, 3, 4, 5], ...]
-        window_idx_it = (range(start, start+self.window_size) for start in range(self.n_windows))
+        window_idx_it = (range(start, start + self.window_size) for start in range(self.n_windows))
 
-        current_fire_id = 0 # start grouping feu id at 0
-        for window_idx in window_idx_it: # for every window of videos
+        current_fire_id = 0  # start grouping feu id at 0
+        for window_idx in window_idx_it:  # for every window of videos
 
             # dict with {id: description(string)}
             id_to_descriptions = dict(zip(window_idx, self.df.loc[window_idx, 'description']))
@@ -97,17 +98,17 @@ class FireLabeler:
                         self.fire_ids[id_s2] = self.fire_ids[id_s1]
                     elif self.fire_ids[id_s2] != -1:
                         self.fire_ids[id_s1] = self.fire_ids[id_s2]
-                    else: # else we add new fire_id (first encounter)
+                    else:  # else we add new fire_id (first encounter)
                         self.fire_ids[id_s1] = current_fire_id
                         self.fire_ids[id_s2] = current_fire_id
                         current_fire_id = current_fire_id + 1
 
         # Now labeling the singletons
-        self._n_singletons = -1*self.fire_ids[self.fire_ids==-1].sum()
+        self._n_singletons = -1 * self.fire_ids[self.fire_ids == -1].sum()
 
-        length = len(self.fire_ids[self.fire_ids==-1])
-        self.fire_ids[self.fire_ids==-1] = range(current_fire_id, current_fire_id+length)
-        assert self.fire_ids[self.fire_ids==-1].sum() == 0, "Singletons escaped indexation!!"
+        length = len(self.fire_ids[self.fire_ids == -1])
+        self.fire_ids[self.fire_ids == -1] = range(current_fire_id, current_fire_id + length)
+        assert self.fire_ids[self.fire_ids == -1].sum() == 0, "Singletons escaped indexation!!"
         return self
 
     @staticmethod
@@ -115,7 +116,8 @@ class FireLabeler:
         """Compare two fire videos descriptions and guess if they match"""
 
         # regexp catching fire name (ex: Goose Fire)
-        p = re.compile(r"(?P<firename>\w+\sFire)") # compile once
+        p = re.compile(r"(?P<firename>\w+\sFire)")  # compile once
+
         def get_firename(string):
             """try to extract fire name"""
             result = p.search(string)
@@ -131,18 +133,15 @@ class FireLabeler:
         # - if same fire names found, it's a match.
         # - if 'Glen Fire' is found and 'Glen' is also found, it's a match
         # - if 'King Fire' is found and 'KingFire' as well, it's a match
-        firenames_match = (firename_s1 is not None
-                               and ((firename_s1 == firename_s2)
-                                    or firename_s1.split(' ')[0] in s2
-                                    or firename_s1.replace(' ','') in s2
-                                   )
-                          ) or (
-                            firename_s2 is not None
-                               and ((firename_s1 == firename_s2)
-                                    or firename_s2.split(' ')[0] in s1
-                                    or firename_s2.replace(' ','') in s1
-                                   )
-                          )
+        firenames_match = ((firename_s1 is not None
+                            and ((firename_s1 == firename_s2)
+                                 or firename_s1.split(' ')[0] in s2
+                                 or firename_s1.replace(' ', '') in s2))
+                           or (
+                           firename_s2 is not None
+                           and ((firename_s1 == firename_s2)
+                                or firename_s2.split(' ')[0] in s1
+                                or firename_s2.replace(' ', '') in s1)))
 
         return firenames_match
 

@@ -14,7 +14,7 @@ class FireLabelerTester(unittest.TestCase):
         """return count of unique-only elements
         [0, 9, 9, 9, 2, 3, 5, 5] ---> 3
         """
-        return len([element for (element, count) in Counter(list_).items() if count==1])
+        return len([element for (element, count) in Counter(list_).items() if count == 1])
 
     def setUp(self):
 
@@ -22,18 +22,16 @@ class FireLabelerTester(unittest.TestCase):
         WildFireFixture = namedtuple('WildFireFixture', 'descriptions fire_ids_truth')
 
         # Now let's write the fixtures
-        wild_voltaire = WildFireFixture(
-                            descriptions="""Small Fire confirmed east of NOAA fire camera at 6:31 PM
+        wild_voltaire = WildFireFixture(descriptions="""Small Fire confirmed east of NOAA fire camera at 6:31 PM
 Voltaire Fire 7pm to midnight, June 12th 2018
 4th hour of the Voltaire Fire as it approaches the urban-wildland interface  at 10 PM
 3rd hour of the Voltaire Fire during a growth phase as seen from McClellan at 9 PM
 2nd hour of the Voltaire Fire near Carson City from McClellan Peak at  8 PM
 Fire near Voltaire Canyon  west of Carson City is confirmed on McClellan Peak camera at  7:43 PM
 Leeks Springs camera spins toward early season Rx fire at 11:38 AM""".split('\n'),
-                            fire_ids_truth=[1, 0, 0, 0, 0, 0, 2])
+                                        fire_ids_truth=[1, 0, 0, 0, 0, 0, 2])
 
-        wild_glen = WildFireFixture(
-                            descriptions="""Smoke from Ralph Incident Fire seen after midnight from Angels Roost  4K camera
+        wild_glen = WildFireFixture(descriptions="""Smoke from Ralph Incident Fire seen after midnight from Angels Roost  4K camera
 Sierra at Tahoe fire camera points to the Ralph Incident Fire at 5:40 AM
 2nd fire camera points at the Maggie Fire from Midas Peak after 1 PM
 Maggie Fire caught shortly after Noon from Jacks Peak fire camera
@@ -46,10 +44,9 @@ Small fire is seen near  South Tahoe High School at 2:51 PM
 Flames from the Triple Fire are seen moving closer to ranch as recorded from Jacks 3 PM
 Triple Fire spotted from the Jacks Peak fire camera at 2 PM
 Jacks Peak's fire camera points to River Ranch Fire towards the SE at 2 PM""".split('\n'),
-                            fire_ids_truth= [0, 0, 1, 1, 2, 2, 2, 2, 4, 5, 3, 3, 6])
+                                    fire_ids_truth=[0, 0, 1, 1, 2, 2, 2, 2, 4, 5, 3, 3, 6])
 
-        wild_king_fire = WildFireFixture(
-                            descriptions="""Zoom to Controlled Burn, Rubicon Oct. 17th, 2014
+        wild_king_fire = WildFireFixture(descriptions="""Zoom to Controlled Burn, Rubicon Oct. 17th, 2014
 King Fire, nighttime from Snow Valley Peak, 8 PM Sept. 17th, 2014
 King Fire, nighttime from CTC North Tahoe, 8 PM Sept. 17th, 2014
 King Fire at sunset from Angel's Roost–Heavenly, 7 PM Sept. 17th, 2014
@@ -84,10 +81,10 @@ Bison Fire 2013-07-08 x25 Time Lapse
 Bison Fire 2013-07-07 x25 Time Lapse
 Bison Fire 2013-07-06 x25 Time Lapse
 Bison Fire 2013-07-05 x25 Time Lapse""".split('\n'),
-                            fire_ids_truth = [3, 0, 0, 0, 0, 0, 1, 1, 4, 1,
-                                              1, 5, 0, 1, 1, 0, 0, 0, 0, 0,
-                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                              2, 2, 2, 2, 2])
+                                         fire_ids_truth=[3, 0, 0, 0, 0, 0, 1, 1, 4, 1,
+                                                         1, 5, 0, 1, 1, 0, 0, 0, 0, 0,
+                                                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                         2, 2, 2, 2, 2])
 
         self.fixtures = [wild_voltaire, wild_glen]
         self.fixtures_long = [wild_king_fire]
@@ -101,7 +98,6 @@ Bison Fire 2013-07-05 x25 Time Lapse""".split('\n'),
             df = fire_labeler.get_dataframe(column_name='fire_id')
             self.assertListEqual(df['fire_id'].tolist(), fire_ids_truth)
             self.assertEqual(fire_labeler._n_singletons, self.get_unique_only_count(fire_ids_truth))
-
 
     def test_label_correctly_long_dependency(self):
         """Test if descriptions are correctly gathered if they are far from each other.
@@ -130,6 +126,7 @@ Bison Fire 2013-07-05 x25 Time Lapse""".split('\n'),
         s1 = "2nd hour of Glen Fire"
         s2 = '6 hour time lapse of "Glen" fire from fire camera located at Sierra at Tahoe'
         self.assertTrue(FireLabeler.fire_are_matching(s1, s2))
+
 
 if __name__ == '__main__':
     unittest.main(FireLabelerTester())
