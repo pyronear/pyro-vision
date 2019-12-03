@@ -115,6 +115,21 @@ Bison Fire 2013-07-05 x25 Time Lapse""".split('\n'),
             self.assertListEqual(df['fire_id'].tolist(), fire_ids_truth)
             self.assertEqual(fire_labeler._n_singletons, self.get_unique_only_count(fire_ids_truth))
 
+    def test_firenames_matching(self):
+        # It should be robust to space before Fire 'King Fire' & 'KingFire':
+        s1 = "King Fire Heavenly 20140915 14:32-15:00"
+        s2 = "KingFire SnowValley 20140916 12:30-15:00"
+        self.assertTrue(FireLabeler.fire_are_matching(s1, s2))
+
+        # If Fire name is hidden in the sentence, it should be a match
+        s1 = "Smoke from the King Fire engulfs Tahoe South Shore"
+        s2 = "KingFire SnowValley 20140916 12:30-15:00"
+        self.assertTrue(FireLabeler.fire_are_matching(s1, s2))
+
+        # if fire name is found without being suffixed by Fire, it should match
+        s1 = "2nd hour of Glen Fire"
+        s2 = '6 hour time lapse of "Glen" fire from fire camera located at Sierra at Tahoe'
+        self.assertTrue(FireLabeler.fire_are_matching(s1, s2))
 
 if __name__ == '__main__':
     unittest.main(FireLabelerTester())
