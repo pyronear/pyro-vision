@@ -2,7 +2,6 @@ import re
 from itertools import combinations
 
 import numpy as np
-import pandas as pd
 
 
 class FireLabeler:

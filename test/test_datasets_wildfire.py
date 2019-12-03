@@ -10,7 +10,8 @@ from pyronear.datasets.wildfire import FireLabeler
 
 class FireLabelerTester(unittest.TestCase):
 
-    def get_unique_only_count(self, list_):
+    @staticmethod
+    def get_unique_only_count(list_):
         """return count of unique-only elements
         [0, 9, 9, 9, 2, 3, 5, 5] ---> 3
         """
