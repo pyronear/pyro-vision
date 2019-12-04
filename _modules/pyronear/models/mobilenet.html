@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyronear.models.mobilenet &mdash; pyronear 0.2.0a0+ebd0c18-git documentation</title>
+  <title>pyronear.models.mobilenet &mdash; pyronear 0.2.0a0+966fe57-git documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.2.0a0+ebd0c18
+                0.2.0a0+966fe57
               </div>
             
           
@@ -175,9 +175,9 @@
 <span></span><span class="ch">#!usr/bin/python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">torchvision.models.mobilenet</span> <span class="k">import</span> <span class="n">MobileNetV2</span><span class="p">,</span> <span class="n">model_urls</span> <span class="k">as</span> <span class="n">imagenet_urls</span>
-<span class="kn">from</span> <span class="nn">torchvision.models.utils</span> <span class="k">import</span> <span class="n">load_state_dict_from_url</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">cnn_model</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.mobilenet</span> <span class="kn">import</span> <span class="n">MobileNetV2</span><span class="p">,</span> <span class="n">model_urls</span> <span class="k">as</span> <span class="n">imagenet_urls</span>
+<span class="kn">from</span> <span class="nn">torchvision.models.utils</span> <span class="kn">import</span> <span class="n">load_state_dict_from_url</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">cnn_model</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mobilenet_v2&#39;</span><span class="p">]</span>
 
@@ -220,7 +220,7 @@
             <span class="n">state_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">missing</span><span class="p">,</span> <span class="n">unexpected</span> <span class="o">=</span> <span class="n">base_model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">unexpected</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="n">elt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;classifier.&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">missing</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Missing parameters: </span><span class="si">{missing}</span><span class="se">\n</span><span class="s2">Unexpected parameters: </span><span class="si">{unexpected}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing parameters: </span><span class="si">{missing}</span><span class="se">\n</span><span class="s2">Unexpected parameters: </span><span class="si">{unexpected}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Cut at last conv layers</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">cnn_model</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="n">model_cut</span><span class="p">,</span> <span class="n">base_model</span><span class="o">.</span><span class="n">classifier</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span>
