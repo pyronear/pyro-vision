@@ -145,8 +145,6 @@ class WildFireSplitter:
         if self.algorithm != 'auto':
             raise ValueError(f"Algorithm {self.algorithm} is unknown. Only 'auto' available for now")
         else:
-            # A strategy should set the attributes as mentionned in the current docstring
-            #self._strategy = self.exhaust_fire_ids
             self._strategy = ExhaustSplitStrategy
 
         # Let's split
