@@ -20,13 +20,13 @@ class WildFireDatasetTester(unittest.TestCase):
         wildfire = WildFireDataset(metadata=self.wildfire_path,
                                    path_to_frames=self.path_to_frames)
 
-        assert len(wildfire) == 974
+        self.assertEqual(len(wildfire),  974)
 
     def test_wildfire_correctly_init_from_dataframe(self):
         wildfire = WildFireDataset(metadata=self.wildfire_df,
                                    path_to_frames=self.path_to_frames)
 
-        assert len(wildfire) == 974
+        self.assertEqual(len(wildfire), 974)
 
 
 if __name__ == '__main__':

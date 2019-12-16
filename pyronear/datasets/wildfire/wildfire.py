@@ -41,15 +41,17 @@ class WildFireDataset(Dataset):
         return len(self.metadata)
 
     def __getitem__(self, index):
-        """Returns the image and metadata containing the following information :
-                fire(0/1) and clf_confidence(0/1)
-                x,y (float, float) and
-                Exploitable(True/False)"""
+        """Returns the image and metadata
+
+        Metadata contains the following information(not exhaustive list) :
+            - fire(0/1) and clf_confidence(0/1)
+            - x,y (float, float) and
+            - Exploitable(True/False)"""
         path_to_frame = self.path_to_frames / self.metadata['imgFile'].iloc[index]
         observation = io.imread(path_to_frame)
 
         if self.transform:
-                observation = self.transform(observation)
+            observation = self.transform(observation)
         return observation, self.metadata.iloc[index]
 
 
