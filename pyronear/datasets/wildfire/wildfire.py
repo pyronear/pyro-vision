@@ -32,7 +32,7 @@ class WildFireDataset(Dataset):
             try:
                 self.metadata = pd.read_csv(metadata)
             except (ValueError, FileNotFoundError):
-                print(f"Invalid path to CSV containing metadata. Please provide one (path={metadata})")
+                raise ValueError(f"Invalid path to CSV containing metadata. Please provide one (path={metadata})")
 
         self.path_to_frames = path_to_frames
         self.transform = transform
