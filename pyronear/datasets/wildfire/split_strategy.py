@@ -47,11 +47,14 @@ class ExhaustSplitStrategy(SplitStrategy):
         fire_ids = list(self.random_fire_ids_gen(n_samples, self._fire_id_to_size_to_exhaust))
         return fire_ids
 
-    def split(self, wildfire, ratios):
+    def split(self, dataset, ratios):
         """Split the dataset in Train/Val/Test according to ratio set at init
         This strategy randomly exhausts the fire ids list
-        so they fills the splits as respectfully to the given ratio as possible"""
-        df = wildfire.metadata  # alias for convenience (less verbose)
+        so they fills the splits as respectfully to the given ratio as possible
+
+        Note: So far, it has only been tested with WildFireDataset.
+        """
+        df = dataset.metadata  # alias for convenience (less verbose)
 
         n_samples_total = df.shape[0]
         n_samples_train = n_samples_total * ratios['train']
