@@ -71,6 +71,7 @@ class ExhaustSplitStrategy(SplitStrategy):
             del self._fire_id_to_size_to_exhaust[fire_id_test]
 
         n_samples_remaining = len(self._fire_id_to_size_to_exhaust)
-        assert n_samples_remaining == 0, f"Algorithm failing, {n_samples_remaining} samples not assigned to any split!"
+        if n_samples_remaining != 0:
+            raise ValueError(f"Algorithm failing, {n_samples_remaining} samples not assigned to any split!")
 
         return {set_: df[df['fire_id'].isin(fire_ids[set_])] for set_ in ['train', 'val', 'test']}
