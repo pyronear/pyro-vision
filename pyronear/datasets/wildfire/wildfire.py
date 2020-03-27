@@ -2,13 +2,14 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from skimage import io
+import torch
 from torch.utils.data import Dataset
 
+from pyronear.datasets.utils import VisionMixin
 from pyronear.datasets.wildfire import ExhaustSplitStrategy
 
 
-class WildFireDataset(Dataset):
+class WildFireDataset(Dataset, VisionMixin):
     """WildFire dataset that can be fed to a torch model
 
     Parameters
@@ -48,7 +49,7 @@ class WildFireDataset(Dataset):
             - x,y (float, float) and
             - Exploitable(True/False)"""
         path_to_frame = self.path_to_frames / self.metadata['imgFile'].iloc[index]
-        observation = io.imread(path_to_frame)
+        observation = self.load_image(path_to_frame)
 
         if self.transform:
             observation = self.transform(observation)
