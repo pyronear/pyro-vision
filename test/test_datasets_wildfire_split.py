@@ -4,6 +4,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import torch
+
+from torch.utils.data import DataLoader
 
 from pyronear.datasets.wildfire import (WildFireDataset,
                                         WildFireSplitter)
@@ -30,14 +33,32 @@ class WildFireDatasetTester(unittest.TestCase):
 
         # try to get one image of wildfire (item 3 is authorized image fixture)
         observation_3, metadata_3 = wildfire[3]
-        self.assertIsInstance(observation_3, np.ndarray)  # image correctly loaded ?
-        self.assertIsInstance(metadata_3, pd.Series)  # metadata correctly loaded ?
+        self.assertIsInstance(observation_3, torch.Tensor)  # image correctly loaded ?
+        self.assertEqual(observation_3.size(), torch.Size([3, 683, 910]))
+        self.assertTrue(torch.equal(metadata_3, torch.tensor([0])))  # metadata correctly loaded ?
+
+    def test_wildfire_correctly_init_with_multiple_targets(self):
+        wildfire = WildFireDataset(metadata=self.wildfire_df,
+                                   path_to_frames=self.path_to_frames,
+                                   target_names=['fire', 'fire_id'])
+
+        self.assertEqual(len(wildfire), 974)
+
+        # try to get one image of wildfire (item 3 is authorized image fixture)
+        observation_3, metadata_3 = wildfire[3]
+        self.assertIsInstance(observation_3, torch.Tensor)  # image correctly loaded ?
+        self.assertEqual(observation_3.size(), torch.Size([3, 683, 910]))
+        self.assertTrue(torch.equal(metadata_3, torch.tensor([0, 96])))  # metadata correctly loaded ?
 
     def test_invalid_csv_path_raises_exception(self):
         with self.assertRaises(ValueError):
             WildFireDataset(metadata='bad_path.csv',
                             path_to_frames=self.path_to_frames)
 
+    def test_dataloader_can_be_init_with_wildfire(self):
+        wildfire = WildFireDataset(metadata=self.wildfire_path,
+                                   path_to_frames=self.path_to_frames)
+        DataLoader(wildfire, batch_size=64)
 
 
 class WildFireDatasetSplitter(unittest.TestCase):
