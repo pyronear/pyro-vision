@@ -39,21 +39,9 @@ class WildFireDatasetTester(unittest.TestCase):
                             path_to_frames=self.path_to_frames)
 
 
+
 class WildFireDatasetSplitter(unittest.TestCase):
-    """
-wildfire = WildFireDataset(metadata='wildfire.csv', path_to_frames=path_to_frames)
 
-ratios = {'train': 0.7, 'val': 0.15, 'test':0.15}
-splitter =  WildFireSplitter(ratios)
-splitter.fit(wildfire)
-
-splitter/n_samples_ # {'train': 700, 'val': 147, 'test': 127}
-
-wildfire_loader_train = DataLoader(splitter.train, batch_size=64, shuffle=True)
-wildfire_loader_val = DataLoader(splitter.val, batch_size=64, shuffle=True)
-wildfire_loader_test = DataLoader(splitter.test, batch_size=64, shuffle=True)
-
-    """
     def setUp(self):
         self.path_to_frames = Path(__file__).parent / 'fixtures/'
         self.wildfire_path = Path(__file__).parent / 'fixtures/wildfire_dataset.csv'
