@@ -168,7 +168,7 @@ class WildFireSplitter:
 
         # Let's split
         strategy = self._strategy()
-        dataframes = strategy.split(wildfire, self.ratios)
+        dataframes = strategy.split(wildfire, self.ratios, self.seed)
         self.set_splits(dataframes)
 
     def set_splits(self, dataframes):
