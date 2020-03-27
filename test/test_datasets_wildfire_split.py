@@ -7,6 +7,7 @@ import pandas as pd
 import torch
 
 from torch.utils.data import DataLoader
+from torchvision.transforms import transforms
 
 from pyronear.datasets.wildfire import (WildFireDataset,
                                         WildFireSplitter)
@@ -91,6 +92,16 @@ class WildFireDatasetSplitter(unittest.TestCase):
         self.assertEqual(splitter.n_samples_, n_samples_expected)
         for (set_, ratio_) in splitter.ratios_.items():
             self.assertAlmostEqual(ratio_, ratios[set_], places=2)
+
+    def test_splitting_working_with_transforms(self):
+        ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
+        transforms_expected = {'train': transforms.RandomCrop(10), 'val': None, 'test': None}
+
+        splitter = WildFireSplitter(ratios, transforms=transforms_expected)
+        splitter.fit(self.wildfire)
+
+        for (set_, ratio_) in splitter.ratios_.items():
+            self.assertIs(getattr(splitter, set_).transform, transforms_expected[set_])
 
 
 if __name__ == '__main__':
