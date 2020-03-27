@@ -20,13 +20,19 @@ class WildFireDataset(Dataset, VisionMixin):
             'imgFile': path_to_frame
             'fire_id': fire index
 
+    target_names: list,
+        List of the columns that can be found in metadata CSV and that represent targets
+        we want to return when accessing the datasets
+        If left to None, will be set to ['fire']
+        Example: ['fire', 'clf_confidence', 'loc_confidence', 'x', 'y']
+
     path_to_frames: str
         Path leading to the directory containing the frames referenced in metadata 'imgFile':
 
-    transform: object
+    transform: object, optional
         Transformations to apply to the frames (ie: torchvision.transforms)
     """
-    def __init__(self, metadata, path_to_frames, transform=None):
+    def __init__(self, metadata, path_to_frames, target_names=None, transform=None):
         if isinstance(metadata, pd.DataFrame):
             self.metadata = metadata
         else:
@@ -35,6 +41,8 @@ class WildFireDataset(Dataset, VisionMixin):
             except (ValueError, FileNotFoundError):
                 raise ValueError(f"Invalid path to CSV containing metadata. Please provide one (path={metadata})")
 
+        # default target is fire detection (0/1)
+        self.target_names = target_names or ['fire']
         self.path_to_frames = path_to_frames
         self.transform = transform
 
@@ -53,7 +61,15 @@ class WildFireDataset(Dataset, VisionMixin):
 
         if self.transform:
             observation = self.transform(observation)
-        return observation, self.metadata.iloc[index]
+        return observation, self._get_targets(index)
+
+    def _get_targets(self, index):
+        """Provide targets listed in target_names in metadata as Tensors
+
+        Non-exhaustive values that can be found in self.target_names:
+            ['fire', 'clf_confidence', 'loc_confidence', 'x', 'y']
+        """
+        return torch.from_numpy(self.metadata[self.target_names].iloc[index].values)
 
 
 class WildFireSplitter:
