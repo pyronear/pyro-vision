@@ -9,7 +9,20 @@ from functools import partial
 from tqdm import tqdm
 from urllib.parse import urlparse
 
+from PIL import Image
+from torchvision import transforms
 from torchvision.datasets.utils import check_integrity
+
+
+class VisionMixin:
+    """Class to provide re-usabled functions to classes dealing this Vision (ie: VisionDataset)"""
+    @staticmethod
+    def load_image(path):
+        """Load an image from a path into a pytorch Tensor"""
+        # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+        with open(path, 'rb') as f:
+            img = Image.open(f)
+            return transforms.ToTensor()(img.convert('RGB'))
 
 
 def url_retrieve(url, outfile, timeout=4):
