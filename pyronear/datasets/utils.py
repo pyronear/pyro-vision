@@ -26,7 +26,6 @@ class VisionMixin:
             return transforms.ToTensor()(img) if to_tensor else img
 
 
-
 def url_retrieve(url, outfile, timeout=4):
     """Download the content of an URL request to a specified location
 
