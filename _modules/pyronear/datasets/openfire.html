@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyronear.datasets.openfire &mdash; pyronear 0.2.0a0+966fe57-git documentation</title>
+  <title>pyronear.datasets.openfire &mdash; pyronear 0.2.0a0+1fab241-git documentation</title>
   
 
   
@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.2.0a0+966fe57
+                0.2.0a0+1fab241
               </div>
             
           
@@ -352,11 +352,11 @@
         <span class="k">if</span> <span class="n">dl_issues</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">extract</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Images not found. You can use download=True to download them.&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">dl_issues</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{dl_issues}</span><span class="s1">/{len(extract)} sample images are not present on disk. &#39;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dl_issues</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">extract</span><span class="p">)</span><span class="si">}</span><span class="s1"> sample images are not present on disk. &#39;</span>
                           <span class="s1">&#39;Please retry downloading later.&#39;</span><span class="p">)</span>
         <span class="c1"># Extract errors</span>
         <span class="k">if</span> <span class="n">target_issues</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{target_issues}</span><span class="s1">/{len(extract)} samples have corrupted targets.&#39;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_issues</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">extract</span><span class="p">)</span><span class="si">}</span><span class="s1"> samples have corrupted targets.&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">valid_samples</span>
 
