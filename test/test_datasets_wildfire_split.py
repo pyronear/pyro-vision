@@ -111,9 +111,15 @@ class WildFireDatasetSplitter(unittest.TestCase):
         splitter = WildFireSplitter(ratios, transforms=transforms_expected)
         splitter.fit(self.wildfire)
 
-        for (set_, ratio_) in splitter.ratios_.items():
-            self.assertIs(getattr(splitter, set_).transform, transforms_expected[set_])
+        for (set_, transform_expected) in transforms_expected.items():
+            self.assertIs(getattr(splitter, set_).transform, transform_expected)
 
+    def test_splitting_with_unavailable_algorithm_raise_exception(self):
+        ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
+
+        splitter = WildFireSplitter(ratios, algorithm='wtf')
+        with self.assertRaises(ValueError):
+            splitter.fit(self.wildfire)
 
 if __name__ == '__main__':
     unittest.main()
