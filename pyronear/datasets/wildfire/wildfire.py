@@ -183,6 +183,7 @@ class WildFireSplitter:
         for set_ in ['train', 'val', 'test']:
             self.splits[set_] = WildFireDataset(metadata=dataframes[set_],
                                                 path_to_frames=self.wildfire.path_to_frames,
+                                                target_names=self.wildfire.target_names,
                                                 transform=self.transforms[set_])
 
         # Determine estimated(posterior) parameters
