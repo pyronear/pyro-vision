@@ -121,5 +121,6 @@ class WildFireDatasetSplitter(unittest.TestCase):
         with self.assertRaises(ValueError):
             splitter.fit(self.wildfire)
 
+
 if __name__ == '__main__':
     unittest.main()
