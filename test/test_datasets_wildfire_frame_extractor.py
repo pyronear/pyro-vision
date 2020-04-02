@@ -65,8 +65,7 @@ class WildFireFrameExtractorTester(unittest.TestCase):
 
     def test_frame_extraction_random(self):
         """Extracting frames should produce expected count of images and length of metadata(labels)"""
-        #for n_frames in [2, 3, 4]:
-        for n_frames in [2]:
+        for n_frames in [2, 3, 4]:
             frames_count_expected = self.path_to_states_count * n_frames
 
             frame_extractor = FrameExtractor(self.path_to_videos,
