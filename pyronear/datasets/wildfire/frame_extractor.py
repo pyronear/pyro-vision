@@ -116,9 +116,20 @@ class FrameExtractor:
         seed: int, seed for random picking (default: 42)
         """
         np.random.seed(seed)
+
+        # Trying to set a valid frame range
+        frames_range = range(state.stateStart, state.stateEnd + 1)
+        frames_range_len = len(frames_range)
+        if frames_range_len < n_frames:
+            raise ValueError(f"Not enough frames available({frames_range_len})"
+                             f" in the state to extract {n_frames} frames")
+
+        # Let's pick frames according to strategy
         if random:
-            return pd.Series(np.random.randint(state.stateStart, state.stateEnd, n_frames))
+            # randomly select unique frame numbers within state range
+            return pd.Series(np.random.choice(frames_range, size=n_frames, replace=False))
         else:
+            # select evenly spaced frames within state range
             return pd.Series(np.linspace(state.stateStart, state.stateEnd, n_frames, dtype=int))
 
     def _get_frame_labels(self, states: pd.DataFrame, n_frames: int, random: bool, seed: int=42) -> pd.DataFrame:
