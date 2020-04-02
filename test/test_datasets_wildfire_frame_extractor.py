@@ -14,6 +14,12 @@ from pyronear.datasets.wildfire import FrameExtractor
 
 class WildFireFrameExtractorTester(unittest.TestCase):
 
+    def setUp(self):
+        self.path_to_videos = Path(__file__).parent / 'fixtures/videos'  # TODO: download automatically
+
+        self.path_to_states = Path(__file__).parent / 'fixtures/wildfire_states.csv'
+        self.path_to_states_count = 14
+
     def test_pick_frames_randomly(self):
         frame_min, frame_max = 100, 106
         state = pd.Series([frame_min, frame_max], index=['stateStart', 'stateEnd'])
@@ -56,6 +62,51 @@ class WildFireFrameExtractorTester(unittest.TestCase):
             # Let's try to generate more frames indexes than available
             with self.assertRaises(ValueError):
                 FrameExtractor._pick_frames(state, n_frames=n_frames, random=random)
+
+    def test_frame_extraction_random(self):
+        """Extracting frames should produce expected count of images and length of metadata(labels)"""
+        #for n_frames in [2, 3, 4]:
+        for n_frames in [2]:
+            frames_count_expected = self.path_to_states_count * n_frames
+
+            frame_extractor = FrameExtractor(self.path_to_videos,
+                                             self.path_to_states,
+                                             strategy='random',
+                                             n_frames=n_frames)
+
+            # assert count of frames png files equals to frames registered in labels.csv
+            with tempfile.TemporaryDirectory() as path_to_frames:
+                labels = (frame_extractor.run(path_to_frames=path_to_frames, seed=69)
+                                         .get_frame_labels())
+
+                # Check that count fo frames created equals expected AND frame labels
+                frames_count = len(glob.glob1(path_to_frames, "*.png"))
+                labels_count = len(labels)
+                self.assertEqual(frames_count, labels_count)
+                self.assertEqual(frames_count, frames_count_expected)
+
+    def test_frame_extraction_all_strategies_too_many_frames(self):
+        """Trying to extract more frames than available should raise Exception"""
+        too_many_n_frames = 10
+
+        for strategy in FrameExtractor.strategies_allowed:
+            frame_extractor = FrameExtractor(self.path_to_videos,
+                                             self.path_to_states,
+                                             strategy=strategy,
+                                             n_frames=too_many_n_frames)
+
+            with tempfile.TemporaryDirectory() as path_to_frames:
+                with self.assertRaises(ValueError):
+                    (frame_extractor.run(path_to_frames=path_to_frames)
+                                    .get_frame_labels())
+
+    def test_frame_extractor_bad_strategy_raise_exception(self):
+        """Trying to extract with unknown strategy should raise Exception"""
+        with self.assertRaises(ValueError):
+            FrameExtractor(self.path_to_videos,
+                           self.path_to_states,
+                           strategy='unavailable',
+                           n_frames=2)
 
 
 if __name__ == '__main__':
