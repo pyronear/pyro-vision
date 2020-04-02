@@ -190,4 +190,4 @@ class FrameExtractor:
                 if success:
                     cv2.imwrite((path_to_frames / row.imgFile).as_posix(), frame)
                 else:
-                    print(f'Could not read frame {row.frame} from {name}')
+                    raise IOError(f'Could not read frame {row.frame} from {name}')

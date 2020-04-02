@@ -2,6 +2,8 @@ import glob
 import tempfile
 import unittest
 
+from unittest.mock import patch
+
 from pathlib import Path
 
 import pandas as pd
@@ -106,6 +108,28 @@ class WildFireFrameExtractorTester(unittest.TestCase):
                            self.path_to_states,
                            strategy='unavailable',
                            n_frames=2)
+
+    def test_frame_video_cannot_be_read_raise_exception(self):
+        """Error in reading video frame should raise Exception"""
+
+        class VideoCaptureMock:
+            def set(*args):
+                pass
+
+            def read():
+                return (False, None)
+
+        with patch('pyronear.datasets.wildfire.frame_extractor.cv2.VideoCapture', return_value=VideoCaptureMock):
+            with self.assertRaises(IOError):
+                # Let's try to extract frames from unreadable video
+                frame_extractor = FrameExtractor(self.path_to_videos,
+                                                 self.path_to_states,
+                                                 strategy='random',
+                                                 n_frames=2)
+
+                with tempfile.TemporaryDirectory() as path_to_frames:
+                    (frame_extractor.run(path_to_frames=path_to_frames)
+                                    .get_frame_labels())
 
 
 if __name__ == '__main__':
