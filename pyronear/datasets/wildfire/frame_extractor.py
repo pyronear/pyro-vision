@@ -133,10 +133,11 @@ class FrameExtractor:
 
         n_frames: int, number of frames per state
 
+        random: bool, pick frames randomly(True) or evenly(False)
+
         seed: int, seed for pseudorandom generator
         """
-        #
-        pick_frames_for_one_state = partial(self._pick_frames, n_frames=n_frames, seed=seed)
+        pick_frames_for_one_state = partial(self._pick_frames, n_frames=n_frames, random=random, seed=seed)
         # DataFrame containing columns (0..n_frames - 1)
         frames = states.apply(pick_frames_for_one_state, axis=1)  # (n_states x n_frames)
 
