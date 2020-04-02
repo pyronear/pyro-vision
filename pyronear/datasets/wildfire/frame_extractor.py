@@ -1,9 +1,11 @@
 from functools import partial
 from pathlib import Path
+from typing import ClassVar, List, Union
 
 import cv2
 import numpy as np
 import pandas as pd
+
 
 class FrameExtractor:
     """Extract frames from wildfire videos according to a strategy
@@ -48,10 +50,15 @@ class FrameExtractor:
 
     labels = (frame_extractor.run(path_to_frames='koukou')
                              .get_frame_labels())
-    """
-    strategies_allowed = ['random', 'evenly']
+    """ # noqa
+    strategies_allowed: ClassVar[List[str]] = ['random', 'evenly']
 
-    def __init__(self, path_to_videos, path_to_states, strategy='random', n_frames=2):
+    def __init__(self,
+                 path_to_videos: Union[str, Path],
+                 path_to_states: Union[str, Path],
+                 strategy: str = 'random',
+                 n_frames: int = 2):
+
         self.path_to_videos = Path(path_to_videos)
         self.path_to_states = Path(path_to_states)
         self.strategy = strategy
@@ -63,8 +70,7 @@ class FrameExtractor:
 
         self.states = pd.read_csv(path_to_states)
 
-
-    def run(self, path_to_frames, seed=42):
+    def run(self, path_to_frames: Union[str, Path], seed: int = 42):
         """Run the frame extraction on the videos according to given strategy and states"""
         # Define frames to extract given a strategy
         if (self.strategy == 'random'):
@@ -89,11 +95,11 @@ class FrameExtractor:
         self._write_frames(labels, path_to_frames)
         return self
 
-    def get_frame_labels(self):
+    def get_frame_labels(self) -> pd.DataFrame:
         return self._labels
 
     @staticmethod
-    def _pick_frames(state, n_frames, random=True, seed=42):
+    def _pick_frames(state: pd.Series, n_frames: int, random: bool = True, seed: int = 42) -> pd.Series:
         """
         Return a Series with the list of selected frames for the given state (n_frames x 1)
 
@@ -115,7 +121,7 @@ class FrameExtractor:
         else:
             return pd.Series(np.linspace(state.stateStart, state.stateEnd, n_frames, dtype=int))
 
-    def _get_frame_labels(self, states, n_frames, random, seed=42):
+    def _get_frame_labels(self, states: pd.DataFrame, n_frames: int, random: bool, seed: int=42) -> pd.DataFrame:
         """
         Given a DataFrame with states, call _pickFrames to create a DataFrame with
         n_frames per state containing the state information, filename and
@@ -132,19 +138,18 @@ class FrameExtractor:
         #
         pick_frames_for_one_state = partial(self._pick_frames, n_frames=n_frames, seed=seed)
         # DataFrame containing columns (0..n_frames - 1)
-        frames = states.apply(pick_frames_for_one_state, axis=1) # (n_states x n_frames)
+        frames = states.apply(pick_frames_for_one_state, axis=1)  # (n_states x n_frames)
 
-                             # Merge states and frames and transform each value of the new columns into a row
+        # Merge states and frames and transform each value of the new columns into a row
         # Drop the new column 'variable' that represents the column name in frames
         df = pd.melt(states.join(frames), id_vars=states.columns,
                      value_vars=range(n_frames), value_name='frame').drop(columns=['variable'])
 
-                             # Add image file name
+        # Add image file name
         df['imgFile'] = df.apply(lambda x: Path(x.fBase).stem + f'_frame{x.frame}.png', axis=1)
         return df.sort_values(['fBase', 'frame'])
 
-
-    def _write_frames(self, labels, path_to_frames):
+    def _write_frames(self, labels: pd.DataFrame, path_to_frames: Union[str, Path]) -> None:
         """Extract frames from videos and write frames as
         <path_to_frames>/<fBase>_frame<frame>.png
 
