@@ -105,7 +105,7 @@ class FrameExtractor:
 
         Parameters
         ----------
-        state: pd.Series containing stateStart, stateEnd
+        state: pd.Series containing stateStart, stateEnd and fBase
 
         n_frames: number of frames to pick
 
@@ -122,7 +122,7 @@ class FrameExtractor:
         frames_range_len = len(frames_range)
         if frames_range_len < n_frames:
             raise ValueError(f"Not enough frames available({frames_range_len})"
-                             f" in the state to extract {n_frames} frames")
+                             f" in the state to extract {n_frames} frames from {state.fBase}")
 
         # Let's pick frames according to strategy
         if random:

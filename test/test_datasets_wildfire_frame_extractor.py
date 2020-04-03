@@ -23,8 +23,8 @@ class WildFireFrameExtractorTester(unittest.TestCase):
         self.path_to_states_count = 14
 
     def test_pick_frames_randomly(self):
-        frame_min, frame_max = 100, 106
-        state = pd.Series([frame_min, frame_max], index=['stateStart', 'stateEnd'])
+        frame_min, frame_max, f_base = 100, 106, '952.mp4'
+        state = pd.Series([frame_min, frame_max, f_base], index=['stateStart', 'stateEnd', 'fBase'])
 
         for n_frames in [2, 3, 4]:
             # Let's generate frames indexes
@@ -38,8 +38,8 @@ class WildFireFrameExtractorTester(unittest.TestCase):
             self.assertLessEqual(frame_indexes.max(), frame_max)
 
     def test_pick_frames_evenly(self):
-        frame_min, frame_max = 100, 106
-        state = pd.Series([frame_min, frame_max], index=['stateStart', 'stateEnd'])
+        frame_min, frame_max, f_base = 100, 106, '952.mp4'
+        state = pd.Series([frame_min, frame_max, f_base], index=['stateStart', 'stateEnd', 'fBase'])
         frame_indexes_expected = {2: [100, 106],
                                   3: [100, 103, 106],
                                   4: [100, 102, 104, 106]}
@@ -55,8 +55,8 @@ class WildFireFrameExtractorTester(unittest.TestCase):
             self.assertListEqual(frame_indexes.tolist(), frame_indexes_expected[n_frames])
 
     def test_pick_too_many_frames_raise_exception(self):
-        frame_min, frame_max = 100, 106
-        state = pd.Series([frame_min, frame_max], index=['stateStart', 'stateEnd'])
+        frame_min, frame_max, f_base = 100, 106, '952.mp4'
+        state = pd.Series([frame_min, frame_max, f_base], index=['stateStart', 'stateEnd', 'fBase'])
         n_frames = 8  # Only 7 available: 106-100+1=7
 
         # For every strategy
