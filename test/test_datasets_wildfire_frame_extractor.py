@@ -28,7 +28,7 @@ class WildFireFrameExtractorTester(unittest.TestCase):
 
         for n_frames in [2, 3, 4]:
             # Let's generate frames indexes
-            frame_indexes = FrameExtractor._pick_frames(state, n_frames=n_frames, random=True)
+            frame_indexes = FrameExtractor._pick_frames(state, n_frames=n_frames, allow_duplicates=False, random=True)
 
             # Assert frames indexes are unique
             self.assertEqual(n_frames, frame_indexes.nunique())
@@ -46,7 +46,7 @@ class WildFireFrameExtractorTester(unittest.TestCase):
 
         for n_frames in [2, 3, 4]:
             # Let's generate frames indexes
-            frame_indexes = FrameExtractor._pick_frames(state, n_frames=n_frames, random=False)
+            frame_indexes = FrameExtractor._pick_frames(state, n_frames=n_frames, allow_duplicates=False, random=False)
 
             # Assert frames indexes are unique
             self.assertEqual(n_frames, frame_indexes.nunique())
@@ -63,7 +63,18 @@ class WildFireFrameExtractorTester(unittest.TestCase):
         for random in [True, False]:
             # Let's try to generate more frames indexes than available
             with self.assertRaises(ValueError):
-                FrameExtractor._pick_frames(state, n_frames=n_frames, random=random)
+                FrameExtractor._pick_frames(state, n_frames=n_frames, allow_duplicates=False, random=random)
+
+    def test_pick_too_many_frames_allowed_raise_warning(self):
+        frame_min, frame_max, f_base = 100, 106, '952.mp4'
+        state = pd.Series([frame_min, frame_max, f_base], index=['stateStart', 'stateEnd', 'fBase'])
+        n_frames = 8  # Only 7 available: 106-100+1=7
+
+        # For every strategy
+        for random in [True, False]:
+            # Let's try to generate more frames indexes than available
+            with self.assertWarns(Warning):
+                FrameExtractor._pick_frames(state, n_frames=n_frames, allow_duplicates=True, random=random)
 
     def test_frame_extraction_random(self):
         """Extracting frames should produce expected count of images and length of metadata(labels)"""
