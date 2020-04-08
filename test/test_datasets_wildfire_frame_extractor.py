@@ -16,8 +16,27 @@ from pyronear.datasets.wildfire import FrameExtractor
 
 class WildFireFrameExtractorTester(unittest.TestCase):
 
-    def setUp(self):
-        self.path_to_videos = Path(__file__).parent / 'fixtures/videos'  # TODO: download automatically
+    @staticmethod
+    def download_video_fixtures(path_to_videos):
+        import urllib
+        import yaml
+        import pafy
+        video_urls_yaml_url = "https://gist.githubusercontent.com/x0s/2015a7e58d8d3f885b6528d33cd10b2d/raw/"
+
+        with urllib.request.urlopen(video_urls_yaml_url) as video_urls_yaml:
+            urls = yaml.safe_load(video_urls_yaml)
+        for dest, url in urls.items():
+            vid = pafy.new(url)
+            stream = vid.getbest()
+            print(f'Downloading {stream.get_filesize()/1e6:.2f} MB')
+            stream.download((path_to_videos / dest).as_posix())
+
+    @classmethod
+    def setUpClass(self):
+        self.path_to_videos = Path(__file__).parent / 'fixtures/videos'
+        self.path_to_videos.mkdir(exist_ok=True)
+
+        self.download_video_fixtures(self.path_to_videos)
 
         self.path_to_states = Path(__file__).parent / 'fixtures/wildfire_states.csv'
         self.path_to_states_count = 14
