@@ -69,7 +69,7 @@ class WildFireDataset(Dataset, VisionMixin):
         Non-exhaustive values that can be found in self.target_names:
             ['fire', 'clf_confidence', 'loc_confidence', 'x', 'y']
         """
-        return torch.from_numpy(self.metadata[self.target_names].iloc[index].values)
+        return torch.from_numpy(self.metadata[self.target_names].iloc[index].values.astype(float))
 
 
 class WildFireSplitter:
