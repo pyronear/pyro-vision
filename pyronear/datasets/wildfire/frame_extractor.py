@@ -71,6 +71,7 @@ class FrameExtractor:
                              f"Please choose from : {', '.join(self.strategies_allowed)}")
 
         self.states = pd.read_csv(path_to_states)
+        this.states = this.states.astype({"stateStart": int, "stateEnd": int})
 
     def run(self, path_to_frames: Union[str, Path], allow_duplicates: bool = False, seed: int = 42):
         """Run the frame extraction on the videos according to given strategy and states
