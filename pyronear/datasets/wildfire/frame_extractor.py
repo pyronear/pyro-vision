@@ -215,7 +215,7 @@ class FrameExtractor:
                 # Save the frame
                 if success:
                     if(resizeFrame):
-                        frame = cv2.resize(frame,resizeFrame)
+                        frame = cv2.resize(frame, resizeFrame)
                     cv2.imwrite((path_to_frames / row.imgFile).as_posix(), frame)
                 else:
                     raise IOError(f'Could not read frame {row.frame} from {name}')
