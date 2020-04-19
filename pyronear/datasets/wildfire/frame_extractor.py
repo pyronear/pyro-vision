@@ -73,7 +73,7 @@ class FrameExtractor:
         self.states = pd.read_csv(path_to_states)
         self.states = self.states.astype({"stateStart": int, "stateEnd": int})
 
-    def run(self, path_to_frames: Union[str, Path], allow_duplicates: bool = False, seed: int = 42):
+    def run(self, path_to_frames: Union[str, Path], allow_duplicates: bool = False, seed: int = 42, resizeFrame=None):
         """Run the frame extraction on the videos according to given strategy and states
 
         path_to_frames: str or Path, path where to save the frames
@@ -103,7 +103,7 @@ class FrameExtractor:
 
         # Write frames
         print(f'Extracting {self.n_frames} frames per state ({len(labels)} in total) to {path_to_frames}')
-        self._write_frames(labels, path_to_frames)
+        self._write_frames(labels, path_to_frames, resizeFrame)
         return self
 
     def get_frame_labels(self) -> pd.DataFrame:
@@ -187,7 +187,7 @@ class FrameExtractor:
         df['imgFile'] = df.apply(lambda x: Path(x.fBase).stem + f'_frame{x.frame}.png', axis=1)
         return df.sort_values(['fBase', 'frame'])
 
-    def _write_frames(self, labels: pd.DataFrame, path_to_frames: Union[str, Path]) -> None:
+    def _write_frames(self, labels: pd.DataFrame, path_to_frames: Union[str, Path], resizeFrame=None) -> None:
         """Extract frames from videos and write frames as
         <path_to_frames>/<fBase>_frame<frame>.png
 
@@ -214,6 +214,8 @@ class FrameExtractor:
                 success, frame = movie.read()
                 # Save the frame
                 if success:
+                    if(resizeFrame):
+                        frame = cv2.resize(frame,resizeFrame)
                     cv2.imwrite((path_to_frames / row.imgFile).as_posix(), frame)
                 else:
                     raise IOError(f'Could not read frame {row.frame} from {name}')
