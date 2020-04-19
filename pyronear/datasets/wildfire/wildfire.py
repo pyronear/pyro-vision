@@ -75,7 +75,7 @@ class WildFireDataset(Dataset, VisionMixin):
         return torch.from_numpy(self.metadata[self.target_names].iloc[index].values)
 
 
-class WildFireSplitter:
+class WildFireSplitter(object):
     """Split one WildFireDataset into train, validation and test sets
 
     Three WildFireDataset instances will be created according the the given ratios.
