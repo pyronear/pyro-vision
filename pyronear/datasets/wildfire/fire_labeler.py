@@ -7,7 +7,7 @@ from itertools import combinations
 import numpy as np
 
 
-class FireLabeler(object):
+class FireLabeler:
     """Automatically labelize WildFire dataset based on video descriptions
 
     It will create a new column containing Fire ids that try to identify the videos
