@@ -1,12 +1,15 @@
 import glob
 import tempfile
 import unittest
+import urllib
 
 from unittest.mock import patch
 
 from pathlib import Path
 
+import pafy
 import pandas as pd
+import yaml
 
 from pyronear.datasets.wildfire import FrameExtractor
 
@@ -18,9 +21,6 @@ class WildFireFrameExtractorTester(unittest.TestCase):
 
     @staticmethod
     def download_video_fixtures(path_to_videos):
-        import urllib
-        import yaml
-        import pafy
         video_urls_yaml_url = "https://gist.githubusercontent.com/x0s/2015a7e58d8d3f885b6528d33cd10b2d/raw/"
 
         with urllib.request.urlopen(video_urls_yaml_url) as video_urls_yaml:
