@@ -11,9 +11,10 @@ import subprocess
 from setuptools import setup, find_packages
 
 
-version = '0.2.0a0'
-sha = 'Unknown'
 package_name = 'pyronear'
+with open(os.path.join('pyronear', 'version.py')) as version_file:
+    version = version_file.read().strip()
+sha = 'Unknown'
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
