@@ -16,7 +16,7 @@ from torchvision.datasets.utils import check_integrity
 class VisionMixin:
     """Class to provide re-usabled functions to classes dealing this Vision (ie: VisionDataset)"""
     @staticmethod
-    def load_image(path, to_tensor=False):
+    def load_image(path, to_tensor=True):
         """Load an image from a path into a (PIL Image) or a (pytorch Tensor)"""
         # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
         with open(path, 'rb') as f:
