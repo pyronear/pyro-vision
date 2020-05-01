@@ -1,4 +1,3 @@
-#!usr/bin/python
 # -*- coding: utf-8 -*-
 
 # Based on https://github.com/fastai/fastai/blob/master/fastai/vision/learner.py

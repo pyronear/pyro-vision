@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import warnings
 
 import numpy as np
@@ -5,8 +7,8 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from pyronear.datasets.utils import VisionMixin
-from pyronear.datasets.wildfire import ExhaustSplitStrategy
+from ..utils import VisionMixin
+from .split_strategy import ExhaustSplitStrategy
 
 
 class WildFireDataset(Dataset, VisionMixin):

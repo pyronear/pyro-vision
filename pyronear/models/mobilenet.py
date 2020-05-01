@@ -1,4 +1,3 @@
-#!usr/bin/python
 # -*- coding: utf-8 -*-
 
 from torchvision.models.mobilenet import MobileNetV2, model_urls as imagenet_urls
