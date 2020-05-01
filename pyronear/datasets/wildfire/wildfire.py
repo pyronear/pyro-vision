@@ -158,10 +158,10 @@ class WildFireSplitter:
         """
         self.wildfire = wildfire
         # Some checks first
-        if wildfire.metadata['fire_id'].nunique() != wildfire.metadata['fire_id'].max() + 1:
-            warnings.warn(f"Inconsistent Fire Labeling. Maybe try to label the fire again\n"
-                          f"Distinct values of ids({wildfire.metadata['fire_id'].nunique()}"
-                          f" ≠ {wildfire.metadata['fire_id'].max() + 1})", Warning)
+        # if wildfire.metadata['fire_id'].nunique() != wildfire.metadata['fire_id'].max() + 1:
+        #     warnings.warn(f"Inconsistent Fire Labeling. Maybe try to label the fire again\n"
+        #                   f"Distinct values of ids({wildfire.metadata['fire_id'].nunique()}"
+        #                   f" ≠ {wildfire.metadata['fire_id'].max() + 1})", Warning)
 
         if self.algorithm != 'auto':
             raise ValueError(f"Algorithm {self.algorithm} is unknown. Only 'auto' available for now")
