@@ -61,7 +61,8 @@ class ExhaustSplitStrategy(SplitStrategy):
 
         n_samples_total = df.shape[0]
         n_samples_train = n_samples_total * ratios['train']
-        n_samples_val = n_samples_total * ratios['val']
+        if ratios['test'] >0:
+            n_samples_val = n_samples_total * ratios['val']
         #n_samples_test = n_samples_total - (n_samples_train + n_samples_val)
 
         # create hash table to exhaust: {fire_id: number of frames labeled with fire_id}
@@ -69,12 +70,21 @@ class ExhaustSplitStrategy(SplitStrategy):
         self._fire_id_to_size_to_exhaust = copy.deepcopy(self._fire_id_to_size)
 
         # Let's get
-        fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train),
-                    'val': self._get_fire_ids_for_one_split(n_samples_val)}
-        fire_ids['test'] = [id_ for id_ in self._fire_id_to_size if id_ not in (fire_ids['train'] + fire_ids['val'])]
-        # Finish exhaustion
-        for fire_id_test in fire_ids['test']:
-            del self._fire_id_to_size_to_exhaust[fire_id_test]
+        if ratios['test'] >0:
+            fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train),
+                        'val': self._get_fire_ids_for_one_split(n_samples_val)}
+            fire_ids['test'] = [id_ for id_ in self._fire_id_to_size if id_ not in (fire_ids['train'] + fire_ids['val'])]
+            # Finish exhaustion
+            for fire_id_test in fire_ids['test']:
+                del self._fire_id_to_size_to_exhaust[fire_id_test]
+
+        else:
+            fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train)}
+            fire_ids['val'] = [id_ for id_ in self._fire_id_to_size if id_ not in fire_ids['train']]
+            # Finish exhaustion
+            for fire_id_test in fire_ids['val']:
+                del self._fire_id_to_size_to_exhaust[fire_id_test]
+            fire_ids['test']=[]
 
         n_samples_remaining = len(self._fire_id_to_size_to_exhaust)
         if n_samples_remaining != 0:
