@@ -88,6 +88,11 @@ class WildFireDatasetSplitter(unittest.TestCase):
         splitter = WildFireSplitter(ratios)
         self.assertEqual(ratios, splitter.ratios)
 
+    def test_consistent_ratios_good_init_with_test_to_zero(self):
+        ratios = {'train': 0.8, 'val': 0.2, 'test': 0}
+        splitter = WildFireSplitter(ratios)
+        self.assertEqual(ratios, splitter.ratios)
+
     def test_inconsistent_ratios_raise_exception(self):
         ratios = {'train': 0.9, 'val': 0.2, 'test': 0.1}  # sum > 1
         with self.assertRaises(ValueError):
