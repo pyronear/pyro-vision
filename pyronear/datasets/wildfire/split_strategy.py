@@ -72,7 +72,8 @@ class ExhaustSplitStrategy(SplitStrategy):
         if ratios['test'] > 0:
             fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train),
                         'val': self._get_fire_ids_for_one_split(n_samples_val)}
-            fire_ids['test'] = [id_ for id_ in self._fire_id_to_size if id_ not in (fire_ids['train'] + fire_ids['val'])]
+            fire_ids['test'] = [id_ for id_ in self._fire_id_to_size
+                                if id_ not in (fire_ids['train'] + fire_ids['val'])]
             # Finish exhaustion
             for fire_id_test in fire_ids['test']:
                 del self._fire_id_to_size_to_exhaust[fire_id_test]
@@ -83,7 +84,7 @@ class ExhaustSplitStrategy(SplitStrategy):
             # Finish exhaustion
             for fire_id_test in fire_ids['val']:
                 del self._fire_id_to_size_to_exhaust[fire_id_test]
-            fire_ids['test']=[]
+            fire_ids['test'] = []
 
         n_samples_remaining = len(self._fire_id_to_size_to_exhaust)
         if n_samples_remaining != 0:
