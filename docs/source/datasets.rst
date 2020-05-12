@@ -16,5 +16,12 @@ The following datasets are available:
 
 OpenFire
 ~~~~~~~~
+An image classification dataset for wildfire in natural environments, built using Google Images referenced data.
 
 .. autoclass:: OpenFire
+
+WildFire
+~~~~~~~~
+A video dataset labeled with spatio-temporal keypoints for wilfire detection, built using available surveillance camera data.
+
+.. autoclass:: WildFireDataset

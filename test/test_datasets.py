@@ -9,15 +9,17 @@ from torchvision.datasets import VisionDataset
 from pyronear import datasets
 
 
-class TestCollectEnv(unittest.TestCase):
+class DatasetsTester(unittest.TestCase):
     def test_downloadurl(self):
         # Valid input
-        url = 'https://gist.githubusercontent.com/yrevar/942d3a0ac09ec9e5eb3a/raw/238f720ff059c1f82f368259d1ca4ffa5dd8f9f5/imagenet1000_clsidx_to_labels.txt'
+        url = 'https://arxiv.org/pdf/1910.02940.pdf'
 
-        with Path(tempfile.TemporaryDirectory().name) as root:
+        with tempfile.TemporaryDirectory() as root:
             # URL error cases
-            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url, 'url', root, verbose=False)
-            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url, 'https://url', root, verbose=False)
+            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url,
+                              'url', root, verbose=False)
+            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url,
+                              'https://url', root, verbose=False)
             self.assertRaises(TypeError, datasets.utils.download_url, 0, root, verbose=False)
 
             # Root error cases
@@ -32,10 +34,12 @@ class TestCollectEnv(unittest.TestCase):
         urls = ['https://arxiv.org/pdf/1910.01108.pdf', 'https://arxiv.org/pdf/1810.04805.pdf',
                 'https://arxiv.org/pdf/1905.11946.pdf', 'https://arxiv.org/pdf/1910.01271.pdf']
 
-        with Path(tempfile.TemporaryDirectory().name) as root:
+        with tempfile.TemporaryDirectory() as root:
             # URL error cases
-            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls, ['url'] * 4, root, silent=False)
-            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls, ['https://url'] * 4, root, silent=False)
+            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls,
+                              ['url'] * 4, root, silent=False)
+            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls,
+                              ['https://url'] * 4, root, silent=False)
             self.assertRaises(TypeError, datasets.utils.download_url, [0] * 4, root, silent=False)
 
             # Working case
@@ -52,20 +56,21 @@ class TestCollectEnv(unittest.TestCase):
                                    img_folder=None)
             self.assertIsInstance(ds.img_folder, Path)
 
-        with tempfile.TemporaryDirectory() as root, \
-             tempfile.TemporaryDirectory() as img_folder:
+        with tempfile.TemporaryDirectory() as root, tempfile.TemporaryDirectory() as img_folder:
 
             # Working case
             # Test img_folder as Path and str
-            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples, img_folder=Path(img_folder))
-            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=num_samples, img_folder=img_folder)
+            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples,
+                                          img_folder=Path(img_folder))
+            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=num_samples,
+                                         img_folder=img_folder)
             # Check inherited properties
             self.assertIsInstance(train_set, VisionDataset)
 
             # Assert valid extensions of every image
-            self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
+            self.assertTrue(all(sample['name'].rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
                                 for sample in train_set.data))
-            self.assertTrue(all(sample['path'].name.rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
+            self.assertTrue(all(sample['name'].rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
                                 for sample in test_set.data))
 
             # Check against number of samples in extract (limit to num_samples)
@@ -85,8 +90,8 @@ class TestCollectEnv(unittest.TestCase):
             # Check train/test split
             self.assertIsInstance(train_set, VisionDataset)
             # Check unicity of sample across all splits
-            train_paths = [sample['path'] for sample in train_set.data]
-            self.assertTrue(all(sample['path'] not in train_paths for sample in test_set.data))
+            train_paths = [sample['name'] for sample in train_set.data]
+            self.assertTrue(all(sample['name'] not in train_paths for sample in test_set.data))
 
 
 if __name__ == '__main__':

@@ -1,4 +1,3 @@
-#!usr/bin/python
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
@@ -18,14 +17,9 @@ class OpenFire(VisionDataset):
     """Wildfire image Dataset.
 
     Args:
-        root (string): Root directory of dataset where ``OpenFire/processed/training.pt``
-            and  ``OpenFire/processed/test.pt`` exist.
-        train (bool, optional): If True, creates dataset from ``training.pt``,
-            otherwise from ``test.pt``.
-        transform (callable, optional): A function/transform that  takes in an PIL image
-            and returns a transformed version. E.g, ``transforms.RandomCrop``
-        target_transform (callable, optional): A function/transform that takes in the
-            target and transforms it.
+        root (string): Root directory of dataset where the ``images``
+            and  ``annotations`` folders exist.
+        train (bool, optional): If True, returns training subset, else test set.
         download (bool, optional): If true, downloads the dataset from the internet and
             puts it in root directory. If dataset is already downloaded, it is not
             downloaded again.
@@ -33,34 +27,42 @@ class OpenFire(VisionDataset):
             for downloading the dataset.
         num_samples (int, optional): Number of samples to download (all by default)
         img_folder (str or Path, optional): Location of image folder. Default: <root>/OpenFire/images
+        **kwargs: optional arguments of torchvision.datasets.VisionDataset
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'
-    training_file = 'training.pt'
-    test_file = 'test.pt'
+    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'  # noqa: E501
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=16, num_samples=None,
+    def __init__(self, root, train=True, download=False, threads=None, num_samples=None,
                  img_folder=None, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
-        self.train = train  # training set or test set
+        self.train = train
         if img_folder is None:
-            self.img_folder = self._root.joinpath(self.__class__.__name__, 'images')
+            self.img_folder = Path(self.root, self.__class__.__name__, 'images')
         else:
             self.img_folder = Path(img_folder)
 
         if download:
             self.download(threads, num_samples)
 
-        if not self._check_exists(train):
-            raise RuntimeError('Dataset not found.' +
-                               ' You can use download=True to download it')
+        # Load appropriate subset
+        extract = [sample for sample in self.get_extract(num_samples)
+                   if sample['is_test'] == (not train)]
 
-        if self.train:
-            data_file = self.training_file
-        else:
-            data_file = self.test_file
-        self.data = torch.load(self._root.joinpath(self._processed, data_file))
+        # Verify samples
+        self.data = self._verify_samples(extract)
+
+    @property
+    def _images(self):
+        return self.img_folder
+
+    @property
+    def _annotations(self):
+        return Path(self.root, self.__class__.__name__, 'annotations')
+
+    @property
+    def class_to_idx(self):
+        return {_class: i for i, _class in enumerate(self.classes)}
 
     def __getitem__(self, idx):
         """ Getter function
@@ -73,92 +75,121 @@ class OpenFire(VisionDataset):
         """
 
         # Load image
-        img = Image.open(self._root.joinpath(self.data[idx]['path']), mode='r').convert('RGB')
+        img = Image.open(self._images.joinpath(self.data[idx]['name']), mode='r').convert('RGB')
         # Load bboxes & encode label
-        target = self.data[idx]['target']
+        target = self.class_to_idx[self.data[idx]['target']]
         if self.transforms is not None:
             img, target = self.transforms(img, target)
 
         return img, target
 
-    @property
-    def _root(self):
-        return Path(self.root)
-
-    @property
-    def _raw(self):
-        return Path(self.__class__.__name__, 'raw')
-
-    @property
-    def _processed(self):
-        return Path(self.__class__.__name__, 'processed')
-
-    @property
-    def class_to_idx(self):
-        return {_class: i for i, _class in enumerate(self.classes)}
-
-    def _check_exists(self, train=True):
-        if train:
-            return self._root.joinpath(self._processed, self.training_file).is_file()
-        else:
-            return self._root.joinpath(self._processed, self.test_file).is_file()
+    def __len__(self):
+        return len(self.data)
 
     def download(self, threads=None, num_samples=None):
-        """Download the OpenFire data if it doesn't exist in processed_folder already.
+        """ Download images from a specific extract
 
         Args:
-            threads (int, optional): Number of threads to use for dataset downloading.
-            num_samples (int, optional): Number of samples to download (all by default)
+            threads (int, optional): number of threads used for parallel downloading
+            num_samples (int, optional): if specified, takes first num_samples from extract
         """
 
-        if self._check_exists(train=True) and self._check_exists(train=False):
-            return
+        # Download extract of samples
+        self._download_extract()
 
-        self._root.joinpath(self._raw).mkdir(parents=True, exist_ok=True)
-        self._root.joinpath(self._processed).mkdir(parents=True, exist_ok=True)
+        # Load only the number of specified samples
+        extract = self.get_extract(num_samples)
 
-        # Download annotations
-        download_url(self.url, self._root.joinpath(self._raw), filename=self.url.rpartition('/')[-1], verbose=False)
-        with open(self._root.joinpath(self._raw, self.url.rpartition('/')[-1]), 'rb') as f:
-            annotations = json.load(f)[:num_samples]
+        # Download the corresponding images
+        self._download_images(extract, threads)
 
-        # Download actual images
-        training_set, test_set = [], []
-        self.img_folder.mkdir(parents=True, exist_ok=True)
-        unavailable_idxs = 0
-        # Prepare URL and filenames for multi-processing
-        entries = [(a['url'], a['name']) for idx, a in enumerate(annotations)]
-        # Use multiple threads to speed up download
-        download_urls(entries, self.img_folder, threads=threads)
-        # Verify downloads
-        for idx, annotation in enumerate(annotations):
-            img_path = self.img_folder.joinpath(entries[idx][1])
-            if img_path.is_file():
-                # Encode target
-                target = self.class_to_idx[annotation['target']]
-                # Aggregate img path and annotations
-                data = dict(path=img_path, target=target)
-                # Add it to the proper set
-                if annotation['is_test']:
-                    test_set.append(data)
-                else:
-                    training_set.append(data)
-            else:
-                unavailable_idxs += 1
-        # HTTP Errors
-        if unavailable_idxs > 0:
-            warnings.warn((f'{unavailable_idxs}/{len(annotations)} samples could not be downloaded. Please retry later.'))
-
-        # save as torch files
-        with open(self._root.joinpath(self._processed, self.training_file), 'wb') as f:
-            torch.save(training_set, f)
-        with open(self._root.joinpath(self._processed, self.test_file), 'wb') as f:
-            torch.save(test_set, f)
+        # Verify download
+        _ = self._verify_samples(extract)
 
         print('Done!')
 
-    def __len__(self):
-        return len(self.data)
+    def _download_extract(self):
+        """ Download extract file from URL """
+
+        self._annotations.mkdir(parents=True, exist_ok=True)
+
+        # Download annotations
+        download_url(self.url, self._annotations, filename=self.url.rpartition('/')[-1], verbose=False)
+
+    def get_extract(self, num_samples=None):
+        """ Load extract into memory
+
+        Args:
+            num_samples (int, optional): if specified, takes first num_samples from extract
+        Returns:
+            extract (list<dict>): loaded extract
+        """
+
+        # Check extract existence
+        file_path = self._annotations.joinpath(self.url.rpartition('/')[-1])
+        if not file_path.is_file():
+            raise RuntimeError('Extract not found. You can use download=True to download it.')
+        # Take the specified number of samples
+        with open(file_path, 'rb') as f:
+            extract = json.load(f)[:num_samples]
+
+        return extract
+
+    def _download_images(self, extract, threads=None):
+        """ Download images from a specific extract
+
+        Args:
+            extract (list<dict>): image extract to download
+            threads (int, optional): number of threads used for parallel downloading
+        """
+
+        self._images.mkdir(parents=True, exist_ok=True)
+        # Prepare URL and filenames for multi-processing
+        entries = [(s['url'], s['name']) for s in extract
+                   if not self._images.joinpath(s['name']).is_file()]
+        # Use multiple threads to speed up download
+        if len(entries) > 0:
+            download_urls(entries, self._images, threads=threads)
+
+    def _verify_samples(self, extract):
+        """ Download images from a specific extract
+
+        Args:
+            extract (list<dict>): list of samples
+        Returns:
+            valid_samples (list<dict>): list of valid samples
+        """
+
+        valid_samples = []
+        dl_issues, target_issues = 0, 0
+        # Verify samples in extract
+        for sample in extract:
+
+            is_ok = True
+            # Verify image
+            if not self._images.joinpath(sample['name']).is_file():
+                dl_issues += 1
+                is_ok = False
+
+            # Verify targets
+            if self.class_to_idx.get(sample['target']) is None:
+                target_issues += 1
+                is_ok = False
+
+            if is_ok:
+                valid_samples.append(sample)
+
+        # HTTP errors
+        if dl_issues == len(extract):
+            raise RuntimeError('Images not found. You can use download=True to download them.')
+        elif dl_issues > 0:
+            warnings.warn(f'{dl_issues}/{len(extract)} sample images are not present on disk. '
+                          'Please retry downloading later.')
+        # Extract errors
+        if target_issues > 0:
+            warnings.warn(f'{target_issues}/{len(extract)} samples have corrupted targets.')
+
+        return valid_samples
 
     def extra_repr(self):
         return "Split: {}".format("Train" if self.train is True else "Test")

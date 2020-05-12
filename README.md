@@ -1,9 +1,27 @@
-# PyroNear
-[![Donate](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a)](https://www.codacy.com/manual/fg/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=frgfm/PyroNear&amp;utm_campaign=Badge_Grade)[![CircleCI](https://circleci.com/gh/frgfm/PyroNear.svg?style=shield)](https://circleci.com/gh/frgfm/PyroNear) [![codecov](https://codecov.io/gh/frgfm/PyroNear/branch/master/graph/badge.svg)](https://codecov.io/gh/frgfm/PyroNear) [![Docs](https://img.shields.io/badge/docs-available-blue.svg)](https://frgfm.github.io/PyroNear)
+![PyroNear Logo](docs/source/_static/img/pyronear-logo-dark.png)
 
-The increasing adoption of mobile phones have significantly shortened the duration between the beginning of a wildfire and the firefighting agents being alerted. In less dense areas, limiting and minimizing this amount of time is critical to preserve forest areas.
+<p align="center">
+    <a href="LICENSE" alt="License">
+        <img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
+    <a href="https://www.codacy.com/manual/fg/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=frgfm/PyroNear&amp;utm_campaign=Badge_Grade">
+        <img src="https://api.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a"/></a>
+    <a href="https://circleci.com/gh/frgfm/PyroNear">
+        <img src="https://circleci.com/gh/frgfm/PyroNear.svg?style=shield" /></a>
+    <a href="https://codecov.io/gh/frgfm/PyroNear">
+  		<img src="https://codecov.io/gh/frgfm/PyroNear/branch/master/graph/badge.svg" /></a>
+    <a href="https://frgfm.github.io/PyroNear">
+  		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
+    <a href="https://pypi.org/project/pyronear/" alt="Pypi">
+        <img src="https://img.shields.io/badge/pypi-v0.1.0-blue.svg" /></a>
+</p>
 
-PyroNear aims at offering an wildfire early detection system with state-of-the-art performances at minimal deployment costs.
+
+
+# PyroNear: wildfire early detection
+
+The increasing adoption of mobile phones have significantly shortened the time required for firefighting agents to be alerted of a starting wildfire. In less dense areas, limiting and minimizing this duration remains critical to preserve forest areas.
+
+PyroNear aims at providing the means to create a wildfire early detection system with state-of-the-art performances at minimal deployment costs.
 
 
 
@@ -30,10 +48,10 @@ PyroNear aims at offering an wildfire early detection system with state-of-the-a
 
 ### Installation
 
-Use pip to install the package from git
+You can install the package using [pypi](https://pypi.org/project/pyronear/) as follows:
 
 ```shell
-pip install git+https://github.com/frgfm/PyroNear@master
+pip install pyronear
 ```
 
 
@@ -63,7 +81,7 @@ python references/classification/fastai/train.py --help
 You can then run the script with your own arguments:
 
 ```shell
-python references/classification/fastai/train.py --data-path ./data --lr 3e-3 --epochs 4 --pretrained --deterministic
+python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrained --deterministic
 ```
 
 *Please note that most tasks are provided with two training scripts (and their `requirements.txt`): one using [fastai](https://github.com/fastai/fastai) and the other without it.*

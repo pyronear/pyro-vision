@@ -21,8 +21,8 @@ import sphinx_rtd_theme
 
 master_doc = 'index'
 project = 'pyronear'
-copyright = '2019, PyroNear Contibutors'
-author = 'PyroNear Contibutors'
+copyright = '2019, PyroNear Contributors'
+author = 'PyroNear Contributors'
 
 # The full version, including alpha/beta/rc tags
 version = pyronear.__version__
@@ -76,8 +76,10 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_theme_options = {
     'collapse_navigation': False,
     'display_version': True,
-    'logo_only': False,
+    'logo_only': True,
 }
+
+html_logo = '_static/img/pyronear-logo-dark.png'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
