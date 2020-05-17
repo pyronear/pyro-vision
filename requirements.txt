@@ -1,5 +1,9 @@
+opencv-python>=3.4.5.20
+pafy>=0.5.5
 pandas>=0.25.2
+PyYAML>=5.1.2
 torch>=1.2.0
 torchvision>=0.4.0
 tqdm>=4.20.0
 requests>=2.20.0
+youtube-dl>=2020.3.24
