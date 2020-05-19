@@ -157,7 +157,7 @@ class WildFireSplitter:
         Because split is randomly done
         """
         self.wildfire = wildfire
-        #Some checks first
+        # Some checks first
         if wildfire.metadata['fire_id'].nunique() != wildfire.metadata['fire_id'].max() + 1:
             warnings.warn(f"Inconsistent Fire Labeling. Maybe try to label the fire again\n"
                           f"Distinct values of ids({wildfire.metadata['fire_id'].nunique()}"
