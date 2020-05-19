@@ -74,18 +74,18 @@ class ModelsTester(unittest.TestCase):
 
         # Test parameters
         batch_size = 32
-        frame_per_seq = 2
+        frame_per_seq = 4
 
         # Valid input
         model = models.ssresnet18.SSResNet18(frame_per_seq=frame_per_seq)
 
         model.eval()
-        x = torch.rand((batch_size, 3, 64, 64))
+        x = torch.rand((batch_size, 3, 448, 448))
         with torch.no_grad():
             out = model(x)
 
         self.assertEqual(out.shape[0], batch_size)
-        self.assertEqual(out.shape[1], 2)
+        self.assertEqual(out.shape[1], 1)
 
 
 for model_name in get_available_classification_models():
