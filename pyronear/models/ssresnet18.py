@@ -51,9 +51,10 @@ class SSResNet18(ResNet):
             s = i % self.frame_per_seq
             x2[i // self.frame_per_seq, s * x.shape[1]:(s + 1) * x.shape[1], :, :] = x[i, :, :, :]
 
-        x = x2
         if x.device.type.startswith('cuda'):
-            x = x.cuda()
+            x = x2.to(x.device)
+        else:
+            x = x2
 
         #conv 1x1
         x = self.conv1_1(x)
