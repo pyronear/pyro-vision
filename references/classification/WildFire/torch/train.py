@@ -168,6 +168,7 @@ def main(args):
 
     val_transforms = transforms.Compose([
         transforms.Resize(size=args.resize),
+        transforms.CenterCrop(size=args.resize),
         transforms.ToTensor(),
         normalize
     ])
