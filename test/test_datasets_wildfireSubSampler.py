@@ -99,15 +99,6 @@ class WildFireDatasetSplitter(unittest.TestCase):
         with self.assertRaises(ValueError):
             WildFireSplitter(ratios)
 
-    def test_splitting_with_test_to_zero(self):
-        ratios = {'train': 0.82, 'val': 0.18, 'test': 0}
-
-        splitter = WildFireSplitter(ratios, seed=42)
-        splitter.fit(self.wildfire)
-
-        for (set_, ratio_) in splitter.ratios_.items():
-            self.assertAlmostEqual(ratio_, ratios[set_], places=2)
-
     def test_splitting_gives_good_splits_size(self):
         n_samples_expected = {'train': 562, 'val': 120, 'test': 118}
         ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
