@@ -1,2 +1,1 @@
 coverage>=4.5.4
-flake8>=3.6.0
