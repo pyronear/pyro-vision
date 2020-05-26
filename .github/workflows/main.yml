@@ -78,7 +78,7 @@ jobs:
           architecture: x64
       - name: Run flake8
         run: |
-          pip install flake8
+          pip install -r .github/workflows/requirements.txt
           flake8 --version
           flake8 ./
 
