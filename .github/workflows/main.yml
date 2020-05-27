@@ -1,16 +1,16 @@
 name: python-package
 
-on: push
+on: pull_request
 
 jobs:
   pkg-install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.6
         uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: 3.6
           architecture: x64
       - name: Cache python modules
         uses: actions/cache@v1.1.2
@@ -33,10 +33,10 @@ jobs:
     needs: pkg-install
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.6
         uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: 3.6
           architecture: x64
       - name: Cache python modules
         uses: actions/cache@v1.1.2
@@ -71,14 +71,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.6
         uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: 3.6
           architecture: x64
       - name: Run flake8
         run: |
-          pip install flake8
+          pip install -r .github/workflows/requirements.txt
           flake8 --version
           flake8 ./
 
@@ -87,10 +87,10 @@ jobs:
     needs: pkg-install
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.6
         uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: 3.6
           architecture: x64
       - name: Cache python modules
         uses: actions/cache@v1.1.2
