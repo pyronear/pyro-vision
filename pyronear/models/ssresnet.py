@@ -26,7 +26,7 @@ class SSResNet(ResNet):
             resnet34: BasicBlock, [3, 4, 6, 3]
             resnet50: Bottleneck, [3, 4, 6, 3]
             resnet101: Bottleneck, [3, 4, 23, 3]
-            resnet101: Bottleneck, [3, 8, 36, 3]
+            resnet152: Bottleneck, [3, 8, 36, 3]
 
             Please refere to torchvision documentation for more details:
             https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py#L232
