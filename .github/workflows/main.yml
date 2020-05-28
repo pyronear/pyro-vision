@@ -1,6 +1,6 @@
 name: python-package
 
-on: pull_request
+on: [push, pull_request]
 
 jobs:
   pkg-install:
