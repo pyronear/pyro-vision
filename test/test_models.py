@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import random
 from pyronear import models
+import torchvision
 
 
 def set_rng_seed(seed):
@@ -70,14 +71,33 @@ class ModelsTester(unittest.TestCase):
         # self.assertExpected(out, rtol=1e-2, atol=0.)
         self.assertEqual(out.shape[-1], 50)
 
-    def test_ssresnet18_model(self):
+    def test_ssresnet_model_BasicBlock(self):
+
+        # Test parameters
+        batch_size = 32
+        frame_per_seq = 4
+        dictres18 = torchvision.models.resnet18(pretrained=True).state_dict()
+        # Valid input
+        model = models.ssresnet.SSResNet(frame_per_seq=frame_per_seq, block='BB', layers=[2, 2, 2, 2],
+                                         pretrainedWeights=dictres18)
+
+        model.eval()
+        x = torch.rand((batch_size, 3, 448, 448))
+        with torch.no_grad():
+            out = model(x)
+
+        self.assertEqual(out.shape[0], batch_size)
+        self.assertEqual(out.shape[1], 1)
+
+    def test_ssresnet_model_Bottleneck(self):
 
         # Test parameters
         batch_size = 32
         frame_per_seq = 4
 
         # Valid input
-        model = models.ssresnet18.SSResNet18(frame_per_seq=frame_per_seq)
+        model = models.ssresnet.SSResNet(frame_per_seq=frame_per_seq, block='BN', layers=[3, 4, 6, 3],
+                                         pretrainedWeights=None, intput1L5=2048, output1L5=1024, output2L5=256)
 
         model.eval()
         x = torch.rand((batch_size, 3, 448, 448))
