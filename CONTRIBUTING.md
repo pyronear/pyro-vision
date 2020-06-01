@@ -6,9 +6,9 @@ Everything you need to know to contribute efficiently to the project.
 
 ## Codebase structure
 
-- [pyronear](https://github.com/frgfm/PyroNear/blob/master/pyronear) - The actual PyroNear library
-- [references](https://github.com/frgfm/PyroNear/blob/master/references) - Scripts to reproduce performances
-- [test](https://github.com/frgfm/PyroNear/blob/master/test) - Python unit tests
+- [pyronear](https://github.com/pyronear/PyroNear/blob/master/pyronear) - The actual PyroNear library
+- [references](https://github.com/pyronear/PyroNear/blob/master/references) - Scripts to reproduce performances
+- [test](https://github.com/pyronear/PyroNear/blob/master/test) - Python unit tests
 
 
 
@@ -26,7 +26,7 @@ As a contributor, you will only have to ensure coverage of your code by adding a
 
 ## Issues
 
-Use Github [issues](https://github.com/frgfm/PyroNear/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
+Use Github [issues](https://github.com/pyronear/PyroNear/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
 
 
 
@@ -100,7 +100,7 @@ cd PyroNear
 3. Set remotes to original project and merge new contributions onto master.
 ```shell
 # add the original repository as remote repository called "upstream"
-git remote add upstream https://github.com/frgfm/PyroNear.git
+git remote add upstream https://github.com/pyronear/PyroNear.git
 
 # verify repository has been correctly added
 git remote -v
