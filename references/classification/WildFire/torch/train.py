@@ -11,17 +11,10 @@ from torch.utils.data import DataLoader
 import torch
 from torch import nn
 from torch import optim
-import torchvision
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
-import torch.nn.functional as F
-from torch.autograd import Variable
-import torch.utils.data as data
-from torch.utils.data.sampler import Sampler
-from torch.utils.data.dataset import Dataset
-from torch.optim.lr_scheduler import OneCycleLR
 from pyronear import models
-from pyronear.datasets.wildfire import (WildFireDataset, WildFireSplitter, FireLabeler)
+from pyronear.datasets.wildfire import WildFireDataset, WildFireSplitter
 from pyronear.datasets.wildfire.split_strategy import *
 
 
