@@ -90,7 +90,7 @@ python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrain
 
 ## Documentation
 
-The full package documentation is available [here](<https://frgfm.github.io/PyroNear/>) for detailed specifications. The documentation was built with [Sphinx](sphinx-doc.org) using a [theme](github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](readthedocs.org).
+The full package documentation is available [here](<https://frgfm.github.io/PyroNear/>) for detailed specifications. The documentation was built with [Sphinx](https://www.sphinx-doc.org) using a [theme](https://github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](https://readthedocs.org).
 
 
 

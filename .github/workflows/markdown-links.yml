@@ -1,0 +1,15 @@
+name: Check Broken Markdown Links
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: gaurav-nelson/github-action-markdown-link-check@master
+      with:
+        config-file: '.github/workflows/markdown-links-config.json'
