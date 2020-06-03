@@ -24,22 +24,22 @@ As a contributor, you will only have to ensure coverage of your code by adding a
 
 
 
-## Issues
+## Issues
 
 Use Github [issues](https://github.com/pyronear/PyroNear/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
 
 
 
-## Code contribution
+## Code contribution
 
 In order to contribute to  project, we will first **set up the development environment**, then describe the **contributing workflow**.
 
-* [Project Setup](project-setup)
+* [Project Setup](#project-setup)
 
     _How to set up a forked project and install its dependencies in a well-encapsulated development environment_
     1. [Create a virtual environment](#create-a-virtual-environment)
     2. [Fork the project](#fork-the-repository)
-* [Contributing workflow](contributing-workflow)
+* [Contributing workflow](#contributing-workflow)
 
    _How to pull remote changes/new contributions and push your contributions to the original project_
 
@@ -61,6 +61,7 @@ Please open a terminal and follow the instructions.
 pip install virtualenvwrapper
 
 # add at the end of your .bashrc
+export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Devel
 source /usr/local/bin/virtualenvwrapper.sh
