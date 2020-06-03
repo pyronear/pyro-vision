@@ -46,8 +46,8 @@ setup(
     description='Datasets and models for wildfire detection in PyTorch',
     long_description=readme,
     long_description_content_type="text/markdown",
-    url='https://github.com/frgfm/PyroNear',
-    download_url='https://github.com/frgfm/PyroNear/tags',
+    url='https://github.com/pyronear/PyroNear',
+    download_url='https://github.com/pyronear/PyroNear/tags',
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
