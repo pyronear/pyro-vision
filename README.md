@@ -91,7 +91,7 @@ python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrain
 
 ## Documentation
 
-The full package documentation is available [here](<https://pyronear.github.io/PyroNear/>) for detailed specifications. The documentation was built with [Sphinx](sphinx-doc.org) using a [theme](github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](readthedocs.org).
+The full package documentation is available [here](https://pyronear.github.io/PyroNear/) for detailed specifications. The documentation was built with [Sphinx](sphinx-doc.org) using a [theme](github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](readthedocs.org).
 
 
 
