@@ -1,64 +1,49 @@
-from torchvision.models.resnet import ResNet, BasicBlock, Bottleneck
+from torchvision.models.resnet import ResNet, resnet18, BasicBlock
 import torchvision
 from torch import nn
 import torch
 import torch.nn.functional as F
 
 
+__all__ = ["SSResNet"]
+
+
 class SSResNet(ResNet):
     """This model is designed to be trained using the SubSamplerDataSet. It can be built over any resnet.
-       The SubSamplerDataSet will send within the same batch K consecutive frames belonging to the same
-       sequence. The SSresnet model will process these K frames independently in the first 4 layers of
-       the resnet then combine them in a 5th layer.
+    The SubSamplerDataSet will send within the same batch K consecutive frames belonging to the same
+    sequence. The SSresnet model will process these K frames independently in the first 4 layers of
+    the resnet then combine them in a 5th layer.
+    Attributes
+    ----------
+    frame_per_seq: int
+        Number of frame per sequence
+    To build a Resnet we need two arguments, are we using a BasicBlock or a Bottleneck and
+    the corresponding layers. This is how to build the ResNets:
+    resnet18: BasicBlock, [2, 2, 2, 2]
+    resnet34: BasicBlock, [3, 4, 6, 3]
+    resnet50: Bottleneck, [3, 4, 6, 3]
+    resnet101: Bottleneck, [3, 4, 23, 3]
+    resnet152: Bottleneck, [3, 8, 36, 3]
+    Please refere to torchvision documentation for more details:
+    https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py#L232
+    block: string
+        block: BasicBlock or Bottleneck
+    layers: list
+        layers argument to build BasicBlock / Bottleneck
+    pretrainedWeights: bool
+        pretrained Weights for the ResNet
+    Then we need shapes of the layer5
+    intput1L5: int
+        Input of the layer5, must be equal to the output of layer4
+    output1L5: int
+        Output shape of the first conv1x1
+    output2L5: int
+        Output shape of the second conv1x1
     """
-    def __init__(self, frame_per_seq, block='BB', layers=[2, 2, 2, 2], pretrainedWeights=False, intput1L5=512,
+    def __init__(self, block, layers, frame_per_seq=2, intput1L5=512,
                  output1L5=512, output2L5=256):
-        """ Init SSResNet
 
-            Attributes
-            ----------
-            frame_per_seq: int
-                Number of frame per sequence
-
-            To build a Resnet we need two arguments, are we using a BasicBlock or a Bottleneck and
-            the corresponding layers. This is how to build the ResNets:
-            resnet18: BasicBlock, [2, 2, 2, 2]
-            resnet34: BasicBlock, [3, 4, 6, 3]
-            resnet50: Bottleneck, [3, 4, 6, 3]
-            resnet101: Bottleneck, [3, 4, 23, 3]
-            resnet152: Bottleneck, [3, 8, 36, 3]
-
-            Please refere to torchvision documentation for more details:
-            https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py#L232
-
-            block: string
-                block: BasicBlock or Bottleneck
-
-            layers: list
-                layers argument to build BasicBlock / Bottleneck
-
-            pretrainedWeights: bool
-                pretrained Weights for the ResNet
-
-            Then we need shapes of the layer5
-
-            intput1L5: int
-                Input of the layer5, must be equal to the output of layer4
-
-            output1L5: int
-                Output shape of the first conv1x1
-
-            output2L5: int
-                Output shape of the second conv1x1
-
-            """
-        if block == 'BB':
-            super(SSResNet, self).__init__(BasicBlock, layers)
-        else:
-            super(SSResNet, self).__init__(Bottleneck, layers)
-
-        if pretrainedWeights:
-            self.load_state_dict(pretrainedWeights)
+        super(SSResNet, self).__init__(block, layers)
 
         self.frame_per_seq = frame_per_seq
 
@@ -72,7 +57,6 @@ class SSResNet(ResNet):
                 nn.init.constant_(m.bias, 0)
 
         self.fc = nn.Linear(256, 1)
-        self.sig = nn.Sigmoid()
 
     def _make_layer5(self, intput1, output1, output2):
 
@@ -119,4 +103,13 @@ class SSResNet(ResNet):
         for i in range(self.frame_per_seq):
             x2[i::self.frame_per_seq] = x
 
-        return self.sig(x2)
+        return x2
+
+
+def ssresnet18(frame_per_seq=2, **kwargs):
+    r"""SubSamplerResNet18 from ResNet-18 model
+
+    Args:
+        frame_per_seq (int, optional): Number of frame per sequence
+    """
+    return SSResNet(BasicBlock, [2, 2, 2, 2], frame_per_seq=frame_per_seq)

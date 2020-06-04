@@ -44,3 +44,8 @@ Wide ResNet
 
 .. autofunction:: wide_resnet50_2
 .. autofunction:: wide_resnet101_2
+
+SSResNet
+---------
+
+.. autofunction:: ssresnet18
