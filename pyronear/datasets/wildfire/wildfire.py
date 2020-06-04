@@ -29,7 +29,7 @@ class WildFireDataset(Dataset, VisionMixin):
         If left to None, will be set to ['fire']
         Example: ['fire', 'clf_confidence', 'loc_confidence', 'x', 'y']
 
-    path_to_frames: str or path 
+    path_to_frames: str or path
         Path leading to the directory containing the frames referenced in metadata 'imgFile':
 
     transform: object, optional
