@@ -78,8 +78,8 @@ class ModelsTester(unittest.TestCase):
         batch_size = 32
 
         # Valid input
-        model = models.ssresnet.SSResNet(block=BasicBlock, layers=[2, 2, 2, 2], frame_per_seq=2, intput1L5=512,
-                                         output1L5=512, output2L5=256)
+        model = models.ssresnet.SSResNet(block=BasicBlock, layers=[2, 2, 2, 2], frame_per_seq=2,
+                                         shapeAfterConv1_1=512, outputShape=256)
 
         model.eval()
         x = torch.rand((batch_size, 3, 448, 448))

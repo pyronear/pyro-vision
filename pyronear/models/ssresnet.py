@@ -13,10 +13,8 @@ class SSResNet(ResNet):
     The SubSamplerDataSet will send within the same batch K consecutive frames belonging to the same
     sequence. The SSresnet model will process these K frames independently in the first 4 layers of
     the resnet then combine them in a 5th layer.
-    Attributes
-    ----------
-    frame_per_seq: int
-        Number of frame per sequence
+    Args:
+
     To build a Resnet we need two arguments, are we using a BasicBlock or a Bottleneck and
     the corresponding layers. This is how to build the ResNets:
     resnet18: BasicBlock, [2, 2, 2, 2]
@@ -26,28 +24,21 @@ class SSResNet(ResNet):
     resnet152: Bottleneck, [3, 8, 36, 3]
     Please refere to torchvision documentation for more details:
     https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py#L232
-    block: string
-        block: BasicBlock or Bottleneck
-    layers: list
-        layers argument to build BasicBlock / Bottleneck
-    pretrainedWeights: bool
-        pretrained Weights for the ResNet
+        block (string): BasicBlock or Bottleneck
+        layers (list): layers argument to build BasicBlock / Bottleneck
+        frame_per_seq (int): Number of frame per sequence
     Then we need shapes of the layer5
-    intput1L5: int
-        Input of the layer5, must be equal to the output of layer4
-    output1L5: int
-        Output shape of the first conv1x1
-    output2L5: int
-        Output shape of the second conv1x1
+        shapeAfterConv1_1 (int): Output shape of the first conv1x1
+        outputShape (int): Output shape of the second conv1x1
     """
-    def __init__(self, block, layers, frame_per_seq=2, intput1L5=512,
-                 output1L5=512, output2L5=256):
+    def __init__(self, block, layers, frame_per_seq=2, shapeAfterConv1_1=512, outputShape=256):
 
         super(SSResNet, self).__init__(block, layers)
 
         self.frame_per_seq = frame_per_seq
 
-        self.layer5 = self._make_layer5(intput1=intput1L5, output1=output1L5, output2=output2L5)
+        self.layer5 = self._make_layer5(intputShape=512 * block.expansion, shapeAfterConv1_1=shapeAfterConv1_1,
+                                        outputShape=outputShape)
 
         for m in self.layer5.modules():
             if isinstance(m, nn.Conv2d):
@@ -58,16 +49,16 @@ class SSResNet(ResNet):
 
         self.fc = nn.Linear(256, 1)
 
-    def _make_layer5(self, intput1, output1, output2):
+    def _make_layer5(self, intputShape, shapeAfterConv1_1, outputShape):
 
-        layer5 = nn.Sequential(nn.Conv2d(intput1 * self.frame_per_seq, output1, kernel_size=1),
-                               nn.BatchNorm2d(output1),
+        layer5 = nn.Sequential(nn.Conv2d(intputShape * self.frame_per_seq, shapeAfterConv1_1, kernel_size=1),
+                               nn.BatchNorm2d(shapeAfterConv1_1),
                                nn.ReLU(inplace=True),
-                               nn.Conv2d(output1, output1, kernel_size=3),
-                               nn.BatchNorm2d(output1),
+                               nn.Conv2d(shapeAfterConv1_1, shapeAfterConv1_1, kernel_size=3),
+                               nn.BatchNorm2d(shapeAfterConv1_1),
                                nn.ReLU(inplace=True),
-                               nn.Conv2d(output1, output2, kernel_size=1),
-                               nn.BatchNorm2d(output2),
+                               nn.Conv2d(shapeAfterConv1_1, outputShape, kernel_size=1),
+                               nn.BatchNorm2d(outputShape),
                                nn.ReLU(inplace=True),
                                )
 
