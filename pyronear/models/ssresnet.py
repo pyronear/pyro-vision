@@ -1,8 +1,6 @@
-from torchvision.models.resnet import ResNet, resnet18, BasicBlock
-import torchvision
+from torchvision.models.resnet import ResNet, BasicBlock
 from torch import nn
 import torch
-import torch.nn.functional as F
 
 
 __all__ = ["SSResNet"]
