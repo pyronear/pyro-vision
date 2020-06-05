@@ -207,7 +207,7 @@ class FrameExtractor:
             # Get the video
             movie = cv2.VideoCapture((self.path_to_videos / name).as_posix())
             # For each state
-            for index, row in group.iterrows():
+            for row in group.itertuples():
                 # Position the video at the current frame
                 movie.set(cv2.CAP_PROP_POS_FRAMES, row.frame)
                 success, frame = movie.read()

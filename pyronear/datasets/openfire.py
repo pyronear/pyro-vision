@@ -4,9 +4,7 @@ from pathlib import Path
 import warnings
 import json
 from PIL import Image, ImageFile
-from tqdm import tqdm
 
-import torch
 from torchvision.datasets import VisionDataset
 from .utils import download_url, download_urls
 

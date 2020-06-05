@@ -109,7 +109,7 @@ class FireLabeler:
 
         length = len(self.fire_ids[self.fire_ids == -1])
         self.fire_ids[self.fire_ids == -1] = range(current_fire_id, current_fire_id + length)
-        assert self.fire_ids[self.fire_ids == -1].sum() == 0, "Singletons escaped indexation!!"
+        assert self.fire_ids[self.fire_ids == -1].sum() == 0, "Singletons escaped indexation!"
         return self
 
     @staticmethod
