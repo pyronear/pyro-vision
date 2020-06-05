@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import random
 from pyronear import models
+from torchvision.models.resnet import BasicBlock
 
 
 def set_rng_seed(seed):
@@ -69,6 +70,39 @@ class ModelsTester(unittest.TestCase):
             out = model(x)
         # self.assertExpected(out, rtol=1e-2, atol=0.)
         self.assertEqual(out.shape[-1], 50)
+
+    def test_ssresnet_model(self):
+
+        # Test parameters
+        batch_size = 32
+
+        # Valid input
+        model = models.ssresnet.SSResNet(block=BasicBlock, layers=[2, 2, 2, 2], frame_per_seq=2,
+                                         shapeAfterConv1_1=512, outputShape=256)
+
+        model.eval()
+        x = torch.rand((batch_size, 3, 448, 448))
+        with torch.no_grad():
+            out = model(x)
+
+        self.assertEqual(out.shape[0], batch_size)
+        self.assertEqual(out.shape[1], 1)
+
+    def test_ssresnet18(self):
+
+        # Test parameters
+        batch_size = 32
+
+        # Valid input
+        model = models.ssresnet.ssresnet18()
+
+        model.eval()
+        x = torch.rand((batch_size, 3, 448, 448))
+        with torch.no_grad():
+            out = model(x)
+
+        self.assertEqual(out.shape[0], batch_size)
+        self.assertEqual(out.shape[1], 1)
 
 
 for model_name in get_available_classification_models():
