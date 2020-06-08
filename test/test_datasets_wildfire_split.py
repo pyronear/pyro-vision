@@ -17,20 +17,25 @@ class WildFireDatasetTester(unittest.TestCase):
 
     def setUp(self):
         self.path_to_frames = Path(__file__).parent / 'fixtures/'
+        self.path_to_frames_str = str(self.path_to_frames)
         self.wildfire_path = Path(__file__).parent / 'fixtures/wildfire_dataset.csv'
         self.wildfire_df = pd.read_csv(self.wildfire_path)
 
     def test_wildfire_correctly_init_from_path(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_path,
-                                   path_to_frames=self.path_to_frames)
+        for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
+            wildfire = WildFireDataset(metadata=self.wildfire_path,
+                                       path_to_frames=path_to_frames)
 
-        self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire[3]), 2)
 
     def test_wildfire_correctly_init_from_dataframe(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_df,
-                                   path_to_frames=self.path_to_frames)
+        for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
+            wildfire = WildFireDataset(metadata=self.wildfire_df,
+                                       path_to_frames=path_to_frames)
 
-        self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire[3]), 2)
 
         # try to get one image of wildfire (item 3 is authorized image fixture)
         observation_3, metadata_3 = wildfire[3]

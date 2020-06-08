@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
+from pathlib import Path
 
 from ..utils import VisionMixin
 from .split_strategy import ExhaustSplitStrategy
@@ -28,7 +29,7 @@ class WildFireDataset(Dataset, VisionMixin):
         If left to None, will be set to ['fire']
         Example: ['fire', 'clf_confidence', 'loc_confidence', 'x', 'y']
 
-    path_to_frames: str
+    path_to_frames: str or path
         Path leading to the directory containing the frames referenced in metadata 'imgFile':
 
     transform: object, optional
@@ -45,8 +46,10 @@ class WildFireDataset(Dataset, VisionMixin):
 
         # default target is fire detection (0/1)
         self.target_names = target_names or ['fire']
-        self.path_to_frames = path_to_frames
         self.transform = transform
+
+        # converting path_to_frames to path type
+        self.path_to_frames = Path(path_to_frames)
 
     def __len__(self):
         return len(self.metadata)
