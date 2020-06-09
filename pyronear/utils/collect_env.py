@@ -1,6 +1,9 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Copyright (c) The pyronear developers.
+# This file is dual licensed under the terms of the CeCILL-2.1 and GPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
 
 """
 Based on https://github.com/pytorch/pytorch/blob/master/torch/utils/collect_env.py

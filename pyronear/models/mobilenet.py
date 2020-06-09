@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# Copyright (c) The pyronear developers.
+# This file is dual licensed under the terms of the CeCILL-2.1 and GPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
 from torchvision.models.mobilenet import MobileNetV2, model_urls as imagenet_urls
 from torchvision.models.utils import load_state_dict_from_url
 from .utils import cnn_model
