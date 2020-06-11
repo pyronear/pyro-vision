@@ -1,7 +1,7 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (c) The pyronear developers.
+# Copyright (c) Pyronear contributors.
 # This file is dual licensed under the terms of the CeCILL-2.1 and GPLv3 licences.
 # See the LICENSE file in the root of this repository for complete details.
 
@@ -45,7 +45,7 @@ setup(
     version=version,
     author='PyroNear Contributors',
     author_email='pyronear.d4g@gmail.com',
-    maintainer='The pyronear developers',
+    maintainer='Pyronear',
     description='Datasets and models for wildfire detection in PyTorch',
     long_description=readme,
     long_description_content_type="text/markdown",
