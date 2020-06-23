@@ -3,9 +3,9 @@ Copyright (c) 2019-2020 Pyronear contributors.
 
 This software is made available under the terms of *either* of the licenses:
 - CEA CNRS Inria Logiciel Libre License, v2.1: for more details, please see LICENSE.CeCILL
-- GNU General Public License v3: for more details, please see LICENSE.GPL
+- GNU Affero General Public License v3: for more details, please see LICENSE.AGPL
 
 Contributions to this software is made under the terms of *both* these licenses.
 
-You should have received a copy of the CeCILL and the GNU GPL licenses along
+You should have received a copy of the CeCILL and the GNU AGPL licenses along
 with this program.  If not, see <https://cecill.info/licences.en.html> and <http://www.gnu.org/licenses/>

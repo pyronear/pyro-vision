@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright (c) Pyronear contributors.
-# This file is dual licensed under the terms of the CeCILL-2.1 and GPLv3 licenses.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
 # See the LICENSE file in the root of this repository for complete details.
 
 import unittest
@@ -16,7 +16,7 @@ class HeadersTester(unittest.TestCase):
         self.header_blank = "\n"
 
         self.header_notice = ("# Copyright (c) Pyronear contributors.\n"
-                              "# This file is dual licensed under the terms of the CeCILL-2.1 and GPLv3 licenses.\n"
+                              "# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.\n"
                               "# See the LICENSE file in the root of this repository for complete details.\n")
 
         self.excluded_files = ["version.py"]
