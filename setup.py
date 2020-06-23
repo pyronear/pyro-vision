@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright (c) Pyronear contributors.
-# This file is dual licensed under the terms of the CeCILL-2.1 and GPLv3 licenses.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
 # See the LICENSE file in the root of this repository for complete details.
 
 """
@@ -51,13 +51,13 @@ setup(
     long_description_content_type="text/markdown",
     url='https://github.com/pyronear/PyroNear',
     download_url='https://github.com/pyronear/PyroNear/tags',
-    license='CeCILL-2.1 or GPLv3',
+    license='CeCILL-2.1 or AGPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: CEA CNRS Inria Logiciel Libre License, version 2.1 (CeCILL-2.1)',
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)",
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
