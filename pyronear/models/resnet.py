@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
 
 from torchvision.models.resnet import BasicBlock, Bottleneck, ResNet, model_urls as imagenet_urls
 from torchvision.models.utils import load_state_dict_from_url

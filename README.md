@@ -109,4 +109,4 @@ This project is developed and maintained by the repo owner and volunteers from [
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the CeCILL and AGPLv3 Licenses. See `LICENSE` for more information.
