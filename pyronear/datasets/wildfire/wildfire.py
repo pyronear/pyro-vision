@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import torch
-import random
+from random import SystemRandom
 from torch.utils.data import Dataset
 
 from ..utils import VisionMixin
@@ -255,7 +255,7 @@ class WildFireSubSampler:
         """
         self.SubSetImgs = []
         SubSetImgsEq = []
-
+        cryptogen = SystemRandom()
         for seU in self.uniqueSEQ:
             #For each sequence get a subSample of frame_per_seq frames
             nn = [self.imgs[i] for i, se in enumerate(self.seq) if se == seU]
@@ -266,7 +266,8 @@ class WildFireSubSampler:
             self.SubSetImgs += nn
             #Equalize the dataset adding not_fire frames
             if self.probTh is not None:
-                if(self.metadata[self.metadata['seq'] == seU]['fire'].values[0] == 0 and random.random() < self.probTh):
+                if(self.metadata[self.metadata['seq'] == seU]['fire'].values[0] == 0 and
+                   cryptogen.random() < self.probTh):
                     nn = [self.imgs[i] for i, se in enumerate(self.seq) if se == seU]
                     if(len(nn) > self.frame_per_seq):
                         nn = random.sample(nn, self.frame_per_seq)
@@ -277,7 +278,7 @@ class WildFireSubSampler:
         #Insert randomly the extra frames in the dataset
         if self.probTh is not None:
             for i in range(0, len(SubSetImgsEq), 2):
-                idx = random.randint(0, len(self.SubSetImgs) - 2) // 2 * 2
+                idx = cryptogen.randint(0, len(self.SubSetImgs) - 2) // 2 * 2
                 self.SubSetImgs.insert(idx, SubSetImgsEq[i + 1])
                 self.SubSetImgs.insert(idx, SubSetImgsEq[i])
 
