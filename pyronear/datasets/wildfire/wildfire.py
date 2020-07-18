@@ -195,16 +195,12 @@ class WildFireSplitter:
         self.ratios_ = {set_: (self.n_samples_[set_] / len(self.wildfire)) for set_ in ['train', 'val', 'test']}
 
 
-class WildFireSubSampler:
-    """Sub-Sample a WildFireDataset
-
-    The Wildfire DataSet is annotated with video sequences. To extract this dataset as frames,
-    you have to choose the number N of frames per sequence. The idea of this SubSampler is to
-    combine K frames among these N to create a derivative of the resnet the ssresnet.
+def computeSubSet(metadata, frame_per_seq, probTh=None):
+    """This function computes a subset of the dataset, it extracts frame_per_seq consecutive frames for each sequence.
 
     Parameters
-    ---------
-    metadata: Pandas.DataFrame
+    ----------
+        metadata: Pandas.DataFrame
         metadata of the WilFireDataset
 
     frame_per_seq: int
@@ -213,77 +209,64 @@ class WildFireSubSampler:
     frame_per_seq: float
         between 0 and 1, percentage of non-fire data to take twice in order to equalize the dataset
 
+    probTh: float , optional
+        The data set contains many more frames classified 'fire' than 'not fire', this parameter
+        allows to equalize the dataset. For each 'not fire' sequence, we draw a random number if
+        it is greater than probTh we double the number of frames used for this sequence
+
     Example
     -------
-    subsampler = WildFireSubSampler(dataset.metadata, 2)
-    dataset.metadata = subsampler.computeSubSet()
-
+    metadataSS = computeSubSet(metadata, 2)
+    wildfireSS = WildFireDataset(metadata=metadataSS, path_to_frames=path_to_frames)
     """
-    def __init__(self, metadata, frame_per_seq, probTh=None):
 
-        self.metadata = metadata
-        self.metadata.index = np.arange(len(self.metadata))
-        self.imgs = self.metadata['imgFile']
-        self.SubSetImgs = []
-        self.probTh = probTh
-        self.frame_per_seq = frame_per_seq
-        # Define sequences numbers
-        fBase = [fname.split("_")[0] + ".mp4" for fname in self.metadata['imgFile'].values]
-        self.metadata['fBase'] = fBase
-        self.metadata.index = np.arange(len(self.metadata))
-        meta = self.metadata[['exploitable', 'fire', 'sequence', 'clf_confidence', 'loc_confidence',
-                              'x', 'y', 't', 'stateStart', 'stateEnd', 'fire_id', 'fBase']]
-        meta = meta.drop_duplicates()
-        meta['seq'] = np.arange(len(meta))
-        self.metadata = pd.merge(self.metadata, meta, on=['exploitable', 'fire', 'sequence', 'clf_confidence',
-                                                          'loc_confidence', 'x', 'y', 't', 'stateStart', 'stateEnd',
-                                                          'fire_id', 'fBase'], how='inner')
-        #Get unique list of sequences
-        self.seq = self.metadata['seq']
-        my_set = set(self.seq)
-        self.uniqueSEQ = list(my_set)
-        random.shuffle(self.uniqueSEQ)
+    metadata.index = np.arange(len(metadata))
+    imgs = metadata['imgFile']
+    # Define sequences numbers
+    metadata.index = np.arange(len(metadata))
+    meta = metadata[['exploitable', 'fire', 'sequence', 'clf_confidence', 'loc_confidence',
+                                    'x', 'y', 't', 'stateStart', 'stateEnd', 'fire_id', 'fBase']]
+    meta = meta.drop_duplicates()
+    meta['seq'] = np.arange(len(meta))
+    metadata = pd.merge(metadata, meta, on=['exploitable', 'fire', 'sequence', 'clf_confidence',
+                                                           'loc_confidence', 'x', 'y', 't', 'stateStart', 'stateEnd',
+                                                           'fire_id', 'fBase'], how='inner')
+    # Get unique list of sequences
+    seq = metadata['seq']
+    my_set = set(seq)
+    uniqueSEQ = list(my_set)
+    random.shuffle(uniqueSEQ)
 
-    def computeSubSet(self):
-        """This function computes the subset, it extracts frame_per_seq frames for each sequence.
+    SubSetImgs = []
+    SubSetImgsEq = []
+    cryptogen = SystemRandom()
+    for seU in uniqueSEQ:
+        # For each sequence get a subSample of frame_per_seq frames
+        nn = [imgs[i] for i, se in enumerate(seq) if se == seU]
+        if(len(nn) > frame_per_seq):
+            nn = random.sample(nn, frame_per_seq)
+        nb = [float(frame.split("frame", 1)[1].split(".", 1)[0]) for frame in nn]
+        nb, nn = (list(t) for t in zip(*sorted(zip(nb, nn))))
+        SubSetImgs += nn
+        # Equalize the dataset adding not_fire frames
+        if probTh is not None:
+            if(metadata[metadata['seq'] == seU]['fire'].values[0] == 0 and
+               cryptogen.random() < probTh):
+                nn = [imgs[i] for i, se in enumerate(seq) if se == seU]
+                if(len(nn) > frame_per_seq):
+                    nn = random.sample(nn, frame_per_seq)
+                nb = [float(frame.split("frame", 1)[1].split(".", 1)[0]) for frame in nn]
+                nb, nn = (list(t) for t in zip(*sorted(zip(nb, nn))))
+                SubSetImgsEq += nn
 
-        Parameters
-        ----------
-        probTh: float , optional
-            The data set contains many more frames classified 'fire' than 'not fire', this parameter
-            allows to equalize the dataset. For each 'not fire' sequence, we draw a random number if
-            it is greater than probTh we double the number of frames used for this sequence
-        """
-        self.SubSetImgs = []
-        SubSetImgsEq = []
-        cryptogen = SystemRandom()
-        for seU in self.uniqueSEQ:
-            #For each sequence get a subSample of frame_per_seq frames
-            nn = [self.imgs[i] for i, se in enumerate(self.seq) if se == seU]
-            if(len(nn) > self.frame_per_seq):
-                nn = random.sample(nn, self.frame_per_seq)
-            nb = [float(frame.split("frame", 1)[1].split(".", 1)[0]) for frame in nn]
-            nb, nn = (list(t) for t in zip(*sorted(zip(nb, nn))))
-            self.SubSetImgs += nn
-            #Equalize the dataset adding not_fire frames
-            if self.probTh is not None:
-                if(self.metadata[self.metadata['seq'] == seU]['fire'].values[0] == 0 and
-                   cryptogen.random() < self.probTh):
-                    nn = [self.imgs[i] for i, se in enumerate(self.seq) if se == seU]
-                    if(len(nn) > self.frame_per_seq):
-                        nn = random.sample(nn, self.frame_per_seq)
-                    nb = [float(frame.split("frame", 1)[1].split(".", 1)[0]) for frame in nn]
-                    nb, nn = (list(t) for t in zip(*sorted(zip(nb, nn))))
-                    SubSetImgsEq += nn
+    # Insert randomly the extra frames in the dataset
+    if probTh is not None:
+        for i in range(0, len(SubSetImgsEq), 2):
+            idx = cryptogen.randint(0, len(SubSetImgs) - 2) // 2 * 2
+            SubSetImgs.insert(idx, SubSetImgsEq[i + 1])
+            SubSetImgs.insert(idx, SubSetImgsEq[i])
 
-        #Insert randomly the extra frames in the dataset
-        if self.probTh is not None:
-            for i in range(0, len(SubSetImgsEq), 2):
-                idx = cryptogen.randint(0, len(self.SubSetImgs) - 2) // 2 * 2
-                self.SubSetImgs.insert(idx, SubSetImgsEq[i + 1])
-                self.SubSetImgs.insert(idx, SubSetImgsEq[i])
+    # Create metadta Subset
+    index = [i for i, im in enumerate(metadata['imgFile'].values) if im in SubSetImgs]
 
-        # Create metadta Subset
-        index = [i for i, im in enumerate(self.metadata['imgFile'].values) if im in self.SubSetImgs]
-
-        return self.metadata.iloc[index]
+    return metadata.iloc[index]
