@@ -1,6 +1,12 @@
 from picamera import PiCamera
 from time import sleep
 import glob
+import torchvision
+import torch
+from torch import nn
+from PIL import Image
+from torchvision import transforms
+import smtplib, ssl
 
 
 class PyronearEngine:
@@ -10,11 +16,12 @@ class PyronearEngine:
     Example
     -------
     pyronearEngine = PyronearEngine()
-    pyronearEngine.run(30) # For a prediction every 30s
+    pyronearEngine.run(30)  # For a prediction every 30s
     """
     def __init__(self, imgsFolder):
         # Camera
         self.camera = PiCamera()
+        self.camera.rotation = 270
 
         # Images Folder
         self.imgsFolder = imgsFolder
@@ -26,7 +33,7 @@ class PyronearEngine:
         in_features = getattr(self.model, 'fc').in_features
         setattr(self.model, 'fc', nn.Linear(in_features, 2))
 
-        self.model.load_state_dict(torch.load("model/model_resnet18.txt"))
+        self.model.load_state_dict(torch.load("model/model_resnet18.txt", map_location=torch.device('cpu')))
 
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
@@ -36,27 +43,27 @@ class PyronearEngine:
 
     def run(self, timeStep):
 
-        imgs = glob.glob(self.imgsFolder)
+        imgs = glob.glob(self.imgsFolder + "//*.jpg")
         idx = len(imgs)
 
         while True:
             imagePath = self.imgsFolder + "//" + str(idx).zfill(8) + ".jpg"
-
+            print(imagePath)
             self.capture(imagePath)
             pred = self.predict(imagePath)
             print(pred)
-
+            idx = idx + 1
             sleep(timeStep)
 
     def capture(self, imagePath):
 
         self.camera.start_preview()
         sleep(3)  # gives the camera’s sensor time to sense the light levels
-        camera.capture(imagePath)
-        camera.stop_preview()
+        self.camera.capture(imagePath)
+        self.camera.stop_preview()
 
     def predict(self, imagePath):
-        im = Image.open(imPath)
+        im = Image.open(imagePath)
         imT = self.tf(im)
 
         self.model.eval()
@@ -66,4 +73,30 @@ class PyronearEngine:
         if pred[0, 0] > pred[0, 1]:
             return "no fire"
         else:
+            self.sendAlert()
             return "FIRE !!!"
+
+    def sendAlert(self):
+        port = 587  # For starttls
+        smtp_server = "smtp.gmail.com"
+        sender_email = "test.pyronear@gmail.com"  # Enter your address
+        receiver_email = "mateo.lostanlen@gmail.com"  # Enter receiver address
+        password = ""  # Add your password
+        message = """\
+        Subject: FIRE
+
+        Pyronear has detected a fire !!!"""
+
+        context = ssl.create_default_context()
+        with smtplib.SMTP(smtp_server, port) as server:
+            server.ehlo()  # Can be omitted
+            server.starttls(context=context)
+            server.ehlo()  # Can be omitted
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message)
+
+
+if __name__ == "__main__":
+
+    pyronearEngine = PyronearEngine('DS')
+    pyronearEngine.run(5)  # For a prediction every 5s
