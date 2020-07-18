@@ -200,7 +200,7 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
 
     Parameters
     ----------
-        metadata: Pandas.DataFrame
+    metadata: Pandas.DataFrame
         metadata of the WilFireDataset
 
     frame_per_seq: int
@@ -267,7 +267,7 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
     # Insert randomly the extra frames in the dataset
     if probTh is not None:
         for i in range(0, len(subSetImgsEq), 2):
-            idx = cryptogen.randint(0, len(subSetImgs) - 2) // 2 * 2
+            idx = random.randint(0, len(subSetImgs) - 2) // 2 * 2
             subSetImgs.insert(idx, subSetImgsEq[i + 1])
             subSetImgs.insert(idx, subSetImgsEq[i])
 
