@@ -6,7 +6,8 @@ import torch
 from torch import nn
 from PIL import Image
 from torchvision import transforms
-import smtplib, ssl
+import smtplib
+import ssl
 
 
 class PyronearEngine:
