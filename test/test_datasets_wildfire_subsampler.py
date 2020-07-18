@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 import pandas as pd
 
-from pyronear.datasets.wildfire import WildFireDataset, WildFireSubSampler
+from pyronear.datasets.wildfire import WildFireDataset, computeSubSet
 
 
 class WildFireDatasetSubSampler(unittest.TestCase):
@@ -19,36 +19,23 @@ class WildFireDatasetSubSampler(unittest.TestCase):
         self.wildfire_df = pd.read_csv(self.wildfire_path)
 
     def test_good_size_after_subsamping(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_path,
-                                   path_to_frames=self.path_to_frames)
+        self.assertEqual(len(self.wildfire_df), 1999)
+        metadataSS = computeSubSet(self.wildfire_df, 2)
 
-        self.assertEqual(len(wildfire), 1999)
-
-        subsampler = WildFireSubSampler(wildfire.metadata, 2)
-        wildfire.metadata = subsampler.computeSubSet()
-
-        self.assertEqual(len(wildfire), 400)
+        self.assertEqual(len(metadataSS), 400)
 
     def test_metadata_changes_each_time(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_path,
-                                   path_to_frames=self.path_to_frames)
+        metadataSS_1 = computeSubSet(self.wildfire_path, 2)
+        metadataSS_2 = computeSubSet(self.wildfire_path, 2)
 
-        subsampler = WildFireSubSampler(wildfire.metadata, 2)
-        wildfire.metadata = subsampler.computeSubSet()
-
-        meta2 = subsampler.computeSubSet()
-
-        self.assertEqual(len(meta2), 400)
-        self.assertFalse(wildfire.metadata['imgFile'].values.tolist() == meta2['imgFile'].values.tolist())
+        self.assertEqual(len(metadataSS_1), 400)
+        self.assertEqual(len(metadataSS_2), 400)
+        self.assertFalse(metadataSS_1['imgFile'].values.tolist() == metadataSS_2['imgFile'].values.tolist())
 
     def test_increase_not_fire_semples(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_path,
-                                   path_to_frames=self.path_to_frames)
+        metadataSS = computeSubSet(self.wildfire_df, 2, 1)
 
-        subsampler = WildFireSubSampler(wildfire.metadata, 2, 1)
-        wildfire.metadata = subsampler.computeSubSet()
-
-        self.assertGreater(len(wildfire), 400)
+        self.assertGreater(len(metadataSS), 400)
 
 
 if __name__ == '__main__':

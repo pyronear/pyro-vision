@@ -242,8 +242,8 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
     uniqueSEQ = list(my_set)
     random.shuffle(uniqueSEQ)
 
-    SubSetImgs = []
-    SubSetImgsEq = []
+    subSetImgs = []
+    subSetImgsEq = []
     cryptogen = SystemRandom()
     for seU in uniqueSEQ:
         # For each sequence get a subSample of frame_per_seq frames
@@ -252,7 +252,7 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
             nn = random.sample(nn, frame_per_seq)
         nb = [float(frame.split("frame", 1)[1].split(".", 1)[0]) for frame in nn]
         nb, nn = (list(t) for t in zip(*sorted(zip(nb, nn))))
-        SubSetImgs += nn
+        subSetImgs += nn
         # Equalize the dataset adding not_fire frames
         if probTh is not None:
             if(metadata[metadata['seq'] == seU]['fire'].values[0] == 0 and
@@ -262,16 +262,16 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
                     nn = random.sample(nn, frame_per_seq)
                 nb = [float(frame.split("frame", 1)[1].split(".", 1)[0]) for frame in nn]
                 nb, nn = (list(t) for t in zip(*sorted(zip(nb, nn))))
-                SubSetImgsEq += nn
+                subSetImgsEq += nn
 
     # Insert randomly the extra frames in the dataset
     if probTh is not None:
-        for i in range(0, len(SubSetImgsEq), 2):
-            idx = cryptogen.randint(0, len(SubSetImgs) - 2) // 2 * 2
-            SubSetImgs.insert(idx, SubSetImgsEq[i + 1])
-            SubSetImgs.insert(idx, SubSetImgsEq[i])
+        for i in range(0, len(subSetImgsEq), 2):
+            idx = cryptogen.randint(0, len(subSetImgs) - 2) // 2 * 2
+            subSetImgs.insert(idx, subSetImgsEq[i + 1])
+            subSetImgs.insert(idx, subSetImgsEq[i])
 
     # Create metadta Subset
-    index = [i for i, im in enumerate(metadata['imgFile'].values) if im in SubSetImgs]
+    index = [i for i, im in enumerate(metadata['imgFile'].values) if im in subSetImgs]
 
     return metadata.iloc[index]
