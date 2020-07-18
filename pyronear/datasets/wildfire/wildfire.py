@@ -195,7 +195,7 @@ class WildFireSplitter:
         self.ratios_ = {set_: (self.n_samples_[set_] / len(self.wildfire)) for set_ in ['train', 'val', 'test']}
 
 
-def computeSubSet(metadata, frame_per_seq, probTh=None):
+def computeSubSet(metadata, frame_per_seq, probTh=None, seed=42):
     """This function computes a subset of the dataset, it extracts frame_per_seq consecutive frames for each sequence.
 
     Parameters
@@ -225,6 +225,9 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
         except (ValueError, FileNotFoundError):
             raise ValueError(f"Invalid path to CSV containing metadata. Please provide one (path={metadata})")
 
+    cryptogen = SystemRandom()
+    cryptogen.seed(seed)
+    random.seed(seed)
     metadata.index = np.arange(len(metadata))
     imgs = metadata['imgFile']
     # Define sequences numbers
@@ -244,7 +247,6 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
 
     subSetImgs = []
     subSetImgsEq = []
-    cryptogen = SystemRandom()
     for seU in uniqueSEQ:
         # For each sequence get a subSample of frame_per_seq frames
         nn = [imgs[i] for i, se in enumerate(seq) if se == seU]
