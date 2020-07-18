@@ -219,6 +219,11 @@ def computeSubSet(metadata, frame_per_seq, probTh=None):
     metadataSS = computeSubSet(metadata, 2)
     wildfireSS = WildFireDataset(metadata=metadataSS, path_to_frames=path_to_frames)
     """
+    if not isinstance(metadata, pd.DataFrame):
+        try:
+            metadata = pd.read_csv(metadata)
+        except (ValueError, FileNotFoundError):
+            raise ValueError(f"Invalid path to CSV containing metadata. Please provide one (path={metadata})")
 
     metadata.index = np.arange(len(metadata))
     imgs = metadata['imgFile']
