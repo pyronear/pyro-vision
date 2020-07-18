@@ -82,7 +82,7 @@ class PyronearEngine:
         smtp_server = "smtp.gmail.com"
         sender_email = "test.pyronear@gmail.com"  # Enter your address
         receiver_email = "mateo.lostanlen@gmail.com"  # Enter receiver address
-        password = ""  # Add your password
+        # password = ""  # uncomment and add your password
         message = """\
         Subject: FIRE
 
