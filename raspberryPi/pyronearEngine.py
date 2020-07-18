@@ -74,27 +74,28 @@ class PyronearEngine:
         if pred[0, 0] > pred[0, 1]:
             return "no fire"
         else:
-            self.sendAlert()
+            sendAlert()
             return "FIRE !!!"
 
-    def sendAlert(self):
-        port = 587  # For starttls
-        smtp_server = "smtp.gmail.com"
-        sender_email = "test.pyronear@gmail.com"  # Enter your address
-        receiver_email = "mateo.lostanlen@gmail.com"  # Enter receiver address
-        # password = ""  # uncomment and add your password
-        message = """\
-        Subject: FIRE
 
-        Pyronear has detected a fire !!!"""
+def sendAlert():
+    port = 587  # For starttls
+    smtp_server = "smtp.gmail.com"
+    sender_email = "test.pyronear@gmail.com"  # Enter your address
+    receiver_email = "mateo.lostanlen@gmail.com"  # Enter receiver address
+    # password = ""  # uncomment and add your password
+    message = """\
+    Subject: FIRE
 
-        context = ssl.create_default_context()
-        with smtplib.SMTP(smtp_server, port) as server:
-            server.ehlo()  # Can be omitted
-            server.starttls(context=context)
-            server.ehlo()  # Can be omitted
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
+    Pyronear has detected a fire !!!"""
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP(smtp_server, port) as server:
+        server.ehlo()  # Can be omitted
+        server.starttls(context=context)
+        server.ehlo()  # Can be omitted
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message)
 
 
 if __name__ == "__main__":
