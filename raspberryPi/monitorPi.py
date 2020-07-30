@@ -48,6 +48,6 @@ class MonitorPi:
 
 if __name__ == "__main__":
 
+
     recordlogs = MonitorPi("/home/pi/Desktop/")
     recordlogs.record(30)
-
