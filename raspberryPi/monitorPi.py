@@ -35,19 +35,14 @@ class MonitorPi:
             log.write("datetime;cpu_temperature_C;mem_available_GB;cpu_usage_percent\n")
                         
             while True:
-                l = "{date};{t:.2f};{mem:.2f};{cpu_usage}\n".format(
-                        date = strftime("%Y-%m-%d %H:%M:%S"),
-                        t = self.cpu_temp.temperature,
-                        mem = psutil.virtual_memory().available / 1024**3,
-                        cpu_usage = psutil.cpu_percent())
+                line = "{date};{t:.2f};{mem:.2f};{cpu_usage}\n".format(date=strftime("%Y-%m-%d %H:%M:%S"),t=self.cpu_temp.temperature,mem=psutil.virtual_memory().available / 1024**3,cpu_usage=psutil.cpu_percent())
                     
-                log.write(l)
+                log.write(line)
                 
                 sleep(timeStep)
 
 
 if __name__ == "__main__":
-
 
     recordlogs = MonitorPi("/home/pi/Desktop/")
     recordlogs.record(30)
