@@ -17,7 +17,6 @@ class MonitorPi:
     --------
     recordlogs = MonitorPi("/home/pi/Desktop/")
     recordlogs.record(5) # record metrics every 5 seconds
-    
     """
 
     def __init__(self, monitoringFolder, logFile="pi_perf.csv"):
@@ -30,15 +29,18 @@ class MonitorPi:
         self.logFile = logFile
 
     def record(self, timeStep):
-            
+
         with open(self.monitoringFolder + self.logFile, "a") as log:
             log.write("datetime;cpu_temperature_C;mem_available_GB;cpu_usage_percent\n")
-                        
+
             while True:
-                line = "{date};{t:.2f};{mem:.2f};{cpu_usage}\n".format(date=strftime("%Y-%m-%d %H:%M:%S"),t=self.cpu_temp.temperature,mem=psutil.virtual_memory().available / 1024**3,cpu_usage=psutil.cpu_percent())
-                    
+                line = "{date};{t:.2f};{mem:.2f};{cpu_usage}\n".format(date=strftime("%Y-%m-%d %H:%M:%S"),
+                                                                       t=self.cpu_temp.temperature,
+                                                                       mem=psutil.virtual_memory().available / 1024**3,
+                                                                       cpu_usage=psutil.cpu_percent())
+
                 log.write(line)
-                
+
                 sleep(timeStep)
 
 
