@@ -211,6 +211,9 @@ def computeSubSet(metadata, frame_per_seq, probTh=None, seed=42):
         allows to equalize the dataset. For each 'not fire' sequence, we draw a random number if
         it is greater than probTh we double the number of frames used for this sequence
 
+    seed : int
+        you can setup a seed for repeatability
+
     Example
     -------
     metadataSS = computeSubSet(metadata, 2)
