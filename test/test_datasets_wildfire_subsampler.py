@@ -11,7 +11,7 @@ import pandas as pd
 from pyronear.datasets.wildfire import computeSubSet
 
 
-class WildFireDatasetSubSampler(unittest.TestCase):
+class WildFireSubSamplerTester(unittest.TestCase):
 
     def setUp(self):
         self.path_to_frames = Path(__file__).parent / 'fixtures/'

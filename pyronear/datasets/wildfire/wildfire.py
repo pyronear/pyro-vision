@@ -206,9 +206,6 @@ def computeSubSet(metadata, frame_per_seq, probTh=None, seed=42):
     frame_per_seq: int
         frame per sequence to take
 
-    frame_per_seq: float
-        between 0 and 1, percentage of non-fire data to take twice in order to equalize the dataset
-
     probTh: float , optional
         The data set contains many more frames classified 'fire' than 'not fire', this parameter
         allows to equalize the dataset. For each 'not fire' sequence, we draw a random number if
