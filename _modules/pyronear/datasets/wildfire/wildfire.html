@@ -184,6 +184,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">SystemRandom</span>
+<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
@@ -373,6 +375,90 @@
         <span class="c1"># Determine estimated(posterior) parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_samples_</span> <span class="o">=</span> <span class="p">{</span><span class="n">set_</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">splits</span><span class="p">[</span><span class="n">set_</span><span class="p">])</span> <span class="k">for</span> <span class="n">set_</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">]}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ratios_</span> <span class="o">=</span> <span class="p">{</span><span class="n">set_</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples_</span><span class="p">[</span><span class="n">set_</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wildfire</span><span class="p">))</span> <span class="k">for</span> <span class="n">set_</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">]}</span>
+
+
+<span class="k">def</span> <span class="nf">computeSubSet</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">frame_per_seq</span><span class="p">,</span> <span class="n">probTh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function computes a subset of the dataset, it extracts frame_per_seq consecutive frames for each sequence.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    metadata: Pandas.DataFrame</span>
+<span class="sd">        metadata of the WilFireDataset</span>
+
+<span class="sd">    frame_per_seq: int</span>
+<span class="sd">        frame per sequence to take</span>
+
+<span class="sd">    probTh: float , optional</span>
+<span class="sd">        The data set contains many more frames classified &#39;fire&#39; than &#39;not fire&#39;, this parameter</span>
+<span class="sd">        allows to equalize the dataset. For each &#39;not fire&#39; sequence, we draw a random number if</span>
+<span class="sd">        it is greater than probTh we double the number of frames used for this sequence</span>
+
+<span class="sd">    seed : int</span>
+<span class="sd">        you can setup a seed for repeatability</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    metadataSS = computeSubSet(metadata, 2)</span>
+<span class="sd">    wildfireSS = WildFireDataset(metadata=metadataSS, path_to_frames=path_to_frames)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid path to CSV containing metadata. Please provide one (path=</span><span class="si">{</span><span class="n">metadata</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="n">cryptogen</span> <span class="o">=</span> <span class="n">SystemRandom</span><span class="p">()</span>
+    <span class="n">cryptogen</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">metadata</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">))</span>
+    <span class="n">imgs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;imgFile&#39;</span><span class="p">]</span>
+    <span class="c1"># Define sequences numbers</span>
+    <span class="n">metadata</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">))</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[[</span><span class="s1">&#39;exploitable&#39;</span><span class="p">,</span> <span class="s1">&#39;fire&#39;</span><span class="p">,</span> <span class="s1">&#39;sequence&#39;</span><span class="p">,</span> <span class="s1">&#39;clf_confidence&#39;</span><span class="p">,</span> <span class="s1">&#39;loc_confidence&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;stateStart&#39;</span><span class="p">,</span> <span class="s1">&#39;stateEnd&#39;</span><span class="p">,</span> <span class="s1">&#39;fire_id&#39;</span><span class="p">,</span> <span class="s1">&#39;fBase&#39;</span><span class="p">]]</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;seq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">meta</span><span class="p">))</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;exploitable&#39;</span><span class="p">,</span> <span class="s1">&#39;fire&#39;</span><span class="p">,</span> <span class="s1">&#39;sequence&#39;</span><span class="p">,</span> <span class="s1">&#39;clf_confidence&#39;</span><span class="p">,</span>
+                                                           <span class="s1">&#39;loc_confidence&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;stateStart&#39;</span><span class="p">,</span> <span class="s1">&#39;stateEnd&#39;</span><span class="p">,</span>
+                                                           <span class="s1">&#39;fire_id&#39;</span><span class="p">,</span> <span class="s1">&#39;fBase&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+    <span class="c1"># Get unique list of sequences</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;seq&#39;</span><span class="p">]</span>
+    <span class="n">my_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">uniqueSEQ</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">my_set</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">uniqueSEQ</span><span class="p">)</span>
+
+    <span class="n">subSetImgs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">subSetImgsEq</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">seU</span> <span class="ow">in</span> <span class="n">uniqueSEQ</span><span class="p">:</span>
+        <span class="c1"># For each sequence get a subSample of frame_per_seq frames</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">se</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">if</span> <span class="n">se</span> <span class="o">==</span> <span class="n">seU</span><span class="p">]</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nn</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">frame_per_seq</span><span class="p">):</span>
+            <span class="n">nn</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="n">frame_per_seq</span><span class="p">)</span>
+        <span class="n">nb</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">nn</span><span class="p">]</span>
+        <span class="n">nb</span><span class="p">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">nn</span><span class="p">))))</span>
+        <span class="n">subSetImgs</span> <span class="o">+=</span> <span class="n">nn</span>
+        <span class="c1"># Equalize the dataset adding not_fire frames</span>
+        <span class="k">if</span> <span class="n">probTh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;seq&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">seU</span><span class="p">][</span><span class="s1">&#39;fire&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span>
+               <span class="n">cryptogen</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">probTh</span><span class="p">):</span>
+                <span class="n">nn</span> <span class="o">=</span> <span class="p">[</span><span class="n">imgs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">se</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">if</span> <span class="n">se</span> <span class="o">==</span> <span class="n">seU</span><span class="p">]</span>
+                <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nn</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">frame_per_seq</span><span class="p">):</span>
+                    <span class="n">nn</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="n">frame_per_seq</span><span class="p">)</span>
+                <span class="n">nb</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">nn</span><span class="p">]</span>
+                <span class="n">nb</span><span class="p">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">nn</span><span class="p">))))</span>
+                <span class="n">subSetImgsEq</span> <span class="o">+=</span> <span class="n">nn</span>
+
+    <span class="c1"># Insert randomly the extra frames in the dataset</span>
+    <span class="k">if</span> <span class="n">probTh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">subSetImgsEq</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">cryptogen</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">subSetImgs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="n">subSetImgs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">subSetImgsEq</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">subSetImgs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">subSetImgsEq</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># Create metadta Subset</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;imgFile&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="k">if</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">subSetImgs</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">metadata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
 </pre></div>
 
            </div>
