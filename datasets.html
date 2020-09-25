@@ -195,7 +195,7 @@ which can load multiple samples parallelly using <code class="docutils literal n
 <p>An image classification dataset for wildfire in natural environments, built using Google Images referenced data.</p>
 <dl class="py class">
 <dt id="pyronear.datasets.OpenFire">
-<em class="property">class </em><code class="sig-prename descclassname">pyronear.datasets.</code><code class="sig-name descname">OpenFire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">train</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">threads</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">num_samples</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyronear/datasets/openfire.html#OpenFire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyronear.datasets.OpenFire" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyronear.datasets.</code><code class="sig-name descname">OpenFire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">train</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">download</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">threads</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">num_samples</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">img_folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyronear/datasets/openfire.html#OpenFire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyronear.datasets.OpenFire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wildfire image Dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -209,6 +209,7 @@ downloaded again.</p></li>
 <li><p><strong>threads</strong> (<em>int</em><em>, </em><em>optional</em>) – If download is set to True, use this amount of threads
 for downloading the dataset.</p></li>
 <li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to download (all by default)</p></li>
+<li><p><strong>img_folder</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Location of image folder. Default: &lt;root&gt;/OpenFire/images</p></li>
 <li><p><strong>**kwargs</strong> – optional arguments of torchvision.datasets.VisionDataset</p></li>
 </ul>
 </dd>
