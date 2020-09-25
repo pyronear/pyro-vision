@@ -3,13 +3,14 @@
 <p align="center">
     <a href="LICENSE" alt="License">
         <img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
-    <a href="https://www.codacy.com/manual/fg/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=frgfm/PyroNear&amp;utm_campaign=Badge_Grade">
-        <img src="https://api.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a"/></a>
-    <a href="https://circleci.com/gh/frgfm/PyroNear">
-        <img src="https://circleci.com/gh/frgfm/PyroNear.svg?style=shield" /></a>
-    <a href="https://codecov.io/gh/frgfm/PyroNear">
-  		<img src="https://codecov.io/gh/frgfm/PyroNear/branch/master/graph/badge.svg" /></a>
-    <a href="https://frgfm.github.io/PyroNear">
+    <a href="https://www.codacy.com/manual/frgfm/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/PyroNear&amp;utm_campaign=Badge_Grade">
+        <img src="https://app.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a"/></a>
+    <a href="https://github.com/pyronear/PyroNear/actions?query=workflow%3Apython-package">
+        <img src="https://github.com/pyronear/PyroNear/workflows/python-package/badge.svg" /></a>
+    <a href="https://codecov.io/gh/pyronear/PyroNear">
+  		<img src="https://codecov.io/gh/pyronear/PyroNear/branch/master/graph/badge.svg" />
+	</a>
+    <a href="https://pyronear.github.io/PyroNear">
   		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
     <a href="https://pypi.org/project/pyronear/" alt="Pypi">
         <img src="https://img.shields.io/badge/pypi-v0.1.0-blue.svg" /></a>
@@ -90,7 +91,7 @@ python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrain
 
 ## Documentation
 
-The full package documentation is available [here](<https://frgfm.github.io/PyroNear/>) for detailed specifications. The documentation was built with [Sphinx](sphinx-doc.org) using a [theme](github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](readthedocs.org).
+The full package documentation is available [here](https://pyronear.github.io/PyroNear/) for detailed specifications. The documentation was built with [Sphinx](https://www.sphinx-doc.org) using a [theme](https://github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](https://readthedocs.org).
 
 
 
@@ -108,4 +109,4 @@ This project is developed and maintained by the repo owner and volunteers from [
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the CeCILL and AGPLv3 Licenses. See `LICENSE` for more information.

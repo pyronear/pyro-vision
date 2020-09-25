@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
 import abc
 import copy
 
@@ -69,12 +73,22 @@ class ExhaustSplitStrategy(SplitStrategy):
         self._fire_id_to_size_to_exhaust = copy.deepcopy(self._fire_id_to_size)
 
         # Let's get
-        fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train),
-                    'val': self._get_fire_ids_for_one_split(n_samples_val)}
-        fire_ids['test'] = [id_ for id_ in self._fire_id_to_size if id_ not in (fire_ids['train'] + fire_ids['val'])]
-        # Finish exhaustion
-        for fire_id_test in fire_ids['test']:
-            del self._fire_id_to_size_to_exhaust[fire_id_test]
+        if ratios['test'] > 0:
+            fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train),
+                        'val': self._get_fire_ids_for_one_split(n_samples_val)}
+            fire_ids['test'] = [id_ for id_ in self._fire_id_to_size
+                                if id_ not in (fire_ids['train'] + fire_ids['val'])]
+            # Finish exhaustion
+            for fire_id_test in fire_ids['test']:
+                del self._fire_id_to_size_to_exhaust[fire_id_test]
+
+        else:
+            fire_ids = {'train': self._get_fire_ids_for_one_split(n_samples_train)}
+            fire_ids['val'] = [id_ for id_ in self._fire_id_to_size if id_ not in fire_ids['train']]
+            # Finish exhaustion
+            for fire_id_test in fire_ids['val']:
+                del self._fire_id_to_size_to_exhaust[fire_id_test]
+            fire_ids['test'] = []
 
         n_samples_remaining = len(self._fire_id_to_size_to_exhaust)
         if n_samples_remaining != 0:

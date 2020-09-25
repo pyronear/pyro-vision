@@ -6,9 +6,9 @@ Everything you need to know to contribute efficiently to the project.
 
 ## Codebase structure
 
-- [pyronear](https://github.com/frgfm/PyroNear/blob/master/pyronear) - The actual PyroNear library
-- [references](https://github.com/frgfm/PyroNear/blob/master/references) - Scripts to reproduce performances
-- [test](https://github.com/frgfm/PyroNear/blob/master/test) - Python unit tests
+- [pyronear](https://github.com/pyronear/PyroNear/blob/master/pyronear) - The actual PyroNear library
+- [references](https://github.com/pyronear/PyroNear/blob/master/references) - Scripts to reproduce performances
+- [test](https://github.com/pyronear/PyroNear/blob/master/test) - Python unit tests
 
 
 
@@ -24,22 +24,22 @@ As a contributor, you will only have to ensure coverage of your code by adding a
 
 
 
-## Issues
+## Issues
 
-Use Github [issues](https://github.com/frgfm/PyroNear/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
+Use Github [issues](https://github.com/pyronear/PyroNear/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
 
 
 
-## Code contribution
+## Code contribution
 
 In order to contribute to  project, we will first **set up the development environment**, then describe the **contributing workflow**.
 
-* [Project Setup](project-setup)
+* [Project Setup](#project-setup)
 
     _How to set up a forked project and install its dependencies in a well-encapsulated development environment_
     1. [Create a virtual environment](#create-a-virtual-environment)
     2. [Fork the project](#fork-the-repository)
-* [Contributing workflow](contributing-workflow)
+* [Contributing workflow](#contributing-workflow)
 
    _How to pull remote changes/new contributions and push your contributions to the original project_
 
@@ -61,6 +61,7 @@ Please open a terminal and follow the instructions.
 pip install virtualenvwrapper
 
 # add at the end of your .bashrc
+export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Devel
 source /usr/local/bin/virtualenvwrapper.sh
@@ -100,7 +101,7 @@ cd PyroNear
 3. Set remotes to original project and merge new contributions onto master.
 ```shell
 # add the original repository as remote repository called "upstream"
-git remote add upstream https://github.com/frgfm/PyroNear.git
+git remote add upstream https://github.com/pyronear/PyroNear.git
 
 # verify repository has been correctly added
 git remote -v

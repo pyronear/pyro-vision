@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
 import warnings
 
 from functools import partial
@@ -207,7 +213,7 @@ class FrameExtractor:
             # Get the video
             movie = cv2.VideoCapture((self.path_to_videos / name).as_posix())
             # For each state
-            for index, row in group.iterrows():
+            for row in group.itertuples():
                 # Position the video at the current frame
                 movie.set(cv2.CAP_PROP_POS_FRAMES, row.frame)
                 success, frame = movie.read()

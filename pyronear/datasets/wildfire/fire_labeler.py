@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
 import re
 from itertools import combinations
 
@@ -109,7 +113,7 @@ class FireLabeler:
 
         length = len(self.fire_ids[self.fire_ids == -1])
         self.fire_ids[self.fire_ids == -1] = range(current_fire_id, current_fire_id + length)
-        assert self.fire_ids[self.fire_ids == -1].sum() == 0, "Singletons escaped indexation!!"
+        assert self.fire_ids[self.fire_ids == -1].sum() == 0, "Singletons escaped indexation!"
         return self
 
     @staticmethod

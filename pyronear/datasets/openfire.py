@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
 from pathlib import Path
 import warnings
 import json
 from PIL import Image, ImageFile
-from tqdm import tqdm
 
-import torch
 from torchvision.datasets import VisionDataset
 from .utils import download_url, download_urls
 

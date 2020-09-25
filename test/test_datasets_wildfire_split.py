@@ -1,8 +1,13 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
 import unittest
 
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import PIL
 import torch
@@ -18,20 +23,25 @@ class WildFireDatasetTester(unittest.TestCase):
 
     def setUp(self):
         self.path_to_frames = Path(__file__).parent / 'fixtures/'
+        self.path_to_frames_str = str(self.path_to_frames)
         self.wildfire_path = Path(__file__).parent / 'fixtures/wildfire_dataset.csv'
         self.wildfire_df = pd.read_csv(self.wildfire_path)
 
     def test_wildfire_correctly_init_from_path(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_path,
-                                   path_to_frames=self.path_to_frames)
+        for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
+            wildfire = WildFireDataset(metadata=self.wildfire_path,
+                                       path_to_frames=path_to_frames)
 
-        self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire[3]), 2)
 
     def test_wildfire_correctly_init_from_dataframe(self):
-        wildfire = WildFireDataset(metadata=self.wildfire_df,
-                                   path_to_frames=self.path_to_frames)
+        for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
+            wildfire = WildFireDataset(metadata=self.wildfire_df,
+                                       path_to_frames=path_to_frames)
 
-        self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire[3]), 2)
 
         # try to get one image of wildfire (item 3 is authorized image fixture)
         observation_3, metadata_3 = wildfire[3]
@@ -92,6 +102,15 @@ class WildFireDatasetSplitter(unittest.TestCase):
         ratios = {'train': 0.9, 'val': 0.2, 'test': 0.1}  # sum > 1
         with self.assertRaises(ValueError):
             WildFireSplitter(ratios)
+
+    def test_splitting_with_test_to_zero(self):
+        ratios = {'train': 0.81, 'val': 0.19, 'test': 0}
+
+        splitter = WildFireSplitter(ratios, seed=42)
+        splitter.fit(self.wildfire)
+
+        for (set_, ratio_) in splitter.ratios_.items():
+            self.assertAlmostEqual(ratio_, ratios[set_], places=2)
 
     def test_splitting_gives_good_splits_size(self):
         n_samples_expected = {'train': 684, 'val': 147, 'test': 143}

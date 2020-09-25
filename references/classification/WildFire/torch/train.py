@@ -1,24 +1,25 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Copyright (c) Pyronear contributors.
+# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
+# See the LICENSE file in the root of this repository for complete details.
+
+import numpy as np
+import pandas as pd
+import math
+from pathlib import Path
 import os
 import random
-import numpy as np
-from pathlib import Path
-import math
+from torch.utils.data import DataLoader
 import torch
-import torch.utils.data
 from torch import nn
 from torch import optim
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
-
-from pyronear.datasets import OpenFire
 from pyronear import models
-
-# Disable warnings about RGBA images (discard transparency information)
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module="PIL.Image")
+from pyronear.datasets.wildfire import WildFireDataset, WildFireSplitter
+from pyronear.datasets.wildfire.split_strategy import *
 
 
 def set_seed(seed):
@@ -64,7 +65,7 @@ def train_batch(model, x, target, optimizer, criterion):
 
 
 def train_epoch(model, train_loader, optimizer, criterion, master_bar,
-                epoch=0, scheduler=None, device='cpu', bin_classif=False):
+                epoch=0, scheduler=None, device='cpu'):
     """Train a model for one epoch
     Args:
         model (torch.nn.Module): model to train
@@ -75,7 +76,6 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
         epoch (int): current epoch index
         scheduler (torch.optim._LRScheduler, optional): learning rate scheduler
         device (str): device hosting tensor data
-        bin_classif (bool, optional): should the target be considered as binary
     Returns:
         batch_loss (float): latch batch loss
     """
@@ -87,10 +87,10 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
     for _ in progress_bar(range(len(train_loader)), parent=master_bar):
 
         x, target = next(loader_iter)
-        if bin_classif:
-            target = target.to(dtype=torch.float).view(-1, 1)
+        target = target.type(torch.LongTensor).squeeze()
+        # Work with tensors on GPU
         if device.startswith('cuda'):
-            x, target = x.cuda(non_blocking=True), target.cuda(non_blocking=True)
+            x, target = x.cuda(), target.cuda()
 
         batch_loss = train_batch(model, x, target, optimizer, criterion)
         train_loss += batch_loss
@@ -104,14 +104,13 @@ def train_epoch(model, train_loader, optimizer, criterion, master_bar,
     return train_loss
 
 
-def evaluate(model, test_loader, criterion, device='cpu', bin_classif=False):
+def evaluate(model, test_loader, criterion, device='cpu'):
     """Evaluation a model on a dataloader
     Args:
         model (torch.nn.Module): model to train
-        test_loader (torch.utils.data.DataLoader): validation dataloader
+        train_loader (torch.utils.data.DataLoader): validation dataloader
         criterion (torch.nn.Module): criterion object
         device (str): device hosting tensor data
-        bin_classif (bool, optional): should the target be considered as binary
     Returns:
         val_loss (float): validation loss
         acc (float): top1 accuracy
@@ -120,8 +119,8 @@ def evaluate(model, test_loader, criterion, device='cpu', bin_classif=False):
     val_loss, correct, targets = 0, 0, 0
     with torch.no_grad():
         for x, target in test_loader:
-            if bin_classif:
-                target = target.to(dtype=torch.float).view(-1, 1)
+
+            target = target.type(torch.LongTensor).squeeze()
             # Work with tensors on GPU
             if device.startswith('cuda'):
                 x, target = x.cuda(), target.cuda()
@@ -130,11 +129,7 @@ def evaluate(model, test_loader, criterion, device='cpu', bin_classif=False):
             outputs = model.forward(x)
             val_loss += criterion(outputs, target).item()
             # Index of max log-probability
-            if bin_classif:
-                pred = torch.sigmoid(outputs).round()
-            else:
-                pred = outputs.argmax(1, keepdim=True)
-
+            pred = outputs.max(1, keepdim=True)[1]
             correct += pred.eq(target.view_as(pred)).sum().item()
             targets += x.size(0)
     val_loss /= len(test_loader)
@@ -155,42 +150,43 @@ def main(args):
         else:
             args.device = 'cpu'
 
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
+    #Create Dataloaders
 
-    data_transforms = transforms.Compose([
-        transforms.RandomResizedCrop((args.resize, args.resize)),
-        transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1, hue=0.1),
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+
+    train_transforms = transforms.Compose([
+        transforms.RandomResizedCrop(size=args.resize, scale=(0.8, 1.0)),
+        transforms.RandomRotation(degrees=15),
+        transforms.ColorJitter(),
         transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(10),
         transforms.ToTensor(),
         normalize
     ])
 
-    # Train & test sets
-    train_set = OpenFire(root=args.data_path, train=True, download=True,
-                         transform=data_transforms, img_folder=args.img_folder)
-    val_set = OpenFire(root=args.data_path, train=False, download=True,
-                       transform=data_transforms, img_folder=args.img_folder)
-    num_classes = len(train_set.classes)
-    if args.binary:
-        if num_classes == 2:
-            num_classes = 1
-        else:
-            raise ValueError('unable to cast number of classes to binary setting')
-    # Samplers
-    train_sampler = torch.utils.data.RandomSampler(train_set)
-    test_sampler = torch.utils.data.SequentialSampler(val_set)
+    val_transforms = transforms.Compose([
+        transforms.Resize(size=args.resize),
+        transforms.CenterCrop(size=args.resize),
+        transforms.ToTensor(),
+        normalize
+    ])
 
-    # Data loader
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, sampler=train_sampler,
-                                               num_workers=args.workers, pin_memory=True)
-    test_loader = torch.utils.data.DataLoader(val_set, batch_size=args.batch_size, sampler=test_sampler,
-                                              num_workers=args.workers, pin_memory=True)
+    tf = {'train': train_transforms, 'test': val_transforms, 'val': val_transforms}
+
+    metadata = pd.read_csv(args.metadata)
+
+    wildfire = WildFireDataset(metadata=metadata, path_to_frames=Path(args.DB), target_names=['fire'])
+
+    ratios = {'train': args.ratio_train, 'val': args.ratio_val, 'test': args.ratio_test}
+
+    splitter = WildFireSplitter(ratios, transforms=tf)
+    splitter.fit(wildfire)
+
+    train_loader = DataLoader(splitter.train, batch_size=args.batch_size, shuffle=True)
+    val_loader = DataLoader(splitter.val, batch_size=args.batch_size, shuffle=True)
 
     # Model definition
     model = models.__dict__[args.model](imagenet_pretrained=args.pretrained,
-                                        num_classes=data.c, lin_features=args.lin_feats,
+                                        num_classes=args.nb_class, lin_features=args.lin_feats,
                                         concat_pool=args.concat_pool, bn_final=args.bn_final,
                                         dropout_prob=args.dropout_prob)
 
@@ -208,10 +204,7 @@ def main(args):
     model.to(args.device)
 
     # Loss function
-    if args.binary:
-        criterion = nn.BCEWithLogitsLoss()
-    else:
-        criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
 
     # optimizer
     optimizer = optim.Adam(model.parameters(),
@@ -230,13 +223,12 @@ def main(args):
         # Training
         train_loss = train_epoch(model, train_loader, optimizer, criterion,
                                  master_bar=mb, epoch=epoch_idx, scheduler=lr_scheduler,
-                                 device=args.device, bin_classif=args.binary)
+                                 device=args.device)
 
         # Evaluation
-        val_loss, acc = evaluate(model, test_loader, criterion, device=args.device,
-                                 bin_classif=args.binary)
+        val_loss, acc = evaluate(model, val_loader, criterion, device=args.device)
 
-        mb.first_bar.comment = f"Epoch {epoch_idx+1}/{args.epochs}"
+        mb.comment = f"Epoch {epoch_idx+1}/{args.epochs}"
         mb.write(f"Epoch {epoch_idx+1}/{args.epochs} - Training loss: {train_loss:.4} | "
                  f"Validation loss: {val_loss:.4} | Error rate: {1 - acc:.4}")
 
@@ -258,17 +250,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PyroNear Classification Training',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # Input / Output
-    parser.add_argument('--data-path', default='./data', help='dataset root folder')
+    parser.add_argument('--DB', default='./DB', help='dataset root folder')
+    parser.add_argument('--metadata', default='./DB/metadata.csv', help='Paht to metadata')
     parser.add_argument('--resume', default=None, help='checkpoint file to resume from')
-    parser.add_argument('--img-folder', default=None,
-                        help='Folder containing images. Default: <data_path>/OpenFire/images')
-    parser.add_argument('--output-dir', default=None, help='path for output saving')
+    parser.add_argument('--output_dir', default=None, help='path for output saving')
     parser.add_argument('--checkpoint', default=None, type=str, help='name of output file')
-    parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
+    parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
                         help='start epoch index')
     # Architecture
     parser.add_argument('--model', default='resnet18', type=str, help='model architecture')
-    parser.add_argument("--concat-pool", dest="concat_pool",
+    parser.add_argument('--nb-class', default=2, type=int, help='train ratio')
+    parser.add_argument("--concat_pool", dest="concat_pool",
                         help="replaces AdaptiveAvgPool2d with AdaptiveConcatPool2d",
                         action="store_true")
     parser.add_argument('--lin-feats', default=512, type=int,
@@ -293,6 +285,9 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--resize', default=224, type=int, help='image size after resizing')
     parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
                         help='number of data loading workers')
+    parser.add_argument('--ratio-train', default=0.8, type=float, help='train ratio')
+    parser.add_argument('--ratio-val', default=0.2, type=float, help='validation ratio')
+    parser.add_argument('--ratio-test', default=0, type=float, help='test ratio')
     # Optimizer
     parser.add_argument('--lr', default=3e-4, type=float, help='maximum learning rate')
     parser.add_argument('--epochs', default=20, type=int, metavar='N',
