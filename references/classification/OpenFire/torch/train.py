@@ -173,9 +173,9 @@ def main(args):
 
     # Train & test sets
     train_set = OpenFire(root=args.data_path, train=True, download=True,
-                         transform=data_transforms)
+                         transform=data_transforms, img_folder=args.img_folder)
     val_set = OpenFire(root=args.data_path, train=False, download=True,
-                       transform=data_transforms)
+                       transform=data_transforms, img_folder=args.img_folder)
     num_classes = len(train_set.classes)
     if args.binary:
         if num_classes == 2:
@@ -264,6 +264,8 @@ if __name__ == "__main__":
     # Input / Output
     parser.add_argument('--data-path', default='./data', help='dataset root folder')
     parser.add_argument('--resume', default=None, help='checkpoint file to resume from')
+    parser.add_argument('--img-folder', default=None,
+                        help='Folder containing images. Default: <data_path>/OpenFire/images')
     parser.add_argument('--output-dir', default=None, help='path for output saving')
     parser.add_argument('--checkpoint', default=None, type=str, help='name of output file')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',

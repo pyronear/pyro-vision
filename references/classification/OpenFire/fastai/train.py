@@ -70,7 +70,8 @@ def main(args):
 
     # Aggregate path and labels into list for fastai ImageDataBunch
     fnames, labels, is_valid = [], [], []
-    dataset = OpenFire(root=args.data_path, train=True, download=True)
+    dataset = OpenFire(root=args.data_path, train=True, download=True,
+                       img_folder=args.img_folder)
     for sample in dataset.data:
         fnames.append(dataset._images.joinpath(sample['name']).relative_to(dataset.root))
         labels.append(sample['target'])
@@ -128,6 +129,8 @@ if __name__ == "__main__":
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # Input / Output
     parser.add_argument('--data-path', default='./data', help='dataset root folder')
+    parser.add_argument('--img-folder', default=None,
+                        help='Folder containing images. Default: <data_path>/OpenFire/images')
     parser.add_argument('--checkpoint', default='checkpoint', type=str, help='name of output file')
     parser.add_argument('--resume', default=None, help='checkpoint name to resume from')
     # Architecture

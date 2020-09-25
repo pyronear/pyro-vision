@@ -55,11 +55,21 @@ class DatasetsTester(unittest.TestCase):
     def test_openfire(self):
         num_samples = 200
 
+        # Test img_folder argument: wrong type and default (None)
         with tempfile.TemporaryDirectory() as root:
+            self.assertRaises(TypeError, datasets.OpenFire, root, download=True, img_folder=1)
+            ds = datasets.OpenFire(root=root, download=True, num_samples=num_samples,
+                                   img_folder=None)
+            self.assertIsInstance(ds.img_folder, Path)
+
+        with tempfile.TemporaryDirectory() as root, tempfile.TemporaryDirectory() as img_folder:
 
             # Working case
-            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples)
-            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=num_samples)
+            # Test img_folder as Path and str
+            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples,
+                                          img_folder=Path(img_folder))
+            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=num_samples,
+                                         img_folder=img_folder)
             # Check inherited properties
             self.assertIsInstance(train_set, VisionDataset)
 
@@ -73,8 +83,9 @@ class DatasetsTester(unittest.TestCase):
             datasets.utils.download_url(train_set.url, root, filename='extract.json', verbose=False)
             with open(Path(root).joinpath('extract.json'), 'rb') as f:
                 extract = json.load(f)[:num_samples]
-            # Uncomment when download issues are resolved
-            # self.assertEqual(len(train_set) + len(test_set), len(extract))
+            # Test if not more than 15 downloads failed.
+            # Change to assertEqual when download issues are resolved
+            self.assertAlmostEqual(len(train_set) + len(test_set), len(extract), delta=15)
 
             # Check integrity of samples
             img, target = train_set[0]

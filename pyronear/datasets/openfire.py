@@ -28,15 +28,21 @@ class OpenFire(VisionDataset):
         threads (int, optional): If download is set to True, use this amount of threads
             for downloading the dataset.
         num_samples (int, optional): Number of samples to download (all by default)
+        img_folder (str or Path, optional): Location of image folder. Default: <root>/OpenFire/images
         **kwargs: optional arguments of torchvision.datasets.VisionDataset
     """
 
     url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'  # noqa: E501
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=None, num_samples=None, **kwargs):
+    def __init__(self, root, train=True, download=False, threads=None, num_samples=None,
+                 img_folder=None, **kwargs):
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train
+        if img_folder is None:
+            self.img_folder = Path(self.root, self.__class__.__name__, 'images')
+        else:
+            self.img_folder = Path(img_folder)
 
         if download:
             self.download(threads, num_samples)
@@ -50,7 +56,7 @@ class OpenFire(VisionDataset):
 
     @property
     def _images(self):
-        return Path(self.root, self.__class__.__name__, 'images')
+        return self.img_folder
 
     @property
     def _annotations(self):
