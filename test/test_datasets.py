@@ -83,9 +83,9 @@ class DatasetsTester(unittest.TestCase):
             datasets.utils.download_url(train_set.url, root, filename='extract.json', verbose=False)
             with open(Path(root).joinpath('extract.json'), 'rb') as f:
                 extract = json.load(f)[:num_samples]
-            # Test if not more than 10 downloads failed.
+            # Test if not more than 15 downloads failed.
             # Change to assertEqual when download issues are resolved
-            self.assertAlmostEqual(len(train_set) + len(test_set), len(extract), delta=10)
+            self.assertAlmostEqual(len(train_set) + len(test_set), len(extract), delta=15)
 
             # Check integrity of samples
             img, target = train_set[0]
