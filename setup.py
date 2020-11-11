@@ -14,8 +14,8 @@ import subprocess
 from setuptools import setup, find_packages
 
 
-package_name = 'pyronear'
-with open(os.path.join('pyronear', 'version.py')) as version_file:
+package_name = 'pyrovision'
+with open(os.path.join('pyrovision', 'version.py')) as version_file:
     version = version_file.read().strip()
 sha = 'Unknown'
 
@@ -49,8 +49,8 @@ setup(
     description='Datasets and models for wildfire detection in PyTorch',
     long_description=readme,
     long_description_content_type="text/markdown",
-    url='https://github.com/pyronear/PyroNear',
-    download_url='https://github.com/pyronear/PyroNear/tags',
+    url='https://github.com/pyronear/pyro-vision',
+    download_url='https://github.com/pyronear/pyro-vision/tags',
     license='CeCILL-2.1 or AGPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
