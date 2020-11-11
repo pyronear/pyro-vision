@@ -15,8 +15,7 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 
-from pyrovision.datasets.wildfire import (WildFireDataset,
-                                        WildFireSplitter)
+from pyrovision.datasets.wildfire import WildFireDataset, WildFireSplitter
 
 
 class WildFireDatasetTester(unittest.TestCase):
