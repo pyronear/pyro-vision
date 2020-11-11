@@ -20,8 +20,8 @@ from fastai.data_block import CategoryList, FloatList
 from fastai.basic_train import Learner
 from fastai.vision.learner import model_meta, _default_meta
 
-from pyronear.datasets import OpenFire
-from pyronear import models
+from pyrovision.datasets import OpenFire
+from pyrovision import models
 
 
 # Disable warnings from fastai using deprecated functions for PyTorch>=1.3
