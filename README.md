@@ -49,10 +49,10 @@ Pyrovision aims at providing the means to create a wildfire early detection syst
 
 ### Installation
 
-You can install the package using [pypi](https://pypi.org/project/pyrovision/) as follows:
+You can install the package using [pypi](https://pypi.org/project/pyronear/) as follows:
 
 ```shell
-pip install pyrovision
+pip install pyronear
 ```
 
 
