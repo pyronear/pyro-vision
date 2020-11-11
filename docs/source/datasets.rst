@@ -1,5 +1,5 @@
-pyronear.datasets
-=================
+pyrovision.datasets
+===================
 
 All datasets are subclasses of :class:`torchvision.datasets.vision.VisionDataset`
 i.e, they have ``__getitem__`` and ``__len__`` methods implemented.
@@ -11,7 +11,7 @@ The following datasets are available:
 .. contents:: Datasets
     :local:
 
-.. currentmodule:: pyronear.datasets
+.. currentmodule:: pyrovision.datasets
 
 
 OpenFire

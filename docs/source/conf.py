@@ -19,20 +19,20 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import pyronear
+import pyrovision
 import sphinx_rtd_theme
 
 
 # -- Project information -----------------------------------------------------
 
 master_doc = 'index'
-project = 'pyronear'
-copyright = '2019, PyroNear Contributors'
-author = 'PyroNear Contributors'
+project = 'pyrovision'
+copyright = '2019, Pyronear Contributors'
+author = 'Pyronear Contributors'
 
 # The full version, including alpha/beta/rc tags
-version = pyronear.__version__
-release = pyronear.__version__ + '-git'
+version = pyrovision.__version__
+release = pyrovision.__version__ + '-git'
 
 
 # -- General configuration ---------------------------------------------------
