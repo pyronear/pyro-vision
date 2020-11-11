@@ -3,26 +3,26 @@
 <p align="center">
     <a href="LICENSE" alt="License">
         <img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
-    <a href="https://www.codacy.com/manual/frgfm/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/PyroNear&amp;utm_campaign=Badge_Grade">
+    <a href="https://www.codacy.com/manual/frgfm/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade">
         <img src="https://app.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a"/></a>
-    <a href="https://github.com/pyronear/PyroNear/actions?query=workflow%3Apython-package">
-        <img src="https://github.com/pyronear/PyroNear/workflows/python-package/badge.svg" /></a>
-    <a href="https://codecov.io/gh/pyronear/PyroNear">
-  		<img src="https://codecov.io/gh/pyronear/PyroNear/branch/master/graph/badge.svg" />
+    <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Apython-package">
+        <img src="https://github.com/pyronear/pyro-vision/workflows/python-package/badge.svg" /></a>
+    <a href="https://codecov.io/gh/pyronear/pyro-vision">
+  		<img src="https://codecov.io/gh/pyronear/pyro-vision/branch/master/graph/badge.svg" />
 	</a>
-    <a href="https://pyronear.github.io/PyroNear">
+    <a href="https://pyronear.github.io/pyro-vision">
   		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
-    <a href="https://pypi.org/project/pyronear/" alt="Pypi">
+    <a href="https://pypi.org/project/pyrovision/" alt="Pypi">
         <img src="https://img.shields.io/badge/pypi-v0.1.0-blue.svg" /></a>
 </p>
 
 
 
-# PyroNear: wildfire early detection
+# Pyrovision: wildfire early detection
 
 The increasing adoption of mobile phones have significantly shortened the time required for firefighting agents to be alerted of a starting wildfire. In less dense areas, limiting and minimizing this duration remains critical to preserve forest areas.
 
-PyroNear aims at providing the means to create a wildfire early detection system with state-of-the-art performances at minimal deployment costs.
+Pyrovision aims at providing the means to create a wildfire early detection system with state-of-the-art performances at minimal deployment costs.
 
 
 
@@ -49,10 +49,10 @@ PyroNear aims at providing the means to create a wildfire early detection system
 
 ### Installation
 
-You can install the package using [pypi](https://pypi.org/project/pyronear/) as follows:
+You can install the package using [pypi](https://pypi.org/project/pyrovision/) as follows:
 
 ```shell
-pip install pyronear
+pip install pyrovision
 ```
 
 
@@ -61,10 +61,10 @@ pip install pyronear
 
 ### datasets
 
-Access all PyroNear datasets just like any `torchvision.datasets.VisionDataset`:
+Access all pyrovision datasets just like any `torchvision.datasets.VisionDataset`:
 
 ```python
-from pyronear.datasets import OpenFire
+from pyrovision.datasets import OpenFire
 dataset = OpenFire('./data', download=True)
 ```
 
@@ -91,7 +91,7 @@ python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrain
 
 ## Documentation
 
-The full package documentation is available [here](https://pyronear.github.io/PyroNear/) for detailed specifications. The documentation was built with [Sphinx](https://www.sphinx-doc.org) using a [theme](https://github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](https://readthedocs.org).
+The full package documentation is available [here](https://pyronear.github.io/pyro-vision/) for detailed specifications. The documentation was built with [Sphinx](https://www.sphinx-doc.org) using a [theme](https://github.com/readthedocs/sphinx_rtd_theme) provided by [Read the Docs](https://readthedocs.org).
 
 
 

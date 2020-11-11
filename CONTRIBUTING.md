@@ -1,4 +1,4 @@
-# Contributing to PyroNear
+# Contributing to pyrovision
 
 Everything you need to know to contribute efficiently to the project.
 
@@ -6,9 +6,9 @@ Everything you need to know to contribute efficiently to the project.
 
 ## Codebase structure
 
-- [pyronear](https://github.com/pyronear/PyroNear/blob/master/pyronear) - The actual PyroNear library
-- [references](https://github.com/pyronear/PyroNear/blob/master/references) - Scripts to reproduce performances
-- [test](https://github.com/pyronear/PyroNear/blob/master/test) - Python unit tests
+- [pyrovision](https://github.com/pyronear/pyro-vision/blob/master/pyrovision) - The actual pyrovision library
+- [references](https://github.com/pyronear/pyro-vision/blob/master/references) - Scripts to reproduce performances
+- [test](https://github.com/pyronear/pyro-vision/blob/master/test) - Python unit tests
 
 
 
@@ -26,7 +26,7 @@ As a contributor, you will only have to ensure coverage of your code by adding a
 
 ## Issues
 
-Use Github [issues](https://github.com/pyronear/PyroNear/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
+Use Github [issues](https://github.com/pyronear/pyro-vision/issues) for feature requests, or bug reporting. When doing so, use issue templates whenever possible and provide enough information for other contributors to jump in.
 
 
 
@@ -92,16 +92,16 @@ We are going to get a local copy of the remote project (_fork_) and set remotes 
 cd /path/to/local/pyronear/project/
 
 # clone your fork. replace YOUR_USERNAME accordingly
-git clone https://github.com/YOUR_USERNAME/PyroNear.git
+git clone https://github.com/YOUR_USERNAME/pyro-vision.git
 
-# cd to PyroNear
-cd PyroNear
+# cd to pyro-vision
+cd pyro-vision
 ```
 
 3. Set remotes to original project and merge new contributions onto master.
 ```shell
 # add the original repository as remote repository called "upstream"
-git remote add upstream https://github.com/pyronear/PyroNear.git
+git remote add upstream https://github.com/pyronear/pyro-vision.git
 
 # verify repository has been correctly added
 git remote -v
