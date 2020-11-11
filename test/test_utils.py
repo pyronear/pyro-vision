@@ -5,7 +5,7 @@
 # See the LICENSE file in the root of this repository for complete details.
 
 import unittest
-from pyronear import utils
+from pyrovision import utils
 
 
 class UtilsTester(unittest.TestCase):

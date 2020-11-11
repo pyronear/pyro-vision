@@ -17,7 +17,7 @@ import pafy
 import pandas as pd
 import yaml
 
-from pyronear.datasets.wildfire import FrameExtractor
+from pyrovision.datasets.wildfire import FrameExtractor
 
 
 # TODO: test when only two frames available and when n_frames > count of available frames

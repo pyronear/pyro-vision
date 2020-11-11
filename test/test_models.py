@@ -8,7 +8,7 @@ import unittest
 import torch
 import numpy as np
 import random
-from pyronear import models
+from pyrovision import models
 from torchvision.models.resnet import BasicBlock
 
 
