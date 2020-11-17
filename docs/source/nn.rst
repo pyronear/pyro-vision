@@ -1,12 +1,12 @@
-pyronear.nn
-===========
+pyrovision.nn
+=============
 
 The nn subpackage contains definitions of modules and functions for Deep Learning architectures.
 
 The following models are available:
 
 .. automodule:: torch.nn
-.. currentmodule:: pyronear.nn
+.. currentmodule:: pyrovision.nn
 
 
 Pooling layers

@@ -6,7 +6,7 @@
 
 import unittest
 import torch
-from pyronear import nn
+from pyrovision import nn
 
 # Based on https://github.com/pytorch/pytorch/blob/master/test/test_nn.py
 

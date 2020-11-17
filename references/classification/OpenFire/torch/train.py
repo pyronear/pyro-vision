@@ -17,8 +17,8 @@ from torch import optim
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
 
-from pyronear.datasets import OpenFire
-from pyronear import models
+from pyrovision.datasets import OpenFire
+from pyrovision import models
 
 # Disable warnings about RGBA images (discard transparency information)
 import warnings

@@ -17,7 +17,7 @@ import pafy
 import pandas as pd
 import yaml
 
-from pyronear.datasets.wildfire import FrameExtractor
+from pyrovision.datasets.wildfire import FrameExtractor
 
 
 # TODO: test when only two frames available and when n_frames > count of available frames
@@ -155,7 +155,7 @@ class WildFireFrameExtractorTester(unittest.TestCase):
             def read():
                 return (False, None)
 
-        with patch('pyronear.datasets.wildfire.frame_extractor.cv2.VideoCapture', return_value=VideoCaptureMock):
+        with patch('pyrovision.datasets.wildfire.frame_extractor.cv2.VideoCapture', return_value=VideoCaptureMock):
             with self.assertRaises(IOError):
                 # Let's try to extract frames from unreadable video
                 frame_extractor = FrameExtractor(self.path_to_videos,

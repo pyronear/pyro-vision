@@ -12,7 +12,7 @@ import requests
 from PIL.Image import Image
 from torchvision.datasets import VisionDataset
 
-from pyronear import datasets
+from pyrovision import datasets
 
 
 class DatasetsTester(unittest.TestCase):

@@ -17,9 +17,9 @@ from torch import nn
 from torch import optim
 from torchvision import transforms
 from fastprogress import master_bar, progress_bar
-from pyronear import models
-from pyronear.datasets.wildfire import WildFireDataset, WildFireSplitter
-from pyronear.datasets.wildfire.split_strategy import *
+from pyrovision import models
+from pyrovision.datasets.wildfire import WildFireDataset, WildFireSplitter
+from pyrovision.datasets.wildfire.split_strategy import *
 
 
 def set_seed(seed):

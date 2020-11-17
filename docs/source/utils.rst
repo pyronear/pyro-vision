@@ -1,7 +1,7 @@
-pyronear.utils
-===============
+pyrovision.utils
+================
 
-.. currentmodule:: pyronear.utils
+.. currentmodule:: pyrovision.utils
 
 .. autofunction:: get_pretty_env_info
 

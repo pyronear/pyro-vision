@@ -1,12 +1,10 @@
 name: python-package
 
 on:
-  pull_request:
-    branches:
-      - master
   push:
-    branches:
-      - master
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   pkg-install:
@@ -19,15 +17,13 @@ jobs:
           python-version: 3.6
           architecture: x64
       - name: Cache python modules
-        uses: actions/cache@v1.1.2
-        env:
-          cache-name: cache-pkg-requirements
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-install-${{ env.cache-name }}-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pkg-deps-${{ hashFiles('requirements.txt') }}-${{ hashFiles('**/*.py') }}
           restore-keys: |
-            ${{ runner.os }}-install-${{ env.cache-name }}-
-            ${{ runner.os }}-install-
+            ${{ runner.os }}-pkg-deps-${{ hashFiles('requirements.txt') }}-
+            ${{ runner.os }}-pkg-deps-
             ${{ runner.os }}-
       - name: Install package
         run: |
@@ -45,15 +41,13 @@ jobs:
           python-version: 3.6
           architecture: x64
       - name: Cache python modules
-        uses: actions/cache@v1.1.2
-        env:
-          cache-name: cache-pkg-requirements
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-install-${{ env.cache-name }}-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pkg-deps-${{ hashFiles('requirements.txt') }}-${{ hashFiles('**/*.py') }}
           restore-keys: |
-            ${{ runner.os }}-install-${{ env.cache-name }}-
-            ${{ runner.os }}-install-
+            ${{ runner.os }}-pkg-deps-${{ hashFiles('requirements.txt') }}-
+            ${{ runner.os }}-pkg-deps-
             ${{ runner.os }}-
       - name: Install dependencies
         run: |
@@ -99,15 +93,13 @@ jobs:
           python-version: 3.6
           architecture: x64
       - name: Cache python modules
-        uses: actions/cache@v1.1.2
-        env:
-          cache-name: cache-pkg-requirements
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-install-${{ env.cache-name }}-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pkg-deps-${{ hashFiles('requirements.txt') }}-${{ hashFiles('**/*.py') }}
           restore-keys: |
-            ${{ runner.os }}-install-${{ env.cache-name }}-
-            ${{ runner.os }}-install-
+            ${{ runner.os }}-pkg-deps-${{ hashFiles('requirements.txt') }}-
+            ${{ runner.os }}-pkg-deps-
             ${{ runner.os }}-
       - name: Install dependencies
         run: |

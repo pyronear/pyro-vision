@@ -11,7 +11,7 @@ from collections import (namedtuple,
 
 import pandas as pd
 
-from pyronear.datasets.wildfire import FireLabeler
+from pyrovision.datasets.wildfire import FireLabeler
 
 
 class FireLabelerTester(unittest.TestCase):

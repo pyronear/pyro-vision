@@ -1,7 +1,7 @@
-Pyronear documentation
-======================
+Pyrovision documentation
+========================
 
-The :mod:`pyronear` package provides datasets and deep learning models
+The :mod:`pyrovision` package provides datasets and deep learning models
 for wildfire detection tasks.
 
 .. toctree::
@@ -14,7 +14,7 @@ for wildfire detection tasks.
    utils
 
 
-.. automodule:: pyronear
+.. automodule:: pyrovision
    :members:
 
 
