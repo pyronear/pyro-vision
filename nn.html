@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyronear.nn &mdash; pyronear 0.2.0a0-git documentation</title>
+  <title>pyrovision.nn &mdash; pyrovision 0.2.0a0-git documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="_static/css/custom_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyronear.utils" href="utils.html" />
-    <link rel="prev" title="pyronear.models" href="models.html" /> 
+    <link rel="next" title="pyrovision.utils" href="utils.html" />
+    <link rel="prev" title="pyrovision.models" href="models.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,12 +91,12 @@
             
               <p class="caption"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="datasets.html">pyronear.datasets</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">pyrovision.datasets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="datasets.html#openfire">OpenFire</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datasets.html#wildfire">WildFire</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="models.html">pyronear.models</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="models.html">pyrovision.models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="models.html#resnet">ResNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html#densenet">DenseNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html#mobilenet-v2">MobileNet v2</a></li>
@@ -104,14 +104,14 @@
 <li class="toctree-l2"><a class="reference internal" href="models.html#wide-resnet">Wide ResNet</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">pyronear.nn</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyrovision.nn</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pooling-layers">Pooling layers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#adaptiveconcatpool2d">AdaptiveConcatPool2d</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">pyronear.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">pyrovision.utils</a></li>
 </ul>
 
             
@@ -126,7 +126,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pyronear</a>
+          <a href="index.html">pyrovision</a>
         
       </nav>
 
@@ -157,7 +157,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>pyronear.nn</li>
+      <li>pyrovision.nn</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -176,8 +176,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pyronear-nn">
-<h1>pyronear.nn<a class="headerlink" href="#pyronear-nn" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="pyrovision-nn">
+<h1>pyrovision.nn<a class="headerlink" href="#pyrovision-nn" title="Permalink to this headline">¶</a></h1>
 <p>The nn subpackage contains definitions of modules and functions for Deep Learning architectures.</p>
 <p>The following models are available:</p>
 <span class="target" id="module-torch.nn"></span><div class="section" id="pooling-layers">
@@ -185,8 +185,8 @@
 <div class="section" id="adaptiveconcatpool2d">
 <h3>AdaptiveConcatPool2d<a class="headerlink" href="#adaptiveconcatpool2d" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
-<dt id="pyronear.nn.AdaptiveConcatPool2d">
-<em class="property">class </em><code class="sig-prename descclassname">pyronear.nn.</code><code class="sig-name descname">AdaptiveConcatPool2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyronear/nn/modules/pooling.html#AdaptiveConcatPool2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyronear.nn.AdaptiveConcatPool2d" title="Permalink to this definition">¶</a></dt>
+<dt id="pyrovision.nn.AdaptiveConcatPool2d">
+<em class="property">class </em><code class="sig-prename descclassname">pyrovision.nn.</code><code class="sig-name descname">AdaptiveConcatPool2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/nn/modules/pooling.html#AdaptiveConcatPool2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.nn.AdaptiveConcatPool2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies both a 2D adaptive max pooling and a 2D adaptive average pooling over an input
 signal composed of several input planes and concatenates them.
 The output is of size H x W, for any input size.
@@ -215,12 +215,26 @@ be the same as that of the input.</p>
 </pre></div>
 </div>
 <dl class="py method">
-<dt id="pyronear.nn.AdaptiveConcatPool2d.extra_repr">
-<code class="sig-name descname">extra_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyronear/nn/modules/pooling.html#AdaptiveConcatPool2d.extra_repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyronear.nn.AdaptiveConcatPool2d.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dt id="pyrovision.nn.AdaptiveConcatPool2d.extra_repr">
+<code class="sig-name descname">extra_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/nn/modules/pooling.html#AdaptiveConcatPool2d.extra_repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.nn.AdaptiveConcatPool2d.extra_repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the extra representation of the module</p>
-<p>To print customized extra information, you should reimplement
+<p>To print customized extra information, you should re-implement
 this method in your own modules. Both single-line and multi-line
 strings are acceptable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyrovision.nn.AdaptiveConcatPool2d.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/nn/modules/pooling.html#AdaptiveConcatPool2d.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.nn.AdaptiveConcatPool2d.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -237,10 +251,10 @@ strings are acceptable.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="utils.html" class="btn btn-neutral float-right" title="pyronear.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="pyrovision.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="models.html" class="btn btn-neutral float-left" title="pyronear.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="models.html" class="btn btn-neutral float-left" title="pyrovision.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -249,7 +263,7 @@ strings are acceptable.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, PyroNear Contributors
+        &copy; Copyright 2019, Pyronear Contributors
 
     </p>
   </div>
