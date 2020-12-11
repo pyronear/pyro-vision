@@ -6,7 +6,6 @@
 
 import torch
 from torch import nn
-from PIL import Image
 from torchvision import transforms
 from pyrovision.models.utils import cnn_model
 import holocron
