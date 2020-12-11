@@ -95,7 +95,7 @@ class PyronearPredictor:
         """Predict if there is a fire on the image."""
         # Get Data
         im = self.transforms(im)
-        
+
         if self.config['device'] == 'cuda' and torch.cuda.is_available():
             im = im.to('cuda:0')
         im = im.unsqueeze(0)
