@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Copyright (c) Pyronear contributors.
 # This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
@@ -10,7 +10,7 @@ import holocron
 from holocron.models.utils import load_pretrained_params
 
 
-## Define Model
+# Define Model
 backbone = 'rexnet1_0x'
 num_classes = 1
 nb_features = 1280
@@ -23,7 +23,7 @@ def pyronear_model(pretrain=True, device='cpu'):
     # Get backbone
     base = holocron.models.__dict__[backbone](False, num_classes=num_classes)
     # Change head
-    model = cnn_model(base, cut), nb_features=nb_features, num_classes=num_classes)
+    model = cnn_model(base, cut, nb_features=nb_features, num_classes=num_classes)
     # Load Weight
     if pretrain:
         load_pretrained_params(model, url)
