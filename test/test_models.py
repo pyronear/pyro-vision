@@ -6,10 +6,17 @@
 
 import unittest
 import torch
+from torch import nn
 import numpy as np
 import random
 from pyrovision import models
 from torchvision.models.resnet import BasicBlock
+from PIL import Image
+from pathlib import Path
+from torchvision import transforms
+
+# Define fire image to test models on a real use case
+testImage = Path(__file__).parent / 'fixtures/wildfire_example.jpg'
 
 
 def set_rng_seed(seed):
@@ -109,6 +116,30 @@ class ModelsTester(unittest.TestCase):
 
         self.assertEqual(out.shape[0], batch_size)
         self.assertEqual(out.shape[1], 1)
+
+    def test_pyronead_model(self):
+        # Define Model
+        model = models.pyronear_model()
+        model = model.eval()
+        sigmoid = nn.Sigmoid()
+
+        # Define transform
+        size = 448
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        tf = transforms.Compose([transforms.Resize(size=(size)),
+                                     transforms.CenterCrop(size=size),
+                                     transforms.ToTensor(),
+                                     normalize
+                                     ])
+        # Load Image
+        im = Image.open(testImage)
+        im = tf(im).unsqueeze(0)
+
+        # Make Prediction
+        with torch.no_grad():
+            pred = model(im)
+
+        self.assertGreater(sigmoid(pred), 0.5)
 
 
 for model_name in get_available_classification_models():
