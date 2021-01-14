@@ -126,11 +126,11 @@ class ModelsTester(unittest.TestCase):
         # Define transform
         size = 448
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        tf = transforms.Compose([transforms.Resize(size=(size)),
-                                     transforms.CenterCrop(size=size),
-                                     transforms.ToTensor(),
-                                     normalize
-                                     ])
+        tf = transforms.Compose([transforms.Resize(size=(size)), 
+                                 transforms.CenterCrop(size=size),
+                                 transforms.ToTensor(),
+                                 normalize
+                                 ])
         # Load Image
         im = Image.open(testImage)
         im = tf(im).unsqueeze(0)
