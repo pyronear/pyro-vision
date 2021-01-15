@@ -10,6 +10,10 @@ The following models are available:
 
 .. currentmodule:: pyrovision.models
 
+Pyronear Model
+--------------
+
+.. autofunction:: pyronear_model
 
 ResNet
 ------
