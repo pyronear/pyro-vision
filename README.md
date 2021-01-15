@@ -75,14 +75,14 @@ dataset = OpenFire('./data', download=True)
 You are free to use any training script, but some are already provided for reference. In order to use them, install the specific requirements and check script options as follows:
 
 ```shell
-pip install -r references/classification/fastai/requirements.txt
-python references/classification/fastai/train.py --help
+pip install -r references/classification/OpenFire/fastai/requirements.txt
+python references/classification/OpenFire/fastai/train.py --help
 ```
 
 You can then run the script with your own arguments:
 
 ```shell
-python references/classification/fastai/train.py --lr 3e-3 --epochs 4 --pretrained --deterministic
+python references/classification/OpenFire/fastai/train.py --lr 3e-3 --epochs 4 --pretrained --deterministic
 ```
 
 *Please note that most tasks are provided with two training scripts (and their `requirements.txt`): one using [fastai](https://github.com/fastai/fastai) and the other without it.*
