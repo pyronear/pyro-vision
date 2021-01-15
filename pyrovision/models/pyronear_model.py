@@ -4,7 +4,6 @@
 # This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
 # See the LICENSE file in the root of this repository for complete details.
 
-import torch
 from pyrovision.models.utils import cnn_model
 import holocron
 from holocron.models.utils import load_pretrained_params
