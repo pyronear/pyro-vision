@@ -280,16 +280,6 @@ def pretty_str(envinfo):
                 dct[key] = false
         return dct
 
-    def prepend(text, tag='[prepend]'):
-        lines = text.split('\n')
-        updated_lines = [tag + line for line in lines]
-        return '\n'.join(updated_lines)
-
-    def replace_if_empty(text, replacement='No relevant packages'):
-        if text is not None and len(text) == 0:
-            return replacement
-        return text
-
     def maybe_start_on_next_line(string):
         # If `string` is multiline, prepend a \n to it.
         if string is not None and len(string.split('\n')) > 1:
