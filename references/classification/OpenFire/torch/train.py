@@ -1,3 +1,5 @@
+#!usr/bin/python
+
 # Copyright (C) 2021, Pyronear contributors.
 
 # This program is licensed under the GNU Affero General Public License version 3.
