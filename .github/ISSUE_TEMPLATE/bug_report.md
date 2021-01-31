@@ -28,7 +28,7 @@ Steps to reproduce the behavior:
 ## Environment
 
 Please copy and paste the output from our
-[environment collection script](https://raw.githubusercontent.com/pyronear/PyroNear/master/pyro-vision/utils/collect_env.py)
+[environment collection script](https://raw.githubusercontent.com/pyronear/PyroNear/master/scripts/collect_env.py)
 (or fill out the checklist below manually).
 
 You can get the script and run it with:
