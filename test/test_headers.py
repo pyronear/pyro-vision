@@ -26,7 +26,6 @@ class HeadersTester(unittest.TestCase):
 
         self.excluded_files = ["version.py", "__init__.py"]
 
-
     def test_headers(self):
         # For every python file in the repository
         for source_path in Path(__file__).parent.parent.rglob('*.py'):
