@@ -225,11 +225,9 @@ def get_env_info():
 
     if TORCH_AVAILABLE:
         torch_str = torch.__version__
-        debug_mode_str = torch.version.debug
         cuda_available_str = torch.cuda.is_available()
-        cuda_version_str = torch.version.cuda
     else:
-        torch_str = debug_mode_str = cuda_available_str = cuda_version_str = 'N/A'
+        torch_str = cuda_available_str = 'N/A'
 
     if VISION_AVAILABLE:
         torchvision_str = torchvision.__version__
