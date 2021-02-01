@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="LICENSE" alt="License">
-        <img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" /></a>
+        <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" /></a>
     <a href="https://www.codacy.com/manual/frgfm/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade">
         <img src="https://app.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a"/></a>
     <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Apython-package">
@@ -15,6 +15,7 @@
     <a href="https://pypi.org/project/pyrovision/" alt="Pypi">
         <img src="https://img.shields.io/badge/pypi-v0.1.0-blue.svg" /></a>
 </p>
+
 
 
 
@@ -109,4 +110,4 @@ This project is developed and maintained by the repo owner and volunteers from [
 
 ## License
 
-Distributed under the CeCILL and AGPLv3 Licenses. See `LICENSE` for more information.
+Distributed under the AGPLv3 License. See `LICENSE` for more information.
