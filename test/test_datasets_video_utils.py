@@ -154,7 +154,7 @@ class WildFireFrameExtractorTester(unittest.TestCase):
             def read():
                 return (False, None)
 
-        with patch('pyrovision.datasets.wildfire.frame_extractor.cv2.VideoCapture', return_value=VideoCaptureMock):
+        with patch('pyrovision.datasets.video_utils.cv2.VideoCapture', return_value=VideoCaptureMock):
             with self.assertRaises(IOError):
                 # Let's try to extract frames from unreadable video
                 frame_extractor = video_utils.FrameExtractor(
