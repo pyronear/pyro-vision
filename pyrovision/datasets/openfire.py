@@ -13,6 +13,8 @@ from .utils import download_url, download_urls
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+__all__ = ['OpenFire']
+
 
 class OpenFire(VisionDataset):
     """Wildfire image Dataset.

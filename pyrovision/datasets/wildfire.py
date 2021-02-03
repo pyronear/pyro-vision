@@ -16,7 +16,7 @@ from pathlib import Path
 from PIL import Image
 
 
-__all__ = ['WildFireDataset']
+__all__ = ['WildFireDataset', 'WildFireSplitter', 'computeSubSet']
 
 
 class WildFireDataset(Dataset):

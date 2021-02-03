@@ -12,6 +12,8 @@ from tqdm import tqdm
 from urllib.parse import urlparse
 from torchvision.datasets.utils import check_integrity
 
+__all__ = ['download_url', 'download_urls']
+
 
 def url_retrieve(url, outfile, timeout=4):
     """Download the content of an URL request to a specified location

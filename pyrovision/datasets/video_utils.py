@@ -15,6 +15,8 @@ import cv2
 import numpy as np
 import pandas as pd
 
+__all__ = ['FrameExtractor', 'FireLabeler']
+
 
 class FrameExtractor:
     """Extract frames from wildfire videos according to a strategy
