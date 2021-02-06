@@ -10,9 +10,6 @@ import numpy as np
 import random
 from pyrovision import models
 from torchvision.models.resnet import BasicBlock
-from PIL import Image
-from pathlib import Path
-from torchvision import transforms
 
 
 def set_rng_seed(seed):
@@ -71,7 +68,7 @@ class ModelsTester(unittest.TestCase):
         # Pretrained parameters
         self.assertRaises(ValueError, models.__dict__[name], pretrained=True, imagenet_pretrained=True)
 
-        # Default case
+        # Default case
         model = models.__dict__[name](num_classes=num_classes)
         model.eval()
         x = torch.rand(input_shape)
@@ -113,44 +110,15 @@ class ModelsTester(unittest.TestCase):
         self.assertEqual(out.shape[0], batch_size)
         self.assertEqual(out.shape[1], 1)
 
-    def test_pyronead_model(self):
-        # Define Model
-        model = models.pyronear_model(pretrained=True)
-        model = model.eval()
-        # Define fire image to test models on a real use case
-        testImage = Path(__file__).parent / 'fixtures/wildfire_example.jpg'
-
-        # Define transform
-        size = 448
-        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        tf = transforms.Compose([transforms.Resize(size=(size)),
-                                 transforms.CenterCrop(size=size),
-                                 transforms.ToTensor(),
-                                 normalize
-                                 ])
-        # Load Image
-        im = Image.open(testImage)
-        im = tf(im).unsqueeze(0)
-
-        # Make Prediction
-        with torch.no_grad():
-            pred = model(im)
-
-        self.assertGreater(torch.sigmoid(pred), 0.5)
-
 
 for model_name in get_available_classification_models():
     # for-loop bodies don't define scopes, so we have to save the variables
     # we want to close over in some way
-    if model_name != "pyronear_model":
-        def do_test(self, model_name=model_name):
-            print(model_name, type(model_name), model_name != '..pyronear_model')
-            if model_name != "..pyronear_model":
-                #print(model_name, type(model_name), model_name != '..pyronear_model')
-                input_shape = (1, 3, 224, 224)
-                self._test_classification_model(model_name, input_shape)
+    def do_test(self, model_name=model_name):
+        input_shape = (1, 3, 224, 224)
+        self._test_classification_model(model_name, input_shape)
 
-        setattr(ModelsTester, "test_" + model_name, do_test)
+    setattr(ModelsTester, "test_" + model_name, do_test)
 
 
 if __name__ == '__main__':
