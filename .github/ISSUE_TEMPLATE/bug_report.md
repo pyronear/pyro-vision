@@ -28,20 +28,21 @@ Steps to reproduce the behavior:
 ## Environment
 
 Please copy and paste the output from our
-[environment collection script](https://raw.githubusercontent.com/pyronear/pyro-vision/master/pyrovision/utils/collect_env.py)
+[environment collection script](https://raw.githubusercontent.com/pyronear/pyro-vision/master/scripts/collect_env.py)
 (or fill out the checklist below manually).
 
 You can get the script and run it with:
 ```
-wget https://raw.githubusercontent.com/pyronear/pyro-vision/master/pyrovision/utils/collect_env.py
+wget https://raw.githubusercontent.com/pyronear/pyro-vision/master/scripts/collect_env.py
 # For security purposes, please check the contents of collect_env.py before running it.
 python collect_env.py
 ```
 
+ - Pyrovision Version (e.g., 1.0.0):
  - PyTorch Version (e.g., 1.2):
  - Torchvision Version (e.g., 0.4):
  - OS (e.g., Linux):
- - How you installed PyTorch (`conda`, `pip`, source):
+ - How you installed Pyrovision (`conda`, `pip`, source):
  - Python version:
  - CUDA/cuDNN version:
  - GPU models and configuration:
