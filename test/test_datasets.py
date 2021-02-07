@@ -1,57 +1,23 @@
-# -*- coding: utf-8 -*-
+# Copyright (C) 2021, Pyronear contributors.
 
-# Copyright (c) Pyronear contributors.
-# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
-# See the LICENSE file in the root of this repository for complete details.
+# This program is licensed under the GNU Affero General Public License version 3.
+# See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 import unittest
 import tempfile
 from pathlib import Path
 import json
-import requests
 from PIL.Image import Image
+import pandas as pd
+import torch
+from torch.utils.data import DataLoader
+from torchvision.transforms import transforms
 from torchvision.datasets import VisionDataset
 
 from pyrovision import datasets
 
 
-class DatasetsTester(unittest.TestCase):
-    def test_downloadurl(self):
-        # Valid input
-        url = 'https://arxiv.org/pdf/1910.02940.pdf'
-
-        with tempfile.TemporaryDirectory() as root:
-            # URL error cases
-            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_url,
-                              'url', root, verbose=False)
-            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_url,
-                              'https://url', root, verbose=False)
-            self.assertRaises(TypeError, datasets.utils.download_url, 0, root, verbose=False)
-
-            # Root error cases
-            self.assertRaises(TypeError, datasets.utils.download_url, url, 0, verbose=False)
-
-            # Working case
-            datasets.utils.download_url(url, root, verbose=True)
-            self.assertTrue(Path(root, url.rpartition('/')[-1]).is_file())
-
-    def test_downloadurls(self):
-        # Valid input
-        urls = ['https://arxiv.org/pdf/1910.01108.pdf', 'https://arxiv.org/pdf/1810.04805.pdf',
-                'https://arxiv.org/pdf/1905.11946.pdf', 'https://arxiv.org/pdf/1910.01271.pdf']
-
-        with tempfile.TemporaryDirectory() as root:
-            # URL error cases
-            self.assertRaises(requests.exceptions.MissingSchema, datasets.utils.download_urls,
-                              ['url'] * 4, root, silent=False)
-            self.assertRaises(requests.exceptions.ConnectionError, datasets.utils.download_urls,
-                              ['https://url'] * 4, root, silent=False)
-            self.assertRaises(TypeError, datasets.utils.download_url, [0] * 4, root, silent=False)
-
-            # Working case
-            datasets.utils.download_urls(urls, root, silent=False)
-            self.assertTrue(all(Path(root, url.rpartition('/')[-1]).is_file() for url in urls))
-
+class OpenFireTester(unittest.TestCase):
     def test_openfire(self):
         num_samples = 200
 
@@ -85,7 +51,7 @@ class DatasetsTester(unittest.TestCase):
                 extract = json.load(f)[:num_samples]
             # Test if not more than 15 downloads failed.
             # Change to assertEqual when download issues are resolved
-            self.assertAlmostEqual(len(train_set) + len(test_set), len(extract), delta=15)
+            self.assertAlmostEqual(len(train_set) + len(test_set), len(extract), delta=20)
 
             # Check integrity of samples
             img, target = train_set[0]
@@ -98,6 +64,172 @@ class DatasetsTester(unittest.TestCase):
             # Check unicity of sample across all splits
             train_paths = [sample['name'] for sample in train_set.data]
             self.assertTrue(all(sample['name'] not in train_paths for sample in test_set.data))
+
+
+class WildFireDatasetTester(unittest.TestCase):
+
+    def setUp(self):
+        self.path_to_frames = Path(__file__).parent / 'fixtures/'
+        self.path_to_frames_str = str(self.path_to_frames)
+        self.wildfire_path = Path(__file__).parent / 'fixtures/wildfire_dataset.csv'
+        self.wildfire_df = pd.read_csv(self.wildfire_path)
+
+    def test_wildfire_correctly_init_from_path(self):
+        for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
+            wildfire = datasets.wildfire.WildFireDataset(
+                metadata=self.wildfire_path,
+                path_to_frames=path_to_frames
+            )
+
+            self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire[3]), 2)
+
+    def test_wildfire_correctly_init_from_dataframe(self):
+        for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
+            wildfire = datasets.wildfire.WildFireDataset(
+                metadata=self.wildfire_df,
+                path_to_frames=path_to_frames
+            )
+
+            self.assertEqual(len(wildfire), 974)
+            self.assertEqual(len(wildfire[3]), 2)
+
+        # try to get one image of wildfire (item 3 is authorized image fixture)
+        observation_3, metadata_3 = wildfire[3]
+        self.assertIsInstance(observation_3, Image)  # image correctly loaded ?
+        self.assertEqual(observation_3.size, (910, 683))
+        self.assertTrue(torch.equal(metadata_3, torch.tensor([0])))  # metadata correctly loaded ?
+
+    def test_wildfire_correctly_init_with_multiple_targets(self):
+        wildfire = datasets.wildfire.WildFireDataset(
+            metadata=self.wildfire_df,
+            path_to_frames=self.path_to_frames,
+            transform=transforms.ToTensor(),
+            target_names=['fire', 'fire_id']
+        )
+
+        self.assertEqual(len(wildfire), 974)
+
+        # try to get one image of wildfire (item 3 is authorized image fixture)
+        observation_3, metadata_3 = wildfire[3]
+        self.assertIsInstance(observation_3, torch.Tensor)  # image correctly loaded ?
+        self.assertEqual(observation_3.size(), torch.Size([3, 683, 910]))
+        self.assertTrue(torch.equal(metadata_3, torch.tensor([0, 96])))  # metadata correctly loaded ?
+
+    def test_invalid_csv_path_raises_exception(self):
+        with self.assertRaises(ValueError):
+            datasets.wildfire.WildFireDataset(
+                metadata='bad_path.csv',
+                path_to_frames=self.path_to_frames
+            )
+
+    def test_wildfire_correctly_init_with_transform(self):
+        wildfire = datasets.wildfire.WildFireDataset(
+            metadata=self.wildfire_path,
+            path_to_frames=self.path_to_frames,
+            transform=transforms.Compose([transforms.Resize((100, 66)), transforms.ToTensor()])
+        )
+
+        observation_3, metadata_3 = wildfire[3]
+        self.assertEqual(observation_3.size(), torch.Size((3, 100, 66)))
+
+    def test_dataloader_can_be_init_with_wildfire(self):
+        wildfire = datasets.wildfire.WildFireDataset(metadata=self.wildfire_path,
+                                                     path_to_frames=self.path_to_frames)
+        DataLoader(wildfire, batch_size=64)
+
+
+class WildFireSubSamplerTester(unittest.TestCase):
+
+    def setUp(self):
+        self.path_to_frames = Path(__file__).parent / 'fixtures/'
+        self.wildfire_path = Path(__file__).parent / 'fixtures/subsampler.csv'
+        self.wildfire_df = pd.read_csv(self.wildfire_path)
+
+    def test_good_size_after_subsamping(self):
+        self.assertEqual(len(self.wildfire_df), 1999)
+        metadataSS = datasets.wildfire.computeSubSet(self.wildfire_df, 2)
+
+        self.assertEqual(len(metadataSS), 400)
+
+    def test_metadata_changes_each_time(self):
+        metadataSS_1 = datasets.wildfire.computeSubSet(self.wildfire_path, 2, seed=1)
+        metadataSS_2 = datasets.wildfire.computeSubSet(self.wildfire_path, 2, seed=2)
+
+        self.assertEqual(len(metadataSS_1), 400)
+        self.assertEqual(len(metadataSS_2), 400)
+        self.assertFalse(metadataSS_1['imgFile'].values.tolist() == metadataSS_2['imgFile'].values.tolist())
+
+    def test_metadata_does_not_changes_with_same_seed(self):
+        metadataSS_1 = datasets.wildfire.computeSubSet(self.wildfire_path, 2, seed=1)
+        metadataSS_2 = datasets.wildfire.computeSubSet(self.wildfire_path, 2, seed=1)
+
+        self.assertEqual(len(metadataSS_1), 400)
+        self.assertEqual(len(metadataSS_2), 400)
+        self.assertTrue(metadataSS_1['imgFile'].values.tolist() == metadataSS_2['imgFile'].values.tolist())
+
+    def test_increase_not_fire_semples(self):
+        metadataSS = datasets.wildfire.computeSubSet(self.wildfire_df, 2, 1)
+
+        self.assertGreater(len(metadataSS), 400)
+
+
+class WildFireDatasetSplitter(unittest.TestCase):
+
+    def setUp(self):
+        self.path_to_frames = Path(__file__).parent / 'fixtures/'
+        self.wildfire_path = Path(__file__).parent / 'fixtures/wildfire_dataset.csv'
+        #self.wildfire_df = pd.read_csv(self.wildfire_path)
+
+        self.wildfire = datasets.wildfire.WildFireDataset(metadata=self.wildfire_path,
+                                                          path_to_frames=self.path_to_frames)
+
+    def test_consistent_ratios_good_init(self):
+        ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
+        splitter = datasets.wildfire.WildFireSplitter(ratios)
+        self.assertEqual(ratios, splitter.ratios)
+
+    def test_inconsistent_ratios_raise_exception(self):
+        ratios = {'train': 0.9, 'val': 0.2, 'test': 0.1}  # sum > 1
+        with self.assertRaises(ValueError):
+            datasets.wildfire.WildFireSplitter(ratios)
+
+    def test_splitting_with_test_to_zero(self):
+        ratios = {'train': 0.81, 'val': 0.19, 'test': 0}
+
+        splitter = datasets.wildfire.WildFireSplitter(ratios, seed=42)
+        splitter.fit(self.wildfire)
+
+        for (set_, ratio_) in splitter.ratios_.items():
+            self.assertAlmostEqual(ratio_, ratios[set_], places=2)
+
+    def test_splitting_gives_good_splits_size(self):
+        n_samples_expected = {'train': 684, 'val': 147, 'test': 143}
+        ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
+
+        splitter = datasets.wildfire.WildFireSplitter(ratios, seed=42)
+        splitter.fit(self.wildfire)
+
+        self.assertEqual(splitter.n_samples_, n_samples_expected)
+        for (set_, ratio_) in splitter.ratios_.items():
+            self.assertAlmostEqual(ratio_, ratios[set_], places=2)
+
+    def test_splitting_working_with_transforms(self):
+        ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
+        transforms_expected = {'train': transforms.RandomCrop(10), 'val': None, 'test': None}
+
+        splitter = datasets.wildfire.WildFireSplitter(ratios, transforms=transforms_expected)
+        splitter.fit(self.wildfire)
+
+        for (set_, transform_expected) in transforms_expected.items():
+            self.assertIs(getattr(splitter, set_).transform, transform_expected)
+
+    def test_splitting_with_unavailable_algorithm_raise_exception(self):
+        ratios = {'train': 0.7, 'val': 0.15, 'test': 0.15}
+
+        splitter = datasets.wildfire.WildFireSplitter(ratios, algorithm='wtf')
+        with self.assertRaises(ValueError):
+            splitter.fit(self.wildfire)
 
 
 if __name__ == '__main__':

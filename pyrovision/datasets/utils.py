@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
+# Copyright (C) 2021, Pyronear contributors.
 
-# Copyright (c) Pyronear contributors.
-# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
-# See the LICENSE file in the root of this repository for complete details.
+# This program is licensed under the GNU Affero General Public License version 3.
+# See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 import requests
 import multiprocessing as mp
@@ -11,22 +10,9 @@ from pathlib import Path
 from functools import partial
 from tqdm import tqdm
 from urllib.parse import urlparse
-
-from PIL import Image
-from torchvision import transforms
 from torchvision.datasets.utils import check_integrity
 
-
-class VisionMixin:
-    """Class to provide re-usabled functions to classes dealing this Vision (ie: VisionDataset)"""
-    @staticmethod
-    def load_image(path, to_tensor=False):
-        """Load an image from a path into a (PIL Image) or a (pytorch Tensor)"""
-        # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
-        with open(path, 'rb') as f:
-            img = (Image.open(f)
-                        .convert('RGB'))
-            return transforms.ToTensor()(img) if to_tensor else img
+__all__ = ['download_url', 'download_urls']
 
 
 def url_retrieve(url, outfile, timeout=4):

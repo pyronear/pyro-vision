@@ -1,9 +1,9 @@
 #!usr/bin/python
-# -*- coding: utf-8 -*-
 
-# Copyright (c) Pyronear contributors.
-# This file is dual licensed under the terms of the CeCILL-2.1 and AGPLv3 licenses.
-# See the LICENSE file in the root of this repository for complete details.
+# Copyright (C) 2021, Pyronear contributors.
+
+# This program is licensed under the GNU Affero General Public License version 3.
+# See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 import os
 import random
