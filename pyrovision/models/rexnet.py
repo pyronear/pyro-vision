@@ -4,7 +4,6 @@
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 import holocron
-from typing import Dict, Any
 from pyrovision.models.utils import cnn_model
 from holocron.models.utils import load_pretrained_params
 
