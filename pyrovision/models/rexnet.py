@@ -27,7 +27,7 @@ def _rexnet(arch, pretrained=False, progress=True,
             dropout_prob=0.5, bn_final=False, concat_pool=True, **kwargs):
 
     # Model creation
-    base_model = holocron.models.rexnet.__dict__[arch](imagenet_pretrained, progress)
+    base_model = holocron.models.__dict__[arch](imagenet_pretrained, progress)
 
     # Cut at last conv layers
     model = cnn_model(base_model, model_cut, base_model.head[1].in_features, num_classes,
@@ -35,6 +35,9 @@ def _rexnet(arch, pretrained=False, progress=True,
 
     # Parameter loading
     if pretrained:
+        if imagenet_pretrained:
+            raise ValueError('imagenet_pretrained cannot be set to True if pretrained=True')
+
         load_pretrained_params(model, model_urls[arch], progress=progress)
 
     return model
