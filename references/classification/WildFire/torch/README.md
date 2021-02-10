@@ -1,6 +1,11 @@
 # Train WildFire
 
-Train WildFire dataset using pyro-vision training script
+We propose here a demonstration of how to use pyro-vision to train a model to detect wildfire outbreaks.
+
+This script allow to train a binary classification model on our WilfFire dataset. You can train here all models availables on Holocron repository:
+https://github.com/frgfm/Holocron/tree/master/holocron/models
+
+You can either follow the procedure below to train the model on your own machine or click on the following collab link to use our training notebook  on powerful and free machine.
 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/MateoLostanlen/1300692a2ab41418276b455f4eeab64c/train-wildfire.ipynb)
@@ -13,15 +18,12 @@ Install pyro-vision first
 pip install pyronear
 ```
 
-Download Dataset
+Download Dataset from https://drive.google.com/file/d/1x2esPA8OZpRM4ixxS8hur-FZPzk72pZB/view?usp=sharing
 
-```bash
-check import depuis gdrive
-```
 
 ## Train
 
 ```
-python train.py WildFire2/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
+python train.py WildFireLght/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
 ```
 
