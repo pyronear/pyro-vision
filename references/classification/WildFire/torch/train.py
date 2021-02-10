@@ -113,6 +113,7 @@ def main(args):
         trainer.lr_find(args.freeze_until)
         trainer.plot_recorder()
         return
+        
     print("Start training")
     start_time = time.time()
     trainer.fit_n_epochs(args.epochs, args.lr, args.freeze_until)

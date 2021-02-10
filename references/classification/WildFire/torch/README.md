@@ -2,7 +2,8 @@
 
 Train WildFire dataset using pyro-vision training script
 
-![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1zmdtXpognUSMXDWUCEtAEfAEqY-CZvgV#scrollTo=UJeHqS76_epf/]
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/MateoLostanlen/1300692a2ab41418276b455f4eeab64c/train-wildfire.ipynb)
 
 ## Install
 
