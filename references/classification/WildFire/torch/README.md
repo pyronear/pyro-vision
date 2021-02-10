@@ -18,7 +18,9 @@ Install pyro-vision first
 pip install pyronear
 ```
 
-Download Dataset from https://drive.google.com/file/d/1x2esPA8OZpRM4ixxS8hur-FZPzk72pZB/view?usp=sharing
+Download Dataset from https://drive.google.com/file/d/1Y5IyBLA5xDMS1rBdVs-hsVNGQF3djaR1/view?usp=sharing
+
+This dataset is protected by a password, please contact us at contact@pyronear.org
 
 
 ## Train
