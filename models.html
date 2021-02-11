@@ -96,6 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyrovision.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rexnet">RexNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resnet">ResNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#densenet">DenseNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mobilenet-v2">MobileNet v2</a></li>
@@ -182,15 +183,104 @@
 <div class="contents local topic" id="models">
 <p class="topic-title">Models</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#resnet" id="id10">ResNet</a></p></li>
-<li><p><a class="reference internal" href="#densenet" id="id11">DenseNet</a></p></li>
-<li><p><a class="reference internal" href="#mobilenet-v2" id="id12">MobileNet v2</a></p></li>
-<li><p><a class="reference internal" href="#resnext" id="id13">ResNext</a></p></li>
-<li><p><a class="reference internal" href="#wide-resnet" id="id14">Wide ResNet</a></p></li>
+<li><p><a class="reference internal" href="#rexnet" id="id14">RexNet</a></p></li>
+<li><p><a class="reference internal" href="#resnet" id="id15">ResNet</a></p></li>
+<li><p><a class="reference internal" href="#densenet" id="id16">DenseNet</a></p></li>
+<li><p><a class="reference internal" href="#mobilenet-v2" id="id17">MobileNet v2</a></p></li>
+<li><p><a class="reference internal" href="#resnext" id="id18">ResNext</a></p></li>
+<li><p><a class="reference internal" href="#wide-resnet" id="id19">Wide ResNet</a></p></li>
 </ul>
 </div>
+<div class="section" id="rexnet">
+<h2><a class="toc-backref" href="#id14">RexNet</a><a class="headerlink" href="#rexnet" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyrovision.models.rexnet1_0x">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_0x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_0x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_0x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-1.0x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
+<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
+<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyrovision.models.rexnet1_3x">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_3x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_3x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_3x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-1.3x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
+<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
+<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyrovision.models.rexnet1_5x">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_5x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_5x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_5x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-1.5x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
+<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
+<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyrovision.models.rexnet2_0x">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet2_0x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet2_0x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet2_0x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-2.0x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
+<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
+<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyrovision.models.rexnet2_2x">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet2_2x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet2_2x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet2_2x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-2.2x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
+<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
+<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="resnet">
-<h2><a class="toc-backref" href="#id10">ResNet</a><a class="headerlink" href="#resnet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">ResNet</a><a class="headerlink" href="#resnet" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.resnet18">
 <code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet18</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet18"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet18" title="Permalink to this definition">¶</a></dt>
@@ -303,7 +393,7 @@
 
 </div>
 <div class="section" id="densenet">
-<h2><a class="toc-backref" href="#id11">DenseNet</a><a class="headerlink" href="#densenet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">DenseNet</a><a class="headerlink" href="#densenet" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.densenet121">
 <code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">densenet121</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/densenet.html#densenet121"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.densenet121" title="Permalink to this definition">¶</a></dt>
@@ -394,7 +484,7 @@
 
 </div>
 <div class="section" id="mobilenet-v2">
-<h2><a class="toc-backref" href="#id12">MobileNet v2</a><a class="headerlink" href="#mobilenet-v2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17">MobileNet v2</a><a class="headerlink" href="#mobilenet-v2" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.mobilenet_v2">
 <code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">mobilenet_v2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/mobilenet.html#mobilenet_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.mobilenet_v2" title="Permalink to this definition">¶</a></dt>
@@ -419,7 +509,7 @@
 
 </div>
 <div class="section" id="resnext">
-<h2><a class="toc-backref" href="#id13">ResNext</a><a class="headerlink" href="#resnext" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">ResNext</a><a class="headerlink" href="#resnext" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.resnext50_32x4d">
 <code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnext50_32x4d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnext50_32x4d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnext50_32x4d" title="Permalink to this definition">¶</a></dt>
@@ -466,7 +556,7 @@
 
 </div>
 <div class="section" id="wide-resnet">
-<h2><a class="toc-backref" href="#id14">Wide ResNet</a><a class="headerlink" href="#wide-resnet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id19">Wide ResNet</a><a class="headerlink" href="#wide-resnet" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.wide_resnet50_2">
 <code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">wide_resnet50_2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#wide_resnet50_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.wide_resnet50_2" title="Permalink to this definition">¶</a></dt>
