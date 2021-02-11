@@ -2,10 +2,9 @@
 
 We propose here a demonstration of how to use pyro-vision to train a model to detect wildfire outbreaks.
 
-This script allow to train a binary classification model on our WilfFire dataset. You can train here all models availables on Holocron repository:
-https://github.com/frgfm/Holocron/tree/master/holocron/models
+This script allows you to train a binary classification model on our WilfFire dataset. You can train here all models available on [Holocron](https://github.com/frgfm/Holocron/tree/master/holocron/models) repository
 
-You can either follow the procedure below to train the model on your own machine or click on the following collab link to use our training notebook  on powerful and free machine.
+You can either follow the procedure below to train the model on your own machine or click on the following collab link to use our training notebook on remote servers for free.
 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/MateoLostanlen/1300692a2ab41418276b455f4eeab64c/train-wildfire.ipynb)

@@ -5,8 +5,6 @@
 # This program is licensed under the GNU Affero General Public License version 3.
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
-#!/usr/bin/env python
-
 
 import os
 import time
@@ -122,7 +120,7 @@ def main(args):
 
 def parse_args():
     import argparse
-    parser = argparse.ArgumentParser(description='Holocron Classification Training',
+    parser = argparse.ArgumentParser(description='Pyronear Classification Training',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('data_path', type=str, help='path to dataset folder')
