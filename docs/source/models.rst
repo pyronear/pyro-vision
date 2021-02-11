@@ -10,6 +10,14 @@ The following models are available:
 
 .. currentmodule:: pyrovision.models
 
+RexNet
+------
+
+.. autofunction:: rexnet1_0x
+.. autofunction:: rexnet1_3x
+.. autofunction:: rexnet1_5x
+.. autofunction:: rexnet2_0x
+.. autofunction:: rexnet2_2x
 
 ResNet
 ------
