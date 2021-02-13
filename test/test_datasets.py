@@ -197,8 +197,9 @@ class WildFireSubSamplerTester(unittest.TestCase):
 
     def setUp(self):
         self.path_to_frames = Path(__file__).parent
-        #self.wildfire_path = Path(__file__).parent / 'fixtures/subsampler.csv'
+        self.wildfire_path = Path(__file__).parent / 'wildfire_dataset.csv'
         self.wildfire_df = generate_wildfire_subsampler_dataset_fixture()
+        self.wildfire_df.to_csv(self.wildfire_path)
 
     def test_good_size_after_subsamping(self):
         self.assertEqual(len(self.wildfire_df), 100)
@@ -223,16 +224,23 @@ class WildFireSubSamplerTester(unittest.TestCase):
         self.assertTrue(metadataSS_1['imgFile'].values.tolist() == metadataSS_2['imgFile'].values.tolist())
 
     def test_increase_not_fire_semples(self):
-        metadataSS = datasets.wildfire.computeSubSet(self.wildfire_df, 2, 1)
+        metadataSS = datasets.wildfire.computeSubSet(self.wildfire_path, 2, 1)
 
         self.assertGreater(len(metadataSS), 20)
+
+    def test_invalid_csv_path_raises_exception(self):
+        with self.assertRaises(ValueError):
+            datasets.wildfire.computeSubSet(
+                metadata='bad_path.csv',
+                frame_per_seq=2
+            )
 
 
 class WildFireDatasetSplitter(unittest.TestCase):
 
     def setUp(self):
         self.path_to_frames = Path(__file__).parent
-        #self.wildfire_path = Path(__file__).parent / 'fixtures/wildfire_dataset.csv'
+
         self.wildfire_df = generate_wildfire_dataset_fixture()
 
         self.wildfire = datasets.wildfire.WildFireDataset(metadata=self.wildfire_df,
