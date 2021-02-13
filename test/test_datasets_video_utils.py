@@ -13,8 +13,34 @@ from pathlib import Path
 import pafy
 import pandas as pd
 import yaml
+import random
 
 from pyrovision.datasets import video_utils
+
+
+def generate_states_fixture():
+    df = pd.DataFrame(columns=['fname', 'fps', 'exploitable', 'fire', 'sequence', 'clf_confidence',
+                               'loc_confidence', 'x', 'y', 't', 'stateStart', 'stateEnd', 'fBase'])
+
+    start = 100
+    end = 109
+    for i in range(14):
+        x = random.uniform(200, 500)
+        y = random.uniform(200, 500)
+        t = random.uniform(0, 100)
+        start += 9
+        end += 9
+        if i < 2:
+            b = 6
+        else:
+            b = 952
+        base = str(b) + '.mp4'
+        fname = str(b) + '_seq' + str(start - 100) + '_' + str(end + 100) + '.mp4'
+        df = df.append({'fname': fname, 'fps': 25, 'exploitable': True, 'fire': 1., 'sequence': 0, 'clf_confidence': 0,
+                        'loc_confidence': 0, 'x': x, 'y': y, 't': t, 'stateStart': start,
+                        'stateEnd': end, 'fBase': base}, ignore_index=True)
+
+        df.to_csv('test/wildfire_states.csv')
 
 
 class WildFireFrameExtractorTester(unittest.TestCase):
@@ -33,12 +59,12 @@ class WildFireFrameExtractorTester(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.path_to_videos = Path(__file__).parent / 'fixtures/videos'
+        self.path_to_videos = Path(__file__).parent / 'videos'
         self.path_to_videos.mkdir(exist_ok=True)
 
         self.download_video_fixtures(self.path_to_videos)
-
-        self.path_to_states = Path(__file__).parent / 'fixtures/wildfire_states.csv'
+        generate_states_fixture()
+        self.path_to_states = Path(__file__).parent / 'wildfire_states.csv'
         self.path_to_states_count = 14
 
     def test_pick_frames_randomly(self):
@@ -120,7 +146,7 @@ class WildFireFrameExtractorTester(unittest.TestCase):
 
     def test_frame_extraction_all_strategies_too_many_frames(self):
         """Trying to extract more frames than available should raise Exception"""
-        too_many_n_frames = 10
+        too_many_n_frames = 20
 
         for strategy in video_utils.FrameExtractor.strategies_allowed:
             frame_extractor = video_utils.FrameExtractor(
