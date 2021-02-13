@@ -105,10 +105,10 @@ class WildFireFrameExtractorTester(unittest.TestCase):
         n_frames = 8  # Only 7 available: 106-100+1=7
 
         # For every strategy
-        for random in [True, False]:
+        for is_random in [True, False]:
             # Let's try to generate more frames indexes than available
             with self.assertRaises(ValueError):
-                video_utils.FrameExtractor._pick_frames(state, n_frames, random, allow_duplicates=False)
+                video_utils.FrameExtractor._pick_frames(state, n_frames, is_random, allow_duplicates=False)
 
     def test_pick_too_many_frames_allowed_raise_warning(self):
         frame_min, frame_max, f_base = 100, 106, '952.mp4'
@@ -116,10 +116,10 @@ class WildFireFrameExtractorTester(unittest.TestCase):
         n_frames = 8  # Only 7 available: 106-100+1=7
 
         # For every strategy
-        for random in [True, False]:
+        for is_random in [True, False]:
             # Let's try to generate more frames indexes than available
             with self.assertWarns(Warning):
-                video_utils.FrameExtractor._pick_frames(state, n_frames, random, allow_duplicates=True)
+                video_utils.FrameExtractor._pick_frames(state, n_frames, is_random, allow_duplicates=True)
 
     def test_frame_extraction_random(self):
         """Extracting frames should produce expected count of images and length of metadata(labels)"""
