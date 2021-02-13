@@ -33,12 +33,12 @@ def generate_wildfire_subsampler_dataset_fixture():
     df = pd.DataFrame(columns=['exploitable', 'fire', 'sequence', 'clf_confidence',
                                'loc_confidence', 'x', 'y', 't', 'stateStart',
                                'stateEnd', 'imgFile', 'fire_id', 'fBase'])
-    for b in range(200):
+    for b in range(10):
         x = random.uniform(200, 500)
         y = random.uniform(200, 500)
         t = random.uniform(0, 100)
         start = random.randint(0, 200)
-        end = random.randint(start+11, 400)
+        end = random.randint(start + 11, 400)
         base = str(b) + '.mp4'
         imgsNb = random.sample(range(start, end), 10)
         imgsNb.sort()
@@ -120,12 +120,13 @@ class WildFireDatasetTester(unittest.TestCase):
     def setUp(self):
         self.path_to_frames = Path(__file__).parent
         self.path_to_frames_str = str(self.path_to_frames)
-        self.wildfire_path = 'wildfire_dataset.csv'
+        self.wildfire_path = Path(__file__).parent / 'wildfire_dataset.csv'
         self.wildfire_df = generate_wildfire_dataset_fixture()
+        self.wildfire_df.to_csv(self.wildfire_path)
         get_wildfire_image()
 
     def test_wildfire_correctly_init_from_path(self):
-        self.wildfire_df.to_csv('wildfire_dataset.csv')
+
         for path_to_frames in [self.path_to_frames, self.path_to_frames_str]:
             wildfire = datasets.wildfire.WildFireDataset(
                 metadata=self.wildfire_path,
@@ -200,31 +201,31 @@ class WildFireSubSamplerTester(unittest.TestCase):
         self.wildfire_df = generate_wildfire_subsampler_dataset_fixture()
 
     def test_good_size_after_subsamping(self):
-        self.assertEqual(len(self.wildfire_df), 2000)
+        self.assertEqual(len(self.wildfire_df), 100)
         metadataSS = datasets.wildfire.computeSubSet(self.wildfire_df, 2)
 
-        self.assertEqual(len(metadataSS), 400)
+        self.assertEqual(len(metadataSS), 20)
 
     def test_metadata_changes_each_time(self):
         metadataSS_1 = datasets.wildfire.computeSubSet(self.wildfire_df, 2, seed=1)
         metadataSS_2 = datasets.wildfire.computeSubSet(self.wildfire_df, 2, seed=2)
 
-        self.assertEqual(len(metadataSS_1), 400)
-        self.assertEqual(len(metadataSS_2), 400)
+        self.assertEqual(len(metadataSS_1), 20)
+        self.assertEqual(len(metadataSS_2), 20)
         self.assertFalse(metadataSS_1['imgFile'].values.tolist() == metadataSS_2['imgFile'].values.tolist())
 
     def test_metadata_does_not_changes_with_same_seed(self):
         metadataSS_1 = datasets.wildfire.computeSubSet(self.wildfire_df, 2, seed=1)
         metadataSS_2 = datasets.wildfire.computeSubSet(self.wildfire_df, 2, seed=1)
 
-        self.assertEqual(len(metadataSS_1), 400)
-        self.assertEqual(len(metadataSS_2), 400)
+        self.assertEqual(len(metadataSS_1), 20)
+        self.assertEqual(len(metadataSS_2), 20)
         self.assertTrue(metadataSS_1['imgFile'].values.tolist() == metadataSS_2['imgFile'].values.tolist())
 
     def test_increase_not_fire_semples(self):
         metadataSS = datasets.wildfire.computeSubSet(self.wildfire_df, 2, 1)
 
-        self.assertGreater(len(metadataSS), 400)
+        self.assertGreater(len(metadataSS), 20)
 
 
 class WildFireDatasetSplitter(unittest.TestCase):
