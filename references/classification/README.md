@@ -1,6 +1,6 @@
-# Train WildFire
+# Wildfire classification
 
-We propose here a demonstration of how to use pyro-vision to train a model to detect wildfire outbreaks.
+The goal here is to propose a training script and a dataset to train a wildfire classification model. 
 
 This script allows you to train a binary classification model on our WilfFire dataset. You can train here all models available on [Holocron](https://github.com/frgfm/Holocron/tree/master/holocron/models) repository
 
