@@ -34,6 +34,6 @@ python train.py WildFireLght/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --o
 You can also use out opensource dataset without password
 
 ```
-python train.py OpenFire/ --use_OpenFire True --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
+python train.py OpenFire/ --use-openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
 ```
 

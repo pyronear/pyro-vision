@@ -133,7 +133,8 @@ def parse_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('data_path', type=str, help='path to dataset folder')
-    parser.add_argument('use_OpenFire', type=bool, default=False, help='use our open source OpenFire dataset')
+    parser.add_argument('use-openfire', dest="use_openfire", action="store_true",
+                        help='use our open source OpenFire dataset')
     parser.add_argument('--model', default='darknet19', type=str, help='model')
     parser.add_argument('--freeze-until', default=None, type=str, help='Last layer to freeze')
     parser.add_argument('--device', default=None, type=int, help='device')
