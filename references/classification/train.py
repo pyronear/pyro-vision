@@ -30,7 +30,7 @@ def target_transform(target):
     return target.unsqueeze(dim=0)
 
 
-def load_data(data_path, use_openfire=False, download=False, img_size=224, crop_pct=0.8):
+def load_data(data_path, use_openfire=False, img_size=224, crop_pct=0.8):
     # Data loading code
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
