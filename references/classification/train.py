@@ -30,7 +30,7 @@ def target_transform(target):
     return target.unsqueeze(dim=0)
 
 
-def load_data(data_path, use_OpenFire=False, download=False, img_size=224, crop_pct=0.8):
+def load_data(data_path, use_openfire=False, download=False, img_size=224, crop_pct=0.8):
     # Data loading code
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -50,7 +50,7 @@ def load_data(data_path, use_OpenFire=False, download=False, img_size=224, crop_
                                          ])
 
     print("Loading data")
-    if use_OpenFire:
+    if use_openfire:
         train_set = OpenFire(root=data_path, train=True, download=True,
                              transform=train_transforms)
         val_set = OpenFire(root=data_path, train=False, download=True,
@@ -68,8 +68,11 @@ def load_data(data_path, use_OpenFire=False, download=False, img_size=224, crop_
 def main(args):
 
     print(args)
+    if args.use-openfire:
+        use-openfire=True
 
-    train_set, val_set = load_data(args.data_path, use_OpenFire=args.use_OpenFire, img_size=args.img_size)
+
+    train_set, val_set = load_data(args.data_path, use_openfire=use-openfire, img_size=args.img_size)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, drop_last=True,
                                                sampler=RandomSampler(train_set), num_workers=args.workers,
                                                pin_memory=True)
