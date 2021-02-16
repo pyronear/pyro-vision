@@ -68,11 +68,10 @@ def load_data(data_path, use_openfire=False, download=False, img_size=224, crop_
 def main(args):
 
     print(args)
-    if args.use-openfire:
-        use-openfire=True
+    if args.use_openfire:
+        use_openfire = True
 
-
-    train_set, val_set = load_data(args.data_path, use_openfire=use-openfire, img_size=args.img_size)
+    train_set, val_set = load_data(args.data_path, use_openfire=use_openfire, img_size=args.img_size)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, drop_last=True,
                                                sampler=RandomSampler(train_set), num_workers=args.workers,
                                                pin_memory=True)
