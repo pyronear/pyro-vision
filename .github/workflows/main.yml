@@ -110,3 +110,13 @@ jobs:
       - name: Build documentation
         run: |
           sphinx-build docs/source docs/build -a
+
+  docker-ready:
+    runs-on: ubuntu-latest
+    needs: pkg-install
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker image
+        run: docker build . -t pyrovision-py3.8.1-torch1.7-slim
+      - name: Run docker container
+        run: docker run pyrovision-py3.8.1-torch1.7-slim python -c 'import pyrovision'
