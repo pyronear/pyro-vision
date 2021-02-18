@@ -38,6 +38,7 @@ class Flatten(nn.Module):
         return x.view(x.size(0), -1)
 
 
+
 def head_stack(in_features, out_features, bn=True, p=0., actn=None):
     """Stacks batch norm, dropout and fully connected layers together
 
@@ -96,7 +97,7 @@ def create_head(in_features, num_classes, lin_features=512, dropout_prob=0.5,
     activations = [nn.ReLU(inplace=True)] * (len(lin_features) - 2) + [None]
 
     # Flatten pooled feature maps
-    layers = [pool, Flatten()]
+    layers = [pool, nn.Flatten()]
     for in_feats, out_feats, prob, activation in zip(lin_features[:-1], lin_features[1:], dropout_prob, activations):
         layers.extend(head_stack(in_feats, out_feats, True, prob, activation))
     # Final batch norm
