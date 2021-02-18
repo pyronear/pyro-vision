@@ -187,7 +187,7 @@ def check_release_file(run_lambda):
 def get_os(run_lambda):
     platform = get_platform()
 
-    if platform == 'win32' or platform == 'cygwin':
+    if platform in ('win32', 'cygwin'):
         return get_windows_version(run_lambda)
 
     if platform == 'darwin':

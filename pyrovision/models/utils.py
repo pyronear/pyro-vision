@@ -32,8 +32,6 @@ def init_module(m, init=nn.init.kaiming_normal_):
 
 class Flatten(nn.Module):
     """Implements a flattening layer"""
-    def __init__(self):
-        super(Flatten, self).__init__()
 
     @staticmethod
     def forward(x):

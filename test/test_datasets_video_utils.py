@@ -148,10 +148,10 @@ class WildFireFrameExtractorTester(unittest.TestCase):
         """Error in reading video frame should raise Exception"""
 
         class VideoCaptureMock:
-            def set(*args):
+            def set(self, *args):
                 pass
 
-            def read():
+            def read(self):
                 return (False, None)
 
         with patch('pyrovision.datasets.video_utils.cv2.VideoCapture', return_value=VideoCaptureMock):
