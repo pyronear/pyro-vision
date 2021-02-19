@@ -126,7 +126,7 @@ def get_cudnn_version(run_lambda):
         cudnn_cmd = 'ldconfig -p | grep libcudnn | rev | cut -d" " -f1 | rev'
     rc, out, _ = run_lambda(cudnn_cmd)
     # find will return 1 if there are permission errors or if not found
-    if len(out) == 0 or (rc != 1 and rc != 0):
+    if len(out) == 0 or rc not in (1, 0):
         lib = os.environ.get('CUDNN_LIBRARY')
         if lib is not None and os.path.isfile(lib):
             return os.path.realpath(l)
@@ -187,7 +187,7 @@ def check_release_file(run_lambda):
 def get_os(run_lambda):
     platform = get_platform()
 
-    if platform == 'win32' or platform == 'cygwin':
+    if platform in ('win32', 'cygwin'):
         return get_windows_version(run_lambda)
 
     if platform == 'darwin':
