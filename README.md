@@ -62,32 +62,41 @@ pip install pyronear
 
 ### datasets
 
-Access all pyrovision datasets just like any `torchvision.datasets.VisionDataset`:
+Access out OpenFire dataset just like any `torchvision.datasets.VisionDataset`:
 
 ```python
 from pyrovision.datasets import OpenFire
 dataset = OpenFire('./data', download=True)
 ```
 
-
-
 ## References
 
 You are free to use any training script, but some are already provided for reference. In order to use them, install the specific requirements and check script options as follows:
 
 ```shell
-pip install -r references/classification/OpenFire/fastai/requirements.txt
-python references/classification/OpenFire/fastai/train.py --help
+pip install -r references/requirements.txt
+python references/classification/train.py --help
 ```
 
-You can then run the script with your own arguments:
+You can then use the script to train tour model on one of our datasets:
 
-```shell
-python references/classification/OpenFire/fastai/train.py --lr 3e-3 --epochs 4 --pretrained --deterministic
+### Wildfire
+
+Download Dataset from https://drive.google.com/file/d/1Y5IyBLA5xDMS1rBdVs-hsVNGQF3djaR1/view?usp=sharing
+
+This dataset is protected by a password, please contact us at contact@pyronear.org
+
+```
+python train.py WildFireLght/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
 ```
 
-*Please note that most tasks are provided with two training scripts (and their `requirements.txt`): one using [fastai](https://github.com/fastai/fastai) and the other without it.*
+### OpenFire
 
+You can also use out opensource dataset without password
+
+```
+python train.py OpenFire/ --use-openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
+```
 
 
 ## Documentation
