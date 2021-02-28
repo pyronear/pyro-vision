@@ -60,13 +60,23 @@ pip install pyronear
 
 ## Usage
 
-### datasets
+### Python package
 
-Access all pyrovision datasets just like any `torchvision.datasets.VisionDataset`:
+You can use the library like any other python package to analyze your documents as follows:
 
 ```python
 from pyrovision.datasets import OpenFire
 dataset = OpenFire('./data', download=True)
+```
+
+
+
+### Docker container
+
+If you wish to deploy containerized environments, a Dockerfile is provided for you build a docker image:
+
+```shell
+docker build . -t <YOUR_IMAGE_TAG>
 ```
 
 
