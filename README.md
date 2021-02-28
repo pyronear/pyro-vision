@@ -62,7 +62,7 @@ pip install pyronear
 
 ### datasets
 
-Access out OpenFire dataset just like any `torchvision.datasets.VisionDataset`:
+Access all pyrovision datasets just like any `torchvision.datasets.VisionDataset`:
 
 ```python
 from pyrovision.datasets import OpenFire
