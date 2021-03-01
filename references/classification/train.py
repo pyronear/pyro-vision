@@ -20,6 +20,8 @@ import holocron
 from holocron.optim.wrapper import Lookahead
 from holocron.trainer import BinaryClassificationTrainer
 
+from pyrovision.datasets import OpenFire
+
 
 def target_transform(target):
 
@@ -28,7 +30,7 @@ def target_transform(target):
     return target.unsqueeze(dim=0)
 
 
-def load_data(traindir, valdir, img_size=224, crop_pct=0.8):
+def load_data(data_path, use_openfire=False, img_size=224, crop_pct=0.8):
     # Data loading code
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -48,8 +50,17 @@ def load_data(traindir, valdir, img_size=224, crop_pct=0.8):
                                          ])
 
     print("Loading data")
-    train_set = ImageFolder(traindir, train_transforms, target_transform=target_transform)
-    val_set = ImageFolder(valdir, val_transforms, target_transform=target_transform)
+    if use_openfire:
+        train_set = OpenFire(root=data_path, train=True, download=True,
+                             transform=train_transforms)
+        val_set = OpenFire(root=data_path, train=False, download=True,
+                           transform=val_transforms)
+
+    else:
+        train_dir = os.path.join(data_path, 'train')
+        val_dir = os.path.join(data_path, 'val')
+        train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
+        val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
 
     return train_set, val_set
 
@@ -58,9 +69,7 @@ def main(args):
 
     print(args)
 
-    train_dir = os.path.join(args.data_path, 'train')
-    val_dir = os.path.join(args.data_path, 'val')
-    train_set, val_set = load_data(train_dir, val_dir, img_size=args.img_size)
+    train_set, val_set = load_data(args.data_path, use_openfire=args.use_openfire, img_size=args.img_size)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, drop_last=True,
                                                sampler=RandomSampler(train_set), num_workers=args.workers,
                                                pin_memory=True)
@@ -124,6 +133,8 @@ def parse_args():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('data_path', type=str, help='path to dataset folder')
+    parser.add_argument('use-openfire', dest="use_openfire", action="store_true",
+                        help='use our open source OpenFire dataset')
     parser.add_argument('--model', default='darknet19', type=str, help='model')
     parser.add_argument('--freeze-until', default=None, type=str, help='Last layer to freeze')
     parser.add_argument('--device', default=None, type=int, help='device')

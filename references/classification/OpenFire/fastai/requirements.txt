@@ -1,3 +1,0 @@
-pyrovision
-fastai>=1.0.57
-pandas>=0.25.1
