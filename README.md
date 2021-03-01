@@ -3,8 +3,8 @@
 <p align="center">
     <a href="LICENSE" alt="License">
         <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" /></a>
-    <a href="https://www.codacy.com/manual/frgfm/pyronear?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade">
-        <img src="https://app.codacy.com/project/badge/Grade/55423de221b14b18a5e35804574d5d5a"/></a>
+    <a href="https://www.codacy.com/gh/pyronear/pyro-vision/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade">
+        <img src="https://app.codacy.com/project/badge/Grade/7f17d9f2448248dd93d84331e93523e1"/></a>
     <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Apython-package">
         <img src="https://github.com/pyronear/pyro-vision/workflows/python-package/badge.svg" /></a>
     <a href="https://codecov.io/gh/pyronear/pyro-vision">
@@ -60,14 +60,26 @@ pip install pyronear
 
 ## Usage
 
-### datasets
+### Python package
 
-Access all pyrovision datasets just like any `torchvision.datasets.VisionDataset`:
+You can use the library like any other python package to analyze your documents as follows:
 
 ```python
 from pyrovision.datasets import OpenFire
 dataset = OpenFire('./data', download=True)
 ```
+
+
+
+### Docker container
+
+If you wish to deploy containerized environments, a Dockerfile is provided for you build a docker image:
+
+```shell
+docker build . -t <YOUR_IMAGE_TAG>
+```
+
+
 
 ## References
 
