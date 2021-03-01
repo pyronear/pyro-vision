@@ -1,0 +1,49 @@
+{% set data = load_setup_py_data(setup_file='../setup.py', from_recipe_dir=True) %}
+
+package:
+  name: {{ data.name }}
+  version: "{{ data.version }}"
+
+source:
+  fn: {{ data.name }}-{{ data.version }}.tar.gz
+  url: ../dist/{{ data.name }}-{{ data.version }}.tar.gz
+
+build:
+  number: 0
+  noarch: python
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+
+  host:
+    - python>=3.6
+
+  run:
+    - opencv>=3.4.5.20
+    - pandas>=0.25.2
+    - pytorch>=1.2.0
+    - torchvision>=0.4.0
+    - tqdm>=4.20.0
+    - requests>=2.20.0
+    - pylocron>=0.1.3
+
+test:
+  # Python imports
+  imports:
+    - pyrovision
+    - pyrovision.models
+    - pyrovision.datasets
+    - pyrovision.nn
+  requires:
+    - python
+
+about:
+  home: {{ data.get('url') }}
+  license: {{ data['license'] }}
+  license_url: https://github.com/pyronear/pyro-vision/blob/master/LICENSE
+  license_file: LICENSE
+  summary: {{ data['description'] }}
+  description: |
+    {{ data['long_description'] | replace("\n", "\n    ") | replace("#", '\#')}}
+  doc_url: https://pyronear.org/pyro-vision/
+  dev_url: {{ data.get('url') }}
