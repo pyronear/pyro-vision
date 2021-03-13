@@ -13,7 +13,7 @@
     <a href="https://pyronear.github.io/pyro-vision">
   		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
     <a href="https://pypi.org/project/pyrovision/" alt="Pypi">
-        <img src="https://img.shields.io/badge/pypi-v0.1.0-blue.svg" /></a>
+        <img src="https://img.shields.io/badge/pypi-v0.1.1-blue.svg" /></a>
 </p>
 
 
@@ -50,10 +50,15 @@ Pyrovision aims at providing the means to create a wildfire early detection syst
 
 ### Installation
 
-You can install the package using [pypi](https://pypi.org/project/pyronear/) as follows:
+You can install the latest release of the package using [pypi](https://pypi.org/project/pyrovision/) as follows:
 
 ```shell
-pip install pyronear
+pip install pyrovision
+```
+or [conda](https://anaconda.org/pyronear/pyrovision) as follows:
+
+```shell
+conda install -c pyronear pyrovision
 ```
 
 
@@ -62,7 +67,7 @@ pip install pyronear
 
 ### Python package
 
-You can use the library like any other python package to analyze your documents as follows:
+You can use the library like any other python package to detect wildfires as follows:
 
 ```python
 from pyrovision.datasets import OpenFire

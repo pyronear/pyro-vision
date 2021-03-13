@@ -36,8 +36,15 @@ print("Building wheel {}-{}".format(package_name, version))
 with open('README.md') as f:
     readme = f.read()
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+requirements = [
+    'opencv-python>=3.4.5.20',
+    'pandas>=0.25.2',
+    'torch>=1.2.0',
+    'torchvision>=0.4.0',
+    'tqdm>=4.20.0',
+    'requests>=2.20.0',
+    'pylocron>=0.1.3',
+]
 
 setup(
     # Metadata
@@ -51,13 +58,12 @@ setup(
     long_description_content_type="text/markdown",
     url='https://github.com/pyronear/pyro-vision',
     download_url='https://github.com/pyronear/pyro-vision/tags',
-    license='CeCILL-2.1 or AGPLv3',
+    license='AGPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: CEA CNRS Inria Logiciel Libre License, version 2.1 (CeCILL-2.1)',
-        "License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
