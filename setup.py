@@ -36,15 +36,8 @@ print("Building wheel {}-{}".format(package_name, version))
 with open('README.md') as f:
     readme = f.read()
 
-requirements = [
-    'opencv-python>=3.4.5.20',
-    'pandas>=0.25.2',
-    'torch>=1.8.0',
-    'torchvision>=0.9.0',
-    'tqdm>=4.20.0',
-    'requests>=2.20.0',
-    'pylocron>=0.1.3',
-]
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 setup(
     # Metadata
