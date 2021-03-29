@@ -70,8 +70,26 @@ conda install -c pyronear pyrovision
 You can use the library like any other python package to detect wildfires as follows:
 
 ```python
-from pyrovision.datasets import OpenFire
-dataset = OpenFire('./data', download=True)
+from pyrovision.models.rexnet import rexnet1_0x
+from torchvision import transforms
+import torch
+from PIL import Image
+
+
+# Init
+normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+
+tf = transforms.Compose([transforms.Resize(size=(448)), transforms.CenterCrop(size=448),
+                         transforms.ToTensor(), normalize])
+
+model = rexnet1_0x(pretrained=True).eval()
+
+# Predict
+im = tf(Image.open("path/to/your/image.jpg").convert('RGB'))
+
+with torch.no_grad():
+    pred = model(im.unsqueeze(0))
+    is_wildfire = torch.sigmoid(pred).item() >= 0.5
 ```
 
 
@@ -113,6 +131,13 @@ You can also use out opensource dataset without password
 
 ```
 python train.py OpenFire/ --use-openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
+```
+
+You can use our dataset as follow:
+
+```python
+from pyrovision.datasets import OpenFire
+dataset = OpenFire('./data', download=True)
 ```
 
 
