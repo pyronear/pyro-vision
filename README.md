@@ -89,21 +89,11 @@ tf = transforms.Compose([transforms.Resize(size=(img_size)),
 model = rexnet1_0x(pretrained=True).eval()
 
 # Predict
-im_file = 'im.jpg'
-im = Image.open(im_file).convert('RGB')
+im = Image.open("path/to/your/image.jpg").convert('RGB')
 imT = tf(im)
 
 with torch.no_grad():
-    pred = model(imT.unsqueeze(0))
-    pred = torch.sigmoid(pred).item()
-    
-if pred < 0.5:
-    print("No fire detected. Fire probability: {:.2%}".format(pred))
-else:
-    print("Fire detected! Fire probability: {:.2%}".format(pred))
-```
-
-
+    is_wildfire = torch.sigmoid(pred).item() >= 0.5
 
 ### Docker container
 
