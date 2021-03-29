@@ -94,6 +94,9 @@ imT = tf(im)
 
 with torch.no_grad():
     is_wildfire = torch.sigmoid(pred).item() >= 0.5
+```
+
+
 
 ### Docker container
 
