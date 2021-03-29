@@ -85,10 +85,10 @@ tf = transforms.Compose([transforms.Resize(size=(448)), transforms.CenterCrop(si
 model = rexnet1_0x(pretrained=True).eval()
 
 # Predict
-im = Image.open("path/to/your/image.jpg").convert('RGB')
-imT = tf(im)
+im = tf(Image.open("path/to/your/image.jpg").convert('RGB'))
 
 with torch.no_grad():
+    pred = model(im.unsqueeze(0))
     is_wildfire = torch.sigmoid(pred).item() >= 0.5
 ```
 
