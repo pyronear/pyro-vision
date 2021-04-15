@@ -68,51 +68,16 @@ def get_wildfire_image():
 
 class OpenFireTester(unittest.TestCase):
     def test_openfire(self):
-        num_samples = 200
 
         # Test img_folder argument: wrong type and default (None)
         with tempfile.TemporaryDirectory() as root:
             self.assertRaises(TypeError, datasets.OpenFire, root, download=True, img_folder=1)
-            ds = datasets.OpenFire(root=root, download=True, num_samples=num_samples,
-                                   img_folder=None)
-            self.assertIsInstance(ds.img_folder, Path)
-
-        with tempfile.TemporaryDirectory() as root, tempfile.TemporaryDirectory() as img_folder:
-
-            # Working case
-            # Test img_folder as Path and str
-            train_set = datasets.OpenFire(root=root, train=True, download=True, num_samples=num_samples,
-                                          img_folder=Path(img_folder))
-            test_set = datasets.OpenFire(root=root, train=False, download=True, num_samples=num_samples,
-                                         img_folder=img_folder)
-            # Check inherited properties
-            self.assertIsInstance(train_set, VisionDataset)
-
-            # Assert valid extensions of every image
-            self.assertTrue(all(sample['name'].rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
-                                for sample in train_set.data))
-            self.assertTrue(all(sample['name'].rpartition('.')[-1] in ['jpg', 'jpeg', 'png', 'gif']
-                                for sample in test_set.data))
-
-            # Check against number of samples in extract (limit to num_samples)
-            datasets.utils.download_url(train_set.url, root, filename='extract.json', verbose=False)
-            with open(Path(root).joinpath('extract.json'), 'rb') as f:
-                extract = json.load(f)[:num_samples]
-            # Test if not more than 15 downloads failed.
-            # Change to assertEqual when download issues are resolved
-            self.assertAlmostEqual(len(train_set) + len(test_set), len(extract), delta=30)
-
-            # Check integrity of samples
-            img, target = train_set[0]
-            self.assertIsInstance(img, Image)
-            self.assertIsInstance(target, int)
-            self.assertEqual(train_set.class_to_idx[extract[0]['target']], target)
-
-            # Check train/test split
-            self.assertIsInstance(train_set, VisionDataset)
-            # Check unicity of sample across all splits
-            train_paths = [sample['name'] for sample in train_set.data]
-            self.assertTrue(all(sample['name'] not in train_paths for sample in test_set.data))
+            ds = datasets.OpenFire(root=root, download=True, train=True, sample=True, img_folder=None)
+            self.assertEqual(len(ds), 100)
+            ds = datasets.OpenFire(root=root, download=False, train=False, sample=True, img_folder=None)
+            self.assertEqual(len(ds), 16)
+            ds = datasets.OpenFire(root=root, download=False, train=False, sample=True, img_folder=root)
+            self.assertEqual(len(ds), 16)
 
 
 class WildFireDatasetTester(unittest.TestCase):
