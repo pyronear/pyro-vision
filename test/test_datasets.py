@@ -6,7 +6,6 @@
 import unittest
 import tempfile
 from pathlib import Path
-import json
 from PIL.Image import Image
 import pandas as pd
 import random
@@ -14,7 +13,6 @@ import requests
 import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
-from torchvision.datasets import VisionDataset
 
 from pyrovision import datasets
 

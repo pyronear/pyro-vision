@@ -72,8 +72,7 @@ class OpenFire(DatasetFolder):
         self.imgs = self.samples
 
     def download(self, sample):
-        """
-        Download dataset"""
+        """Download dataset"""
         print('Downloading OpenFire ...')
         if sample:
             gdrive_file_id = self.gdrive_file_id_sample
