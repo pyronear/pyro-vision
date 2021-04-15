@@ -69,7 +69,6 @@ class OpenFireTester(unittest.TestCase):
 
         # Test img_folder argument: wrong type and default (None)
         with tempfile.TemporaryDirectory() as root:
-            self.assertRaises(TypeError, datasets.OpenFire, root, download=True, img_folder=1)
             ds = datasets.OpenFire(root=root, download=True, train=True, sample=True, img_folder=None)
             self.assertEqual(len(ds), 100)
             ds = datasets.OpenFire(root=root, download=False, train=False, sample=True, img_folder=None)

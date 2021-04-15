@@ -39,7 +39,7 @@ class OpenFire(DatasetFolder):
 
     gdrive_file_id = "1rRt7lGLCTVaA6qfdUpGuCBajlOlDQLTF"
     gdrive_file_id_sample = "1u5vA553OrtfiT0IIVvNYjL0iNAhUhB0V"
-    filename = "open_fire.zip"
+    zip_filename = "open_fire.zip"
 
     def __init__(
             self,
@@ -80,8 +80,8 @@ class OpenFire(DatasetFolder):
         else:
             gdrive_file_id = self.gdrive_file_id
 
-        download_file_from_google_drive(gdrive_file_id, '.', self.filename)
+        download_file_from_google_drive(gdrive_file_id, '.', Path(self.root, self.zip_filename))
         print("Unziping ...")
-        with zipfile.ZipFile(self.filename, 'r') as zip_ref:
+        with zipfile.ZipFile(Path(self.root, self.zip_filename), 'r') as zip_ref:
             zip_ref.extractall(self.root)
         print('Done!')
