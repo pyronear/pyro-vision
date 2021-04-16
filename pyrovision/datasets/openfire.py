@@ -26,15 +26,12 @@ class OpenFire(DatasetFolder):
     Args:
         root (string): Root directory of dataset where the ``images``
             and  ``annotations`` folders exist.
-        train (bool, optional): If True, returns training subset, else test set.
         download (bool, optional): If true, downloads the dataset from the internet and
             puts it in root directory. If dataset is already downloaded, it is not
             downloaded again.
-        threads (int, optional): If download is set to True, use this amount of threads
-            for downloading the dataset.
-        num_samples (int, optional): Number of samples to download (all by default)
-        img_folder (str or Path, optional): Location of image folder. Default: <root>/OpenFire/images
-        **kwargs: optional arguments of torchvision.datasets.VisionDataset
+        img_folder (str or Path, optional): Location of image folder. Default: <root>/OpenFire/
+        train (bool, optional): If True, returns training subset, else test set.
+        sample (bool, optional): If True, use openfire subset with 100 training images and 16 testing.
     """
 
     gdrive_file_id = "1rRt7lGLCTVaA6qfdUpGuCBajlOlDQLTF"
