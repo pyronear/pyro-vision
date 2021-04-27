@@ -71,4 +71,3 @@ class OpenFire(DatasetFolder):
                                        target_transform=target_transform,
                                        is_valid_file=loader)
         self.imgs = self.samples
-
