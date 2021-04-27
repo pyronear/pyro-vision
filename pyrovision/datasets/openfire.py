@@ -9,6 +9,7 @@ import zipfile
 from torchvision.datasets import DatasetFolder
 from typing import Any, Callable, Optional
 from PIL import Image
+from .utils import download_dataset_from_url
 
 __all__ = ['OpenFire']
 
@@ -34,8 +35,8 @@ class OpenFire(DatasetFolder):
         sample (bool, optional): If True, use openfire subset with 100 training images and 16 testing.
     """
 
-    gdrive_file_id = "1rRt7lGLCTVaA6qfdUpGuCBajlOlDQLTF"
-    gdrive_file_id_sample = "1u5vA553OrtfiT0IIVvNYjL0iNAhUhB0V"
+    url = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire-dd0b5bb0.zip"
+    url_sample = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire_sample-06a07e48.zip"
     zip_filename = "open_fire.zip"
 
     def __init__(
@@ -56,7 +57,9 @@ class OpenFire(DatasetFolder):
             self.root = Path(img_folder)
 
         if download:
-            self.download(sample)
+            if sample:
+                url = url_sample
+            download_dataset_from_url(url, self.root)
 
         if self.train:
             self.path_to_imgs = Path(self.root, 'train')
@@ -69,16 +72,3 @@ class OpenFire(DatasetFolder):
                                        is_valid_file=loader)
         self.imgs = self.samples
 
-    def download(self, sample):
-        """Download dataset."""
-        print('Downloading OpenFire ...')
-        if sample:
-            gdrive_file_id = self.gdrive_file_id_sample
-        else:
-            gdrive_file_id = self.gdrive_file_id
-
-        download_file_from_google_drive(gdrive_file_id, '.', Path(self.root, self.zip_filename))
-        print("Unziping ...")
-        with zipfile.ZipFile(Path(self.root, self.zip_filename), 'r') as zip_ref:
-            zip_ref.extractall(self.root)
-        print('Done!')
