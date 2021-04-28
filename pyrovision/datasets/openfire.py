@@ -14,6 +14,11 @@ from .utils import download_dataset_from_url
 __all__ = ['OpenFire']
 
 
+url = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire-dd0b5bb0.zip"
+url_sample = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire_sample-06a07e48.zip"
+zip_filename = "open_fire.zip"
+
+
 def pil_loader(path: str) -> Image.Image:
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     with open(path, 'rb') as f:
@@ -34,10 +39,6 @@ class OpenFire(DatasetFolder):
         train (bool, optional): If True, returns training subset, else test set.
         sample (bool, optional): If True, use openfire subset with 100 training images and 16 testing.
     """
-
-    url = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire-dd0b5bb0.zip"
-    url_sample = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire_sample-06a07e48.zip"
-    zip_filename = "open_fire.zip"
 
     def __init__(
             self,
