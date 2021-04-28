@@ -4,8 +4,6 @@
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 from pathlib import Path
-from torchvision.datasets.utils import download_file_from_google_drive
-import zipfile
 from torchvision.datasets import DatasetFolder
 from typing import Any, Callable, Optional
 from PIL import Image

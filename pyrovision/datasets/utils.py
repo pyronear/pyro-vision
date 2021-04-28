@@ -7,7 +7,6 @@ import urllib.request
 import hashlib
 from tqdm import tqdm
 import zipfile
-from pathlib import Path
 
 
 class DownloadProgressBar(tqdm):
