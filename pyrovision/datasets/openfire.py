@@ -14,8 +14,8 @@ from .utils import download_dataset_from_url
 __all__ = ['OpenFire']
 
 
-url = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire-dd0b5bb0.zip"
-url_sample = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.3/open_fire_sample-06a07e48.zip"
+url = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/open_fire-dd0b5bb0.zip"
+url_sample = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/open_fire_sample-06a07e48.zip"
 zip_filename = "open_fire.zip"
 
 
