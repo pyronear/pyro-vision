@@ -21,7 +21,7 @@ pip install pyronear
 
 ### OpenFire
 
-You can also use out open-source dataset without password
+You can also use freely our open-source dataset
 
 ```
 python train.py OpenFire/ --use-openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
@@ -29,7 +29,7 @@ python train.py OpenFire/ --use-openfire --model rexnet1_0x --lr 1e-3 -b 16 --ep
 
 ### Wildfire
 
-This dataset is private for now, for now only Pyronear members can access it
+This dataset is private, for now only Pyronear members can access it
 
 ```
 python train.py WildFireLght/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
