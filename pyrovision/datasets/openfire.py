@@ -50,6 +50,7 @@ class OpenFire(VisionDataset):
             download: bool = False,
             sample: bool = False
     ) -> None:
+        """Init."""
 
         super(OpenFire, self).__init__(root, transform=transform,
                                        target_transform=target_transform)
@@ -74,7 +75,7 @@ class OpenFire(VisionDataset):
         return glob.glob(data + '/**/*g', recursive=True)  # get all jpg, jpeg, png
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
-        """
+        """Get Item
         Args:
             index (int): Index
         Returns:
@@ -95,6 +96,7 @@ class OpenFire(VisionDataset):
         return img, target
 
     def __len__(self) -> int:
+        """Length"""
         return len(self.data)
 
     @property
@@ -107,7 +109,6 @@ class OpenFire(VisionDataset):
 
     def download(self) -> None:
         """Download the OpenFire data if it doesn't exist already."""
-
         # download files
         if self.sample:
             self.url = self.urls['sample']
