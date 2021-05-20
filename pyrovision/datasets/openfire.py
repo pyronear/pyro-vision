@@ -51,7 +51,6 @@ class OpenFire(VisionDataset):
             sample: bool = False
     ) -> None:
         """Init."""
-
         super(OpenFire, self).__init__(root, transform=transform,
                                        target_transform=target_transform)
 
@@ -77,6 +76,7 @@ class OpenFire(VisionDataset):
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         """Get Item
+
         Args:
             index (int): Index
         Returns:
@@ -98,7 +98,7 @@ class OpenFire(VisionDataset):
         return img, target
 
     def __len__(self) -> int:
-        """Length"""
+        """Length."""
         return len(self.data)
 
     @property
