@@ -54,7 +54,7 @@ def generate_wildfire_subsampler_dataset_fixture():
 
 def get_wildfire_image():
 
-    #download image
+    # download image
     url = 'https://media.springernature.com/w580h326/nature-cms/uploads/collections/' \
           'Wildfire-and-ecosystems-Hero-d62e7fbbf36ce6915d4e3efef069ee0e.jpg'
     response = requests.get(url)
@@ -67,13 +67,14 @@ def get_wildfire_image():
 class OpenFireTester(unittest.TestCase):
     def test_openfire(self):
 
-        # Test img_folder argument: wrong type and default (None)
         with tempfile.TemporaryDirectory() as root:
-            ds = datasets.OpenFire(root=root, download=True, train=True, sample=True, img_folder=None)
-            self.assertEqual(len(ds), 100)
-            ds = datasets.OpenFire(root=root, download=False, train=False, sample=True, img_folder=None)
-            self.assertEqual(len(ds), 16)
-            ds = datasets.OpenFire(root=root, download=False, train=False, sample=True, img_folder=root)
+            ds = datasets.OpenFire(root=root, train=True, download=True, sample=True)
+            self.assertEqual(len(ds), 64)
+            x, y = ds[0]
+            self.assertEqual(y, 0)
+            self.assertEqual(x.size[0], 1200)
+            self.assertEqual(x.size[1], 800)
+            ds = datasets.OpenFire(root=root, download=False, train=False, sample=True)
             self.assertEqual(len(ds), 16)
 
 
