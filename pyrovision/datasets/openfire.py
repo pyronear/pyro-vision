@@ -57,6 +57,7 @@ class OpenFire(VisionDataset):
 
         self.train = train  # training set or test set
         self.sample = sample  # sample dataset for test purpose
+        self.filename = None
 
         if download:
             self.download()
@@ -81,11 +82,12 @@ class OpenFire(VisionDataset):
         Returns:
             tuple: (image, target) where target is index of the target class.
         """
-        img = self.data[index]  # get image
-        target = os.path.normpath(img)  # get target from image path
+        img_path = self.data[index]  # get image
+        target = os.path.normpath(img_path)  # get target from image path
         target = int(target.split(os.sep)[-2])
 
-        img = Image.open(img)
+        with open(img_path, 'rb') as f:
+            img = Image.open(f).convert('RGB')
 
         if self.transform is not None:
             img = self.transform(img)
@@ -104,7 +106,8 @@ class OpenFire(VisionDataset):
         return os.path.join(self.root)
 
     def _check_exists(self) -> bool:
-
+        if self.filename is None:
+            return False
         return check_integrity(os.path.join(self.raw_folder, self.filename))
 
     def download(self) -> None:
