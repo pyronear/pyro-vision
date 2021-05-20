@@ -73,8 +73,6 @@ class OpenFireTester(unittest.TestCase):
             self.assertEqual(len(ds), 64)
             x, _ = ds[0]
             self.assertEqual(x.shape[1], 224)
-            ds = datasets.OpenFire(root=root, download=False, train=False, sample=True)
-            self.assertEqual(len(ds), 16)
 
 
 class WildFireDatasetTester(unittest.TestCase):
