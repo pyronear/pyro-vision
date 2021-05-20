@@ -72,7 +72,7 @@ class OpenFireTester(unittest.TestCase):
             ds = datasets.OpenFire(root=root, train=True, transform=tf, download=True, sample=True)
             self.assertEqual(len(ds), 64)
             x, _ = ds[0]
-            self.assertEqual(x.shape[0], 224)
+            self.assertEqual(x.shape[1], 224)
             ds = datasets.OpenFire(root=root, download=False, train=False, sample=True)
             self.assertEqual(len(ds), 16)
 
