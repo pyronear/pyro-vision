@@ -156,7 +156,7 @@ If you wish to cite this project, feel free to use this [BibTeX](http://www.bibt
 
 ## Contributing
 
-Please refer to [`CONTRIBUTING`](CONTRIBUTING) to help grow this project!
+Please refer to [`CONTRIBUTING`](CONTRIBUTING.md) to help grow this project!
 
 
 
