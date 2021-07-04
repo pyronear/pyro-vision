@@ -8,6 +8,7 @@ Everything you need to know to contribute efficiently to the project.
 
 - [pyrovision](https://github.com/pyronear/pyro-vision/blob/master/pyrovision) - The actual pyrovision library
 - [references](https://github.com/pyronear/pyro-vision/blob/master/references) - Scripts to reproduce performances
+- [docs](https://github.com/frgfm/Holocron/blob/master/docs) - Sphinx documentation building
 - [test](https://github.com/pyronear/pyro-vision/blob/master/test) - Python unit tests
 
 
@@ -16,7 +17,7 @@ Everything you need to know to contribute efficiently to the project.
 
 This project uses the following integrations to ensure proper codebase maintenance:
 
-- [CircleCI](https://circleci.com/) - run jobs for package build and coverage
+- [Github Worklow](https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow) - run jobs for package build and coverage
 - [Codacy](https://www.codacy.com/) - analyzes commits for code quality
 - [Codecov](https://codecov.io/) - reports back coverage results
 
