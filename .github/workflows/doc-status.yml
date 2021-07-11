@@ -6,10 +6,10 @@ jobs:
   see-page-build-payload:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Python 3.6
+      - name: Set up Python 3.7
         uses: actions/setup-python@v1
         with:
-          python-version: 3.6
+          python-version: 3.7
           architecture: x64
       - name: check status
         run: |
