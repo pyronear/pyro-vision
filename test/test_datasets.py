@@ -68,7 +68,7 @@ class OpenFireTester(unittest.TestCase):
     def test_openfire(self):
         tf = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
         with tempfile.TemporaryDirectory() as root:
-            print(root)
+
             ds = datasets.OpenFire(root=root, train=True, transform=tf, download=True, sample=True)
             self.assertEqual(len(ds), 64)
             x, _ = ds[0]
