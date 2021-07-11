@@ -39,7 +39,7 @@ class OpenFire(VisionDataset):
             'sample': '31117230cceb029d557a1981f0f30cf7'
             }
 
-    classes = ['0 - No Fire', '1 - Fire']
+    classes: List[str] = ['No fire', 'Fire']
 
     def __init__(
             self,
