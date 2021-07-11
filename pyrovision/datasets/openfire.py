@@ -113,12 +113,8 @@ class OpenFire(VisionDataset):
     def download(self) -> None:
         """Download the OpenFire data if it doesn't exist already."""
         # download files
-        if self.sample:
-            self.url = self.urls['sample']
-            md5 = self.md5s['sample']
-        else:
-            self.url = self.urls['ds']
-            md5 = self.md5s['ds']
+        self.url = self.urls['sample' if self.sample else 'ds']
+        md5 = self.md5s['sample' if self.sample else 'ds']
 
         path = os.path.normpath(self.url)
         self.filename = path.split(os.sep)[-1]
