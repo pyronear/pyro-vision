@@ -117,7 +117,7 @@ class OpenFire(VisionDataset):
         md5 = self.md5s['sample' if self.sample else 'ds']
 
         path = os.path.normpath(self.url)
-        self.filename = path.split(os.sep)[-1]
+        self.filename = path.rpartition(os.sep)[-1]
 
         if self._check_exists():
             return
