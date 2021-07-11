@@ -135,9 +135,7 @@ class OpenFire(VisionDataset):
                 md5=md5
             )
         except URLError as error:
-            print(
-                "Failed to download (trying next):\n{}".format(error)
-            )
+            print(f"failed to download {self.url}. Please investigate")
 
     def extra_repr(self) -> str:
-        return "Split: {}".format("Train" if self.train is True else "Test")
+        return f"train={self.train}"
