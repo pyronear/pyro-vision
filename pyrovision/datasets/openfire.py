@@ -124,14 +124,11 @@ class OpenFire(VisionDataset):
 
         os.makedirs(self.raw_folder, exist_ok=True)
 
-        try:
-            download_and_extract_archive(
-                self.url, download_root=self.raw_folder,
-                filename=self.filename,
-                md5=md5
-            )
-        except URLError as error:
-            print(f"failed to download {self.url}. Please investigate")
+        download_and_extract_archive(
+            self.url, download_root=self.raw_folder,
+            filename=self.filename,
+            md5=md5
+        )
 
     def extra_repr(self) -> str:
         return f"train={self.train}"
