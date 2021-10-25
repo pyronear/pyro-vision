@@ -60,7 +60,7 @@ class OpenFire(VisionDataset):
 
         if not self._check_exists():
             raise FileNotFoundError('Dataset not found.' +
-                               ' You can use download=True to download it')
+                                    ' You can use download=True to download it')
 
         self.data = self._load_data()
 
