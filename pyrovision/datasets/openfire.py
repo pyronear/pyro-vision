@@ -31,13 +31,10 @@ class OpenFire(VisionDataset):
         sample (bool, optional): If True, use openfire subset with 64 training images and 16 testing.
     """
 
-    urls = {'ds': 'https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/open_fire.zip',
-            'sample': 'https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/open_fire_sample.zip'
-            }
-
-    md5s = {'ds': '5a532853ac17dc43ed7dd4a97a15d715',
-            'sample': '31117230cceb029d557a1981f0f30cf7'
-            }
+    DATA = ("https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/open_fire.zip",
+            "5a532853ac17dc43ed7dd4a97a15d715")
+    SAMPLE = ("https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/open_fire_sample.zip",
+              "31117230cceb029d557a1981f0f30cf7")
 
     classes: List[str] = ['No fire', 'Fire']
 
@@ -113,8 +110,9 @@ class OpenFire(VisionDataset):
     def download(self) -> None:
         """Download the OpenFire data if it doesn't exist already."""
         # download files
-        self.url = self.urls['sample' if self.sample else 'ds']
-        md5 = self.md5s['sample' if self.sample else 'ds']
+
+        self.url = SAMPLE[0] if self.sample else DATA[0]
+        self.md5 = SAMPLE[1] if self.sample else DATA[1]
 
         path = os.path.normpath(self.url)
         self.filename = path.rpartition(os.sep)[-1]
