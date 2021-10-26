@@ -39,7 +39,7 @@ with open('README.md') as f:
 requirements = [
     'opencv-python>=3.4.5.20',
     'pandas>=0.25.2',
-    'torch>=1.10.0',
+    'torch>=1.8.0',
     'torchvision>=0.9.0',
     'tqdm>=4.20.0',
     'requests>=2.20.0',

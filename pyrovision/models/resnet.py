@@ -4,7 +4,11 @@
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 from torchvision.models.resnet import BasicBlock, Bottleneck, ResNet, model_urls as imagenet_urls
-from torch.hub import load_state_dict_from_url
+import torch
+if int(torch.__version__.split('.')[1]) >= 10:
+    from torch.hub import load_state_dict_from_url
+else:
+    from torchvision.models.utils import load_state_dict_from_url
 from .utils import cnn_model
 
 __all__ = ['resnet18', 'resnet34', 'resnet50', 'resnet101',

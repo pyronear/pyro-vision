@@ -5,7 +5,11 @@
 
 import re
 from torchvision.models.densenet import DenseNet, model_urls as imagenet_urls
-from torch.hub import load_state_dict_from_url
+import torch
+if int(torch.__version__.split('.')[1]) >= 10:
+    from torch.hub import load_state_dict_from_url
+else:
+    from torchvision.models.utils import load_state_dict_from_url
 from .utils import cnn_model
 
 __all__ = ['densenet121', 'densenet169', 'densenet201', 'densenet161']
