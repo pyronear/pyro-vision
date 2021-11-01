@@ -124,3 +124,6 @@ jobs:
 
       - name: Build documentation
         run: sphinx-build docs/source docs/build -a
+
+      - name: Documentation sanity check
+        run: test -e docs/build/index.html || exit
