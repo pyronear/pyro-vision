@@ -24,7 +24,7 @@ model = rexnet1_0x(pretrained=True).eval()
 ds_val = ImageFolder(root='ardeche_test_ds', transform=tf)
 val_loader = DataLoader(ds_val, batch_size=4)
 
-ok_fire, ok_no_fire, num_samples_fire, num_samples_no_fire = 0, 0, 0, 0
+tp, tn, num_samples_fire, num_samples_no_fire = 0, 0, 0, 0
 for x, target in val_loader:
 
     # Forward
@@ -39,14 +39,16 @@ for x, target in val_loader:
     num_samples_fire += int(torch.sum(samples_fire).item())
     num_samples_no_fire += int(torch.sum(samples_no_fire).item())
 
-    ok_fire += int(torch.sum(out[samples_fire] >= 0.4).item())
-    ok_no_fire += int(torch.sum(out[samples_no_fire] < 0.4).item())
+    tp += int(torch.sum(out[samples_fire] >= 0.4).item())
+    tn += int(torch.sum(out[samples_no_fire] < 0.4).item())
 
 
-accuracy_fire = ok_fire / num_samples_fire
-accuracy_no_fire = ok_no_fire / num_samples_no_fire
-accuracy = (ok_fire + ok_no_fire) / (num_samples_fire + num_samples_no_fire)
+fp = num_samples_fire - tp
+fn = num_samples_no_fire - tn
+accuracy = (tp + tn) / (tp + fp + tn + fn)
+recall = tp / (tp + fn)
+precision = tp / (tp + fp)
 
 # Write results to file
-with open("test_score.json", 'w') as outfile:
-    json.dump({"accuracy": accuracy, "accuracy_fire": accuracy_fire, "accuracy_no_fire": accuracy_no_fire}, outfile)
+with open("references/classification/test_score.json", 'w') as outfile:
+    json.dump({"accuracy": accuracy, "recall": recall, "precision": precision}, outfile)
