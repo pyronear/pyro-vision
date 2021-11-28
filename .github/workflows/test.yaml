@@ -1,0 +1,37 @@
+name: perturbation-test
+on:
+  push:
+    paths:
+      - 'references/classification/test_ardeche.py'
+    jobs:
+      run:
+        runs-on: [ubuntu-latest]
+        container: docker://dvcorg/cml-py3:latest
+        steps:
+          - uses: actions/checkout@v2
+          - name: cml_run
+            env:
+              repo_token: ${{ secrets.GITHUB_TOKEN }}
+            run: |
+
+              # Run the test
+              python -m pip install --upgrade pip
+              pip install -e .
+              pip install -r references/classification/requirements.txt
+              python references/classification/eval_ardeche.py
+              
+              # Report the diff
+              echo "## Workspace vs. Main" > report.md
+              git fetch --prune
+              dvc metrics diff master --targets references/classification/test_score.json  --show-md >> report.md
+              
+              # Print out the failure modes
+              echo "## Failure modes" >> report.md
+              
+              # Send it!
+              cml-send-comment report.md
+
+          - uses: stefanzweifel/git-auto-commit-action@v4
+            with:
+              commit_message: Commit new test score file
+              file_pattern: references/classification/test_score.json 
