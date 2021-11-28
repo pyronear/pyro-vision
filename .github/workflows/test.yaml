@@ -1,4 +1,4 @@
-name: perturbation-test
+name: ardeche-test
 on:
   push:
     paths:
