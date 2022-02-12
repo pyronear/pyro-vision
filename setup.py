@@ -43,7 +43,7 @@ requirements = [
     'torchvision>=0.9.0',
     'tqdm>=4.20.0',
     'requests>=2.20.0',
-    '-e git+https://github.com/frgfm/Holocron.git#egg=pylocron',
+    'pylocron',
 ]
 
 setup(
