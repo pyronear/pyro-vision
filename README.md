@@ -162,4 +162,4 @@ Please refer to [`CONTRIBUTING`](CONTRIBUTING.md) to help grow this project!
 
 ## License
 
-Distributed under the AGPLv3 License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the Apache 2 License. See [`LICENSE`](LICENSE) for more information.
