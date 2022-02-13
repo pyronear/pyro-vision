@@ -1,9 +1,7 @@
-#!usr/bin/python
+# Copyright (C) 2019-2022, Pyronear.
 
-# Copyright (C) 2021, Pyronear contributors.
-
-# This program is licensed under the GNU Affero General Public License version 3.
-# See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
+# This program is licensed under the Apache License version 2.
+# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
 """
 Package installation setup
@@ -58,12 +56,12 @@ setup(
     long_description_content_type="text/markdown",
     url='https://github.com/pyronear/pyro-vision',
     download_url='https://github.com/pyronear/pyro-vision/tags',
-    license='AGPLv3',
+    license='Apache',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        "License :: OSI Approved :: GNU Affero General Public License v3",
+        'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
