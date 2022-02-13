@@ -5,7 +5,7 @@
 
 import re
 from torchvision.models.densenet import DenseNet, model_urls as imagenet_urls
-from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url
 from .utils import cnn_model
 
 __all__ = ['densenet121', 'densenet169', 'densenet201', 'densenet161']

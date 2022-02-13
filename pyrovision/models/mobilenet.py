@@ -4,7 +4,7 @@
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
 from torchvision.models.mobilenetv2 import MobileNetV2, model_urls as imagenet_urls
-from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url
 from .utils import cnn_model
 
 __all__ = ['mobilenet_v2']
