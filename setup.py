@@ -43,7 +43,7 @@ requirements = [
     'torchvision>=0.9.0',
     'tqdm>=4.20.0',
     'requests>=2.20.0',
-    'pylocron>=0.1.3',
+    'pylocron>=0.2.0',
 ]
 
 setup(
