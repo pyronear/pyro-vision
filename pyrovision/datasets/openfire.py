@@ -6,7 +6,7 @@
 from torchvision.datasets.vision import VisionDataset
 from PIL import Image
 import os
-from typing import Any, Callable, Optional, Tuple
+from typing import Any, Callable, Optional, Tuple, List
 from urllib.error import URLError
 from torchvision.datasets.utils import download_and_extract_archive, check_integrity
 import glob
