@@ -1,9 +1,7 @@
-#!usr/bin/python
+# Copyright (C) 2019-2022, Pyronear.
 
-# Copyright (C) 2021, Pyronear contributors.
-
-# This program is licensed under the GNU Affero General Public License version 3.
-# See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
+# This program is licensed under the Apache License version 2.
+# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
 
 import os
