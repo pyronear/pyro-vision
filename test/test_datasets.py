@@ -68,11 +68,34 @@ class OpenFireTester(unittest.TestCase):
     def test_openfire(self):
         tf = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
         with tempfile.TemporaryDirectory() as root:
+            # Test train dataset
+            ds_train = datasets.OpenFire(root=root, train=True, transform=tf, download=True, sample=True)
+            self.assertEqual(len(ds_train), 64)
+            x, trarget = ds_train[0]
 
-            ds = datasets.OpenFire(root=root, train=True, transform=tf, download=True, sample=True)
-            self.assertEqual(len(ds), 64)
-            x, _ = ds[0]
             self.assertEqual(x.shape[1], 224)
+            self.assertIsInstance(x, torch.Tensor)  # image correctly loaded ?
+            self.assertIsInstance(trarget, int)  # target with correctly type
+
+            # Test val dataset
+            ds_val = datasets.OpenFire(root=root, train=False, transform=tf, download=True, sample=True)
+            self.assertEqual(len(ds_val), 16)
+            x, _ = ds_val[0]
+            self.assertEqual(x.shape[1], 224)
+            self.assertIsInstance(x, torch.Tensor)  # image correctly loaded ?
+
+            # Test dataloader
+            train_loader = torch.utils.data.DataLoader(ds_train, batch_size=8)
+            val_loader = torch.utils.data.DataLoader(ds_val, batch_size=4, drop_last=False)
+
+            self.assertEqual(len(train_loader), 8)
+            self.assertEqual(len(val_loader), 4)
+
+            x, y = next(iter(train_loader))
+            self.assertEqual(x.shape, torch.Size([8, 3, 224, 224]))
+            self.assertEqual(y.shape, torch.Size([8]))
+            self.assertIsInstance(x, torch.Tensor)
+            self.assertIsInstance(y[0].item(), int)
 
 
 class WildFireDatasetTester(unittest.TestCase):
