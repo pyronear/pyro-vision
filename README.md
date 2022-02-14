@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="LICENSE" alt="License">
-        <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" /></a>
+        <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" /></a>
     <a href="https://www.codacy.com/gh/pyronear/pyro-vision/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade">
         <img src="https://app.codacy.com/project/badge/Grade/7f17d9f2448248dd93d84331e93523e1"/></a>
     <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Apython-package">
@@ -162,4 +162,4 @@ Please refer to [`CONTRIBUTING`](CONTRIBUTING.md) to help grow this project!
 
 ## License
 
-Distributed under the AGPLv3 License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the Apache 2 License. See [`LICENSE`](LICENSE) for more information.

@@ -1,11 +1,11 @@
-# Copyright (C) 2021, Pyronear contributors.
+# Copyright (C) 2019-2022, Pyronear.
 
-# This program is licensed under the GNU Affero General Public License version 3.
-# See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
+# This program is licensed under the Apache License version 2.
+# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
 import re
 from torchvision.models.densenet import DenseNet, model_urls as imagenet_urls
-from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url
 from .utils import cnn_model
 
 __all__ = ['densenet121', 'densenet169', 'densenet201', 'densenet161']
