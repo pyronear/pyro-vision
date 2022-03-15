@@ -105,3 +105,6 @@ venv.bak/
 data/
 test/fixtures/videos/
 conda-dist/
+
+#Ignore version file
+pyrovision/version.py
