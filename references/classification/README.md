@@ -19,19 +19,9 @@ pip install pyronear
 
 ## Train
 
-### OpenFire
-
-You can also use freely our open-source dataset
+Train the model on your own dataset
 
 ```
-python train.py OpenFire/ --use-openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
-```
-
-### Wildfire
-
-This dataset is private, for now only Pyronear members can access it
-
-```
-python train.py WildFireLght/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
+python train.py dataset_path/ --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
 ```
 
