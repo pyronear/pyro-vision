@@ -78,7 +78,7 @@ def download_url(url, root, filename=None, md5=None, timeout=4,
     if not isinstance(url, str):
         raise TypeError('expected argument url to be of type <str>')
 
-    # Root folder
+    # Root folder
     root = Path(root).expanduser()
     root.mkdir(parents=True, exist_ok=True)
     if not filename:
