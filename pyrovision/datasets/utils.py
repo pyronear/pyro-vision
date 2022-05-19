@@ -3,14 +3,15 @@
 # This program is licensed under the Apache License version 2.
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
-import requests
 import multiprocessing as mp
+from functools import partial
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from functools import partial
-from tqdm import tqdm
 from urllib.parse import urlparse
+
+import requests
 from torchvision.datasets.utils import check_integrity
+from tqdm import tqdm
 
 __all__ = ['download_url', 'download_urls']
 

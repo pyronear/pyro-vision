@@ -4,19 +4,18 @@
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
 
+import datetime
 import os
 import time
-import datetime
 
+import holocron
 import torch
 import torch.nn as nn
+from holocron.optim.wrapper import Lookahead
+from holocron.trainer import BinaryClassificationTrainer
 from torch.utils.data import RandomSampler, SequentialSampler
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
-
-import holocron
-from holocron.optim.wrapper import Lookahead
-from holocron.trainer import BinaryClassificationTrainer
 
 from pyrovision.datasets import OpenFire
 

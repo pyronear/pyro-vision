@@ -3,12 +3,13 @@
 # This program is licensed under the Apache License version 2.
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
-from pathlib import Path
-import warnings
 import json
-from PIL import Image, ImageFile
+import warnings
+from pathlib import Path
 
+from PIL import Image, ImageFile
 from torchvision.datasets import VisionDataset
+
 from .utils import download_url, download_urls
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
