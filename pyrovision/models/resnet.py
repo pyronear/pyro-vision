@@ -34,7 +34,7 @@ def _resnet(
     **kwargs: Any,
 ) -> src.ResNet:
     # Build the model
-    model = arch_fn(**kwargs)
+    model = arch_fn(**kwargs)  # type: ignore[call-arg]
     # Load pretrained parameters
     if pretrained:
         load_pretrained_params(model, default_cfgs[arch]['url'], progress)

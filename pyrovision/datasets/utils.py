@@ -153,6 +153,8 @@ def parallel(
     if any([o is not None for o in results]):
         return results
 
+    return None
+
 
 def download_urls(
     entries: List[Tuple[str, str]],

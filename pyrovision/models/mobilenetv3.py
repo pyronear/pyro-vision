@@ -34,7 +34,7 @@ def _mobilenet_v3(
     **kwargs: Any,
 ) -> src.MobileNetV3:
     # Build the model
-    model = arch_fn(**kwargs)
+    model = arch_fn(**kwargs)  # type: ignore[call-arg]
     # Load pretrained parameters
     if pretrained:
         load_pretrained_params(model, default_cfgs[arch]['url'], progress)
