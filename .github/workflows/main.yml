@@ -113,7 +113,7 @@ jobs:
           pip install -e ".[docs]" --upgrade
 
       - name: Build documentation
-        run: cd docs && bash build.sh
+        run: sphinx-build docs/source docs/build -a -v
 
       - name: Documentation sanity check
         run: test -e docs/build/index.html || exit
