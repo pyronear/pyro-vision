@@ -7,18 +7,18 @@ from typing import Any, Callable, Dict
 
 from holocron.models.presets import IMAGENET
 from holocron.models.utils import load_pretrained_params
-from torchvision.models import resnet as src
+from torchvision.models import mobilenetv3 as src
 
-__all__ = ['resnet18', 'resnet34']
+__all__ = ['mobilenet_v3_small', 'mobilenet_v3_large']
 
 
 default_cfgs: Dict[str, Dict[str, Any]] = {
-    'resnet18': {
+    'mobilenet_v3_small': {
         **IMAGENET,
         'input_shape': (3, 224, 224),
         'url': None,
     },
-    'resnet34': {
+    'mobilenet_v3_large': {
         **IMAGENET,
         'input_shape': (3, 224, 224),
         'url': None,
@@ -26,13 +26,13 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
 }
 
 
-def _resnet(
-    arch_fn: Callable[[Any], src.ResNet],
+def _mobilenet_v3(
+    arch_fn: Callable[[Any], src.MobileNetV3],
     arch: str,
     pretrained: bool,
     progress: bool,
     **kwargs: Any,
-) -> src.ResNet:
+) -> src.MobileNetV3:
     # Build the model
     model = arch_fn(**kwargs)
     # Load pretrained parameters
@@ -42,9 +42,9 @@ def _resnet(
     return model
 
 
-def resnet18(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> src.ResNet:
-    """ResNet-18 from
-    `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_.
+def mobilenet_v3_small(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> src.MobileNetV3:
+    """MobileNetV3 model from
+    `"Searching for MobileNetV" <https://arxiv.org/abs/1905.02244>`_.
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
@@ -53,12 +53,12 @@ def resnet18(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> 
     Returns:
         torch.nn.Module: classification model
     """
-    return _resnet(src.resnet18, "resnet18", pretrained, progress, **kwargs)
+    return _mobilenet_v3(src.mobilenet_v3_small, "mobilenet_v3_small", pretrained, progress, **kwargs)
 
 
-def resnet34(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> src.ResNet:
-    """ResNet-34 from
-    `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_.
+def mobilenet_v3_large(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> src.MobileNetV3:
+    """MobileNetV3 model from
+    `"Searching for MobileNetV" <https://arxiv.org/abs/1905.02244>`_.
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
@@ -67,4 +67,4 @@ def resnet34(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> 
     Returns:
         torch.nn.Module: classification model
     """
-    return _resnet(src.resnet34, "resnet34", pretrained, progress, **kwargs)
+    return _mobilenet_v3(src.mobilenet_v3_large, "mobilenet_v3_large", pretrained, progress, **kwargs)
