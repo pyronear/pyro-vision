@@ -79,14 +79,7 @@ class OpenFire(VisionDataset):
         return {_class: i for i, _class in enumerate(self.classes)}
 
     def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
-        """ Getter function
-
-        Args:
-            index (int): Index
-        Returns:
-            img (torch.Tensor<float>): image tensor
-            target (int): dictionary of bboxes and labels' tensors
-        """
+        """ Getter function"""
 
         # Load image
         img = Image.open(self._images.joinpath(self.data[idx]['name']), mode='r').convert('RGB')
