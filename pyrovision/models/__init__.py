@@ -1,3 +1,3 @@
 from .resnet import *
-from .mobilenet import *
+from .mobilenetv3 import *
 from .rexnet import *
