@@ -44,11 +44,8 @@ extensions = [
 	'sphinx.ext.napoleon',
 	'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax'
+    'sphinx.ext.mathjax',
+    'sphinx_copybutton',
 ]
 
 napoleon_use_ivar = True

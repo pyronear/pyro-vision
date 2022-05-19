@@ -39,17 +39,13 @@ with open('README.md') as f:
     readme = f.read()
 
 _deps = [
-    "opencv-python>=3.4.5.20",
-    "pandas>=0.25.2",
     "torch>=1.11.0",
     "torchvision>=0.12.0",
     "tqdm>=4.20.0",
     "requests>=2.20.0",
     "pylocron>=0.2.0",
     # Testing
-    "PyYAML>=5.1.2",
-    "youtube-dl>=2020.3.24",
-    "pafy>=0.5.5",
+    "pytest>=5.3.2",
     "coverage>=4.5.4",
     # Quality
     "flake8>=3.9.0",
@@ -60,6 +56,8 @@ _deps = [
     "sphinx<=3.4.3,<3.5.0",
     "sphinx-rtd-theme==0.4.3",
     "docutils<0.18",
+    "sphinx-copybutton>=0.3.1",
+    "Jinja2<3.1",  # cf. https://github.com/readthedocs/readthedocs.org/issues/9038
 ]
 
 # Borrowed from https://github.com/huggingface/transformers/blob/master/setup.py
@@ -71,8 +69,6 @@ def deps_list(*pkgs):
 
 
 install_requires = [
-    deps["opencv-python"],
-    deps["pandas"],
     deps["torch"],
     deps["torchvision"],
     deps["tqdm"],
@@ -83,9 +79,7 @@ install_requires = [
 extras = {}
 
 extras["testing"] = deps_list(
-    "PyYAML",
-    "youtube-dl",
-    "pafy",
+    "pytest",
     "coverage",
 )
 
@@ -100,6 +94,8 @@ extras["docs"] = deps_list(
     "sphinx",
     "sphinx-rtd-theme",
     "docutils",
+    "sphinx-copybutton",
+    "Jinja2",
 )
 
 extras["dev"] = (
