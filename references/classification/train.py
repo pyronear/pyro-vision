@@ -8,7 +8,6 @@ import datetime
 import os
 import time
 
-import holocron
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
@@ -21,6 +20,7 @@ from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
 from torchvision.transforms.functional import InterpolationMode, to_pil_image
 
+import pyrovision
 from pyrovision.datasets import OpenFire
 
 
@@ -108,7 +108,7 @@ def main(args):
                                              pin_memory=True)
 
     print("Creating model")
-    model = holocron.models.__dict__[args.arch](args.pretrained, num_classes=1)
+    model = pyrovision.models.__dict__[args.arch](args.pretrained, num_classes=1)
 
     criterion = nn.BCEWithLogitsLoss()
 

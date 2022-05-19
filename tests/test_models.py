@@ -1,14 +1,14 @@
 import pytest
 import torch
 
-from pyrovision.models import classification
+from pyrovision import models
 
 
 def _test_classification_model(name, num_classes=10):
 
     batch_size = 2
     x = torch.rand((batch_size, 3, 224, 224))
-    model = classification.__dict__[name](pretrained=True).eval()
+    model = models.__dict__[name](pretrained=True).eval()
     with torch.no_grad():
         out = model(x)
 
