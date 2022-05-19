@@ -179,7 +179,7 @@ def parse_args():
 
     parser.add_argument('data_path', type=str, help='path to dataset folder')
     parser.add_argument('--name', type=str, default=None, help='Name of your training experiment')
-    parser.add_argument('--arch', default='darknet19', type=str, help='model')
+    parser.add_argument('--arch', default='rexnet1_0x', type=str, help='model')
     parser.add_argument('--dataset', default='openfire', type=str, help='dataset to train on')
     parser.add_argument('--freeze-until', default=None, type=str, help='Last layer to freeze')
     parser.add_argument('--device', default=None, type=int, help='device')
