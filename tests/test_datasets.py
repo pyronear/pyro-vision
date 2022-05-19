@@ -3,17 +3,15 @@
 # This program is licensed under the GNU Affero General Public License version 3.
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
-import unittest
-import tempfile
-from pathlib import Path
 import json
-from PIL.Image import Image
-import pandas as pd
 import random
+import tempfile
+import unittest
+from pathlib import Path
+
+import pandas as pd
 import requests
-import torch
-from torch.utils.data import DataLoader
-from torchvision.transforms import transforms
+from PIL.Image import Image
 from torchvision.datasets import VisionDataset
 
 from pyrovision import datasets

@@ -3,12 +3,14 @@
 # This program is licensed under the GNU Affero General Public License version 3.
 # See LICENSE or go to <https://www.gnu.org/licenses/agpl-3.0.txt> for full license details.
 
-import unittest
-import torch
-import numpy as np
 import random
-from pyrovision import models
+import unittest
+
+import numpy as np
+import torch
 from torchvision.models.resnet import BasicBlock
+
+from pyrovision import models
 
 
 def set_rng_seed(seed):
