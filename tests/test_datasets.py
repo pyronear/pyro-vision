@@ -41,7 +41,7 @@ def test_openfire(tmpdir_factory):
         extract = json.load(f)[:num_samples]
     # Test if not more than 15 downloads failed.
     # Change to assertEqual when download issues are resolved
-    assert abs((len(train_set) + len(test_set)) - len(extract)) <= 30
+    assert abs((len(train_set) + len(test_set)) - len(extract)) <= 32
 
     # Check integrity of samples
     img, target = train_set[0]
