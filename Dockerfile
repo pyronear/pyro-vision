@@ -12,6 +12,4 @@ COPY ./pyrovision /tmp/pyrovision
 RUN pip install --upgrade pip setuptools wheel \
     && pip install -e /tmp/. \
     && pip cache purge \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/* \
     && rm -rf /root/.cache/pip

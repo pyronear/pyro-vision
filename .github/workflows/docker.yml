@@ -1,0 +1,17 @@
+name: docker
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+jobs:
+  docker-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker image
+        run: docker build . -t pyrovision:latest-py3.8.1-slim
+      - name: Run docker container
+        run: docker run pyrovision:latest-py3.8.1-slim python -c 'import pyrovision'
