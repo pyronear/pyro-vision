@@ -12,6 +12,8 @@ import holocron
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
+import wandb
+from holocron.models.presets import IMAGENET
 from holocron.optim import AdamP
 from holocron.trainer import BinaryClassificationTrainer
 from torch.utils.data import RandomSampler, SequentialSampler
@@ -35,17 +37,17 @@ def plot_samples(images, targets, num_samples=4):
     _, axes = plt.subplots(1, nb_samples, figsize=(20, 5))
     for idx in range(nb_samples):
         img = images[idx]
-        img *= torch.tensor(IMAGENETTE['std']).view(-1, 1, 1)
-        img += torch.tensor(IMAGENETTE['mean']).view(-1, 1, 1)
+        img *= torch.tensor(IMAGENET['std']).view(-1, 1, 1)
+        img += torch.tensor(IMAGENET['mean']).view(-1, 1, 1)
         img = to_pil_image(img)
 
         axes[idx].imshow(img)
         axes[idx].axis('off')
         if targets.ndim == 1:
-            axes[idx].set_title(IMAGENETTE['classes'][targets[idx].item()])
+            axes[idx].set_title(IMAGENET['classes'][targets[idx].item()])
         else:
             class_idcs = torch.where(targets[idx] > 0)[0]
-            _info = [f"{IMAGENETTE['classes'][_idx.item()]} ({targets[idx, _idx]:.2f})" for _idx in class_idcs]
+            _info = [f"{IMAGENET['classes'][_idx.item()]} ({targets[idx, _idx]:.2f})" for _idx in class_idcs]
             axes[idx].set_title(" ".join(_info))
 
     plt.show()
@@ -58,8 +60,8 @@ def main(args):
     torch.backends.cudnn.benchmark = True
 
     # Data loading code
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
+    normalize = transforms.Normalize(mean=IMAGENET['mean'],
+                                     std=IMAGENET['std]'])
 
     interpolation = InterpolationMode.BILINEAR
 
@@ -170,6 +172,9 @@ def main(args):
     trainer.fit_n_epochs(args.epochs, args.lr, args.freeze_until, args.sched, norm_weight_decay=args.norm_wd)
     total_time_str = str(datetime.timedelta(seconds=int(time.time() - start_time)))
     print(f"Training time {total_time_str}")
+
+    if args.wb:
+        run.finish()
 
 
 def parse_args():
