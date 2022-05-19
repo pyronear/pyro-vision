@@ -4,8 +4,9 @@
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
 import holocron
-from pyrovision.models.utils import cnn_model
 from holocron.models.utils import load_pretrained_params
+
+from pyrovision.models.utils import cnn_model
 
 __all__ = ['rexnet1_0x', 'rexnet1_3x', 'rexnet1_5x', 'rexnet2_0x', 'rexnet2_2x']
 

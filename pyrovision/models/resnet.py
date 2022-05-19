@@ -3,8 +3,10 @@
 # This program is licensed under the Apache License version 2.
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
-from torchvision.models.resnet import BasicBlock, Bottleneck, ResNet, model_urls as imagenet_urls
 from torch.hub import load_state_dict_from_url
+from torchvision.models.resnet import BasicBlock, Bottleneck, ResNet
+from torchvision.models.resnet import model_urls as imagenet_urls
+
 from .utils import cnn_model
 
 __all__ = ['resnet18', 'resnet34', 'resnet50', 'resnet101',
