@@ -29,7 +29,7 @@ HEADERS = [
 
 
 IGNORED_FILES = ["version.py", "__init__.py"]
-FOLDERS = ["pyrovision", "scripts", "references"]
+FOLDERS = ["pyrovision", "scripts"]
 
 
 def main():
@@ -54,6 +54,7 @@ def main():
                     for option in HEADERS
                 ):
                     invalid_files.append(source_path)
+
     if len(invalid_files) > 0:
         invalid_str = "\n- " + "\n- ".join(map(str, invalid_files))
         raise AssertionError(f"Invalid header in the following files:{invalid_str}")
