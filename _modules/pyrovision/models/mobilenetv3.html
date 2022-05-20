@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyrovision.models.resnet &mdash; pyrovision 0.1.2.dev0+48262ca-git documentation</title>
+  <title>pyrovision.models.mobilenetv3 &mdash; pyrovision 0.1.2.dev0+48262ca-git documentation</title>
   
 
   
@@ -147,7 +147,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>pyrovision.models.resnet</li>
+      <li>pyrovision.models.mobilenetv3</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,7 +162,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pyrovision.models.resnet</h1><div class="highlight"><pre>
+  <h1>Source code for pyrovision.models.mobilenetv3</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Copyright (C) 2019-2022, Pyronear.</span>
 
 <span class="c1"># This program is licensed under the Apache License version 2.</span>
@@ -172,18 +172,18 @@
 
 <span class="kn">from</span> <span class="nn">holocron.models.presets</span> <span class="kn">import</span> <span class="n">IMAGENET</span>
 <span class="kn">from</span> <span class="nn">holocron.models.utils</span> <span class="kn">import</span> <span class="n">load_pretrained_params</span>
-<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">resnet</span> <span class="k">as</span> <span class="n">src</span>
+<span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">mobilenetv3</span> <span class="k">as</span> <span class="n">src</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span> <span class="s1">&#39;resnet34&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mobilenet_v3_small&#39;</span><span class="p">,</span> <span class="s1">&#39;mobilenet_v3_large&#39;</span><span class="p">]</span>
 
 
 <span class="n">default_cfgs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;resnet18&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;mobilenet_v3_small&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s1">&#39;input_shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
         <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s1">&#39;resnet34&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;mobilenet_v3_large&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s1">&#39;input_shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
         <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -191,13 +191,13 @@
 <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">_resnet</span><span class="p">(</span>
-    <span class="n">arch_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">src</span><span class="o">.</span><span class="n">ResNet</span><span class="p">],</span>
+<span class="k">def</span> <span class="nf">_mobilenet_v3</span><span class="p">(</span>
+    <span class="n">arch_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">src</span><span class="o">.</span><span class="n">MobileNetV3</span><span class="p">],</span>
     <span class="n">arch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ResNet</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">MobileNetV3</span><span class="p">:</span>
     <span class="c1"># Build the model</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">arch_fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[call-arg]</span>
     <span class="c1"># Load pretrained parameters</span>
@@ -207,9 +207,9 @@
     <span class="k">return</span> <span class="n">model</span>
 
 
-<div class="viewcode-block" id="resnet18"><a class="viewcode-back" href="../../../models.html#pyrovision.models.resnet18">[docs]</a><span class="k">def</span> <span class="nf">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ResNet</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;ResNet-18 from</span>
-<span class="sd">    `&quot;Deep Residual Learning for Image Recognition&quot; &lt;https://arxiv.org/pdf/1512.03385.pdf&gt;`_.</span>
+<div class="viewcode-block" id="mobilenet_v3_small"><a class="viewcode-back" href="../../../models.html#pyrovision.models.mobilenet_v3_small">[docs]</a><span class="k">def</span> <span class="nf">mobilenet_v3_small</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">MobileNetV3</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;MobileNetV3 model from</span>
+<span class="sd">    `&quot;Searching for MobileNetV&quot; &lt;https://arxiv.org/abs/1905.02244&gt;`_.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        pretrained (bool): If True, returns a model pre-trained on ImageNet</span>
@@ -218,12 +218,12 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_resnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">resnet18</span><span class="p">,</span> <span class="s2">&quot;resnet18&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_mobilenet_v3</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">mobilenet_v3_small</span><span class="p">,</span> <span class="s2">&quot;mobilenet_v3_small&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="resnet34"><a class="viewcode-back" href="../../../models.html#pyrovision.models.resnet34">[docs]</a><span class="k">def</span> <span class="nf">resnet34</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ResNet</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;ResNet-34 from</span>
-<span class="sd">    `&quot;Deep Residual Learning for Image Recognition&quot; &lt;https://arxiv.org/pdf/1512.03385.pdf&gt;`_.</span>
+<div class="viewcode-block" id="mobilenet_v3_large"><a class="viewcode-back" href="../../../models.html#pyrovision.models.mobilenet_v3_large">[docs]</a><span class="k">def</span> <span class="nf">mobilenet_v3_large</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">MobileNetV3</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;MobileNetV3 model from</span>
+<span class="sd">    `&quot;Searching for MobileNetV&quot; &lt;https://arxiv.org/abs/1905.02244&gt;`_.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        pretrained (bool): If True, returns a model pre-trained on ImageNet</span>
@@ -232,7 +232,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_resnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">resnet34</span><span class="p">,</span> <span class="s2">&quot;resnet34&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_mobilenet_v3</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">mobilenet_v3_large</span><span class="p">,</span> <span class="s2">&quot;mobilenet_v3_large&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

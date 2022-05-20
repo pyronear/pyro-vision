@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyrovision.models.rexnet &mdash; pyrovision 0.1.2.dev0+ce4db67-git documentation</title>
+  <title>pyrovision.models.rexnet &mdash; pyrovision 0.1.2.dev0+48262ca-git documentation</title>
   
 
   
@@ -24,6 +24,8 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.1.2.dev0+ce4db67
+                0.1.2.dev0+48262ca
               </div>
             
           
@@ -90,23 +92,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../datasets.html">pyrovision.datasets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../datasets.html#openfire">OpenFire</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../datasets.html#wildfire">WildFire</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../models.html">pyrovision.models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../models.html#rexnet">RexNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../models.html#resnet">ResNet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../models.html#densenet">DenseNet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../models.html#mobilenet-v2">MobileNet v2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../models.html#resnext">ResNext</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../models.html#wide-resnet">Wide ResNet</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../../nn.html">pyrovision.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../nn.html#pooling-layers">Pooling layers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../nn.html#adaptiveconcatpool2d">AdaptiveConcatPool2d</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../models.html#mobilenet-v3">MobileNet v3</a></li>
 </ul>
 </li>
 </ul>
@@ -177,114 +168,93 @@
 <span class="c1"># This program is licensed under the Apache License version 2.</span>
 <span class="c1"># See LICENSE or go to &lt;https://www.apache.org/licenses/LICENSE-2.0.txt&gt; for full license details.</span>
 
-<span class="kn">import</span> <span class="nn">holocron</span>
-<span class="kn">from</span> <span class="nn">pyrovision.models.utils</span> <span class="kn">import</span> <span class="n">cnn_model</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">holocron.models</span> <span class="kn">import</span> <span class="n">rexnet</span> <span class="k">as</span> <span class="n">src</span>
+<span class="kn">from</span> <span class="nn">holocron.models.presets</span> <span class="kn">import</span> <span class="n">IMAGENET</span>
 <span class="kn">from</span> <span class="nn">holocron.models.utils</span> <span class="kn">import</span> <span class="n">load_pretrained_params</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rexnet1_0x&#39;</span><span class="p">,</span> <span class="s1">&#39;rexnet1_3x&#39;</span><span class="p">,</span> <span class="s1">&#39;rexnet1_5x&#39;</span><span class="p">,</span> <span class="s1">&#39;rexnet2_0x&#39;</span><span class="p">,</span> <span class="s1">&#39;rexnet2_2x&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rexnet1_0x&#39;</span><span class="p">,</span> <span class="s1">&#39;rexnet1_3x&#39;</span><span class="p">,</span> <span class="s1">&#39;rexnet1_5x&#39;</span><span class="p">]</span>
 
 
-<span class="n">model_urls</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;rexnet1_0x&#39;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.0/rexnet1_0x_acp_2e017f83.pth&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;rexnet1_3x&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;rexnet1_5x&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;rexnet2_0x&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;rexnet2_2x&#39;</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">default_cfgs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;rexnet1_0x&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
+        <span class="s1">&#39;input_shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;rexnet1_3x&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
+        <span class="s1">&#39;input_shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;rexnet1_5x&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
+        <span class="s1">&#39;input_shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 
-<span class="n">model_cut</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
 
-
-<span class="k">def</span> <span class="nf">_rexnet</span><span class="p">(</span><span class="n">arch</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">imagenet_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lin_features</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
-            <span class="n">dropout_prob</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">bn_final</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">concat_pool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
-    <span class="c1"># Model creation</span>
-    <span class="n">base_model</span> <span class="o">=</span> <span class="n">holocron</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">arch</span><span class="p">](</span><span class="n">imagenet_pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">)</span>
-
-    <span class="c1"># Cut at last conv layers</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">cnn_model</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="n">model_cut</span><span class="p">,</span> <span class="n">base_model</span><span class="o">.</span><span class="n">head</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span>
-                      <span class="n">lin_features</span><span class="p">,</span> <span class="n">dropout_prob</span><span class="p">,</span> <span class="n">bn_final</span><span class="o">=</span><span class="n">bn_final</span><span class="p">,</span> <span class="n">concat_pool</span><span class="o">=</span><span class="n">concat_pool</span><span class="p">)</span>
-
-    <span class="c1"># Parameter loading</span>
+<span class="k">def</span> <span class="nf">_rexnet</span><span class="p">(</span>
+    <span class="n">arch_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">],</span>
+    <span class="n">arch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">:</span>
+    <span class="c1"># Build the model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">arch_fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[call-arg]</span>
+    <span class="c1"># Load pretrained parameters</span>
     <span class="k">if</span> <span class="n">pretrained</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">imagenet_pretrained</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;imagenet_pretrained cannot be set to True if pretrained=True&#39;</span><span class="p">)</span>
-
-        <span class="n">load_pretrained_params</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_urls</span><span class="p">[</span><span class="n">arch</span><span class="p">],</span> <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">)</span>
+        <span class="n">load_pretrained_params</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">default_cfgs</span><span class="p">[</span><span class="n">arch</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">progress</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">model</span>
 
 
-<div class="viewcode-block" id="rexnet1_0x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_0x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_0x</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ReXNet-1.0x from `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
-<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        pretrained (bool, optional): should pretrained parameters be loaded (Pyronear training)</span>
-<span class="sd">        progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters</span>
-<span class="sd">        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)</span>
-<span class="sd">        num_classes (int, optional): number of output classes</span>
-<span class="sd">        **kwargs: optional arguments of _rexnet</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="s1">&#39;rexnet1_0x&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="rexnet1_3x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_3x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_3x</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ReXNet-1.3x from `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
-<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_</span>
+<div class="viewcode-block" id="rexnet1_0x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_0x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_0x</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;ReXNet-1.0x from</span>
+<span class="sd">    `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pretrained (bool, optional): should pretrained parameters be loaded (Pyronear training)</span>
-<span class="sd">        progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters</span>
-<span class="sd">        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)</span>
-<span class="sd">        num_classes (int, optional): number of output classes</span>
-<span class="sd">        **kwargs: optional arguments of _rexnet</span>
+<span class="sd">        pretrained (bool): If True, returns a model pre-trained on ImageNet</span>
+<span class="sd">        progress (bool): If True, displays a progress bar of the download to stderr</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="s1">&#39;rexnet1_3x&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_0x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_0x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rexnet1_5x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_5x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_5x</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ReXNet-1.5x from `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
-<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_</span>
+<div class="viewcode-block" id="rexnet1_3x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_3x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_3x</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;ReXNet-1.3x from</span>
+<span class="sd">    `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pretrained (bool, optional): should pretrained parameters be loaded (Pyronear training)</span>
-<span class="sd">        progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters</span>
-<span class="sd">        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)</span>
-<span class="sd">        num_classes (int, optional): number of output classes</span>
-<span class="sd">        **kwargs: optional arguments of _rexnet</span>
+<span class="sd">        pretrained (bool): If True, returns a model pre-trained on ImageNet</span>
+<span class="sd">        progress (bool): If True, displays a progress bar of the download to stderr</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="s1">&#39;rexnet1_5x&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_0x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_0x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rexnet2_0x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet2_0x">[docs]</a><span class="k">def</span> <span class="nf">rexnet2_0x</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ReXNet-2.0x from `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
-<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_</span>
+<div class="viewcode-block" id="rexnet1_5x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_5x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_5x</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;ReXNet-1.5x from</span>
+<span class="sd">    `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pretrained (bool, optional): should pretrained parameters be loaded (Pyronear training)</span>
-<span class="sd">        progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters</span>
-<span class="sd">        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)</span>
-<span class="sd">        num_classes (int, optional): number of output classes</span>
-<span class="sd">        **kwargs: optional arguments of _rexnet</span>
+<span class="sd">        pretrained (bool): If True, returns a model pre-trained on ImageNet</span>
+<span class="sd">        progress (bool): If True, displays a progress bar of the download to stderr</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="s1">&#39;rexnet2_0x&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="rexnet2_2x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet2_2x">[docs]</a><span class="k">def</span> <span class="nf">rexnet2_2x</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ReXNet-2.2x from `&quot;ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network&quot;</span>
-<span class="sd">    &lt;https://arxiv.org/pdf/2007.00992.pdf&gt;`_</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        pretrained (bool, optional): should pretrained parameters be loaded (Pyronear training)</span>
-<span class="sd">        progress (bool, optional): should a progress bar be displayed while downloading pretrained parameters</span>
-<span class="sd">        imagenet_pretrained (bool, optional): should pretrained parameters be loaded on conv layers (ImageNet training)</span>
-<span class="sd">        num_classes (int, optional): number of output classes</span>
-<span class="sd">        **kwargs: optional arguments of _rexnet</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="s1">&#39;rexnet2_2x&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">imagenet_pretrained</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_0x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_0x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

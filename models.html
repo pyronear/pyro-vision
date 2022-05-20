@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyrovision.models &mdash; pyrovision 0.1.2.dev0+ce4db67-git documentation</title>
+  <title>pyrovision.models &mdash; pyrovision 0.1.2.dev0+48262ca-git documentation</title>
   
 
   
@@ -25,6 +25,8 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -37,7 +39,6 @@
   <link rel="stylesheet" href="_static/css/custom_theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyrovision.nn" href="nn.html" />
     <link rel="prev" title="pyrovision.datasets" href="datasets.html" /> 
 </head>
 
@@ -65,7 +66,7 @@
             
             
               <div class="version">
-                0.1.2.dev0+ce4db67
+                0.1.2.dev0+48262ca
               </div>
             
           
@@ -93,23 +94,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">pyrovision.datasets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="datasets.html#openfire">OpenFire</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datasets.html#wildfire">WildFire</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyrovision.models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rexnet">RexNet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resnet">ResNet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#densenet">DenseNet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mobilenet-v2">MobileNet v2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#resnext">ResNext</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#wide-resnet">Wide ResNet</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">pyrovision.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#pooling-layers">Pooling layers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="nn.html#adaptiveconcatpool2d">AdaptiveConcatPool2d</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#mobilenet-v3">MobileNet v3</a></li>
 </ul>
 </li>
 </ul>
@@ -183,428 +173,162 @@
 <div class="contents local topic" id="models">
 <p class="topic-title">Models</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#rexnet" id="id14">RexNet</a></p></li>
-<li><p><a class="reference internal" href="#resnet" id="id15">ResNet</a></p></li>
-<li><p><a class="reference internal" href="#densenet" id="id16">DenseNet</a></p></li>
-<li><p><a class="reference internal" href="#mobilenet-v2" id="id17">MobileNet v2</a></p></li>
-<li><p><a class="reference internal" href="#resnext" id="id18">ResNext</a></p></li>
-<li><p><a class="reference internal" href="#wide-resnet" id="id19">Wide ResNet</a></p></li>
+<li><p><a class="reference internal" href="#rexnet" id="id5">RexNet</a></p></li>
+<li><p><a class="reference internal" href="#resnet" id="id6">ResNet</a></p></li>
+<li><p><a class="reference internal" href="#mobilenet-v3" id="id7">MobileNet v3</a></p></li>
 </ul>
 </div>
 <section id="rexnet">
-<h2><a class="toc-backref" href="#id14">RexNet</a><a class="headerlink" href="#rexnet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">RexNet</a><a class="headerlink" href="#rexnet" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.rexnet1_0x">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_0x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_0x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_0x" title="Permalink to this definition">¶</a></dt>
-<dd><p>ReXNet-1.0x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_0x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; holocron.models.classification.rexnet.ReXNet<a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_0x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_0x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-1.0x from
+<a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
+<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pyrovision.models.rexnet1_3x">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_3x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_3x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_3x" title="Permalink to this definition">¶</a></dt>
-<dd><p>ReXNet-1.3x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_3x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; holocron.models.classification.rexnet.ReXNet<a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_3x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_3x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-1.3x from
+<a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
+<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pyrovision.models.rexnet1_5x">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_5x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_5x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_5x" title="Permalink to this definition">¶</a></dt>
-<dd><p>ReXNet-1.5x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet1_5x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; holocron.models.classification.rexnet.ReXNet<a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet1_5x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet1_5x" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReXNet-1.5x from
+<a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
+<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
 </ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.rexnet2_0x">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet2_0x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet2_0x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet2_0x" title="Permalink to this definition">¶</a></dt>
-<dd><p>ReXNet-2.0x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.rexnet2_2x">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">rexnet2_2x</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/rexnet.html#rexnet2_2x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.rexnet2_2x" title="Permalink to this definition">¶</a></dt>
-<dd><p>ReXNet-2.2x from <a class="reference external" href="https://arxiv.org/pdf/2007.00992.pdf">“ReXNet: Diminishing Representational Bottleneck on Convolutional Neural Network”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (Pyronear training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of _rexnet</p></li>
-</ul>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
 <section id="resnet">
-<h2><a class="toc-backref" href="#id15">ResNet</a><a class="headerlink" href="#resnet" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">ResNet</a><a class="headerlink" href="#resnet" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="pyrovision.models.resnet18">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet18</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet18"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet18" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-18 model for image classification from
-<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a></p>
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet18</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; torchvision.models.resnet.ResNet<a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet18"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet18" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-18 from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
+<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pyrovision.models.resnet34">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet34</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet34"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet34" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-34 model for image classification from
-<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a></p>
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet34</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; torchvision.models.resnet.ResNet<a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet34"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet34" title="Permalink to this definition">¶</a></dt>
+<dd><p>ResNet-34 from
+<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
+<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
 </ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.resnet50">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet50</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet50"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet50" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-50 model for image classification from
-<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.resnet101">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet101</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet101"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet101" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-101 model for image classification from
-<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.resnet152">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnet152</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnet152"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnet152" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-152 model for image classification from
-<a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">“Deep Residual Learning for Image Recognition”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
-<section id="densenet">
-<h2><a class="toc-backref" href="#id16">DenseNet</a><a class="headerlink" href="#densenet" title="Permalink to this headline">¶</a></h2>
+<section id="mobilenet-v3">
+<h2><a class="toc-backref" href="#id7">MobileNet v3</a><a class="headerlink" href="#mobilenet-v3" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="pyrovision.models.densenet121">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">densenet121</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/densenet.html#densenet121"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.densenet121" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-121 model from
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a></p>
+<dt id="pyrovision.models.mobilenet_v3_small">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">mobilenet_v3_small</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; torchvision.models.mobilenetv3.MobileNetV3<a class="reference internal" href="_modules/pyrovision/models/mobilenetv3.html#mobilenet_v3_small"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.mobilenet_v3_small" title="Permalink to this definition">¶</a></dt>
+<dd><p>MobileNetV3 model from
+<a class="reference external" href="https://arxiv.org/abs/1905.02244">“Searching for MobileNetV”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
 <li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.densenet.DenseNet</span></code></p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pyrovision.models.densenet169">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">densenet169</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/densenet.html#densenet169"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.densenet169" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-169 model from
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a></p>
+<dt id="pyrovision.models.mobilenet_v3_large">
+<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">mobilenet_v3_large</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; torchvision.models.mobilenetv3.MobileNetV3<a class="reference internal" href="_modules/pyrovision/models/mobilenetv3.html#mobilenet_v3_large"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.mobilenet_v3_large" title="Permalink to this definition">¶</a></dt>
+<dd><p>MobileNetV3 model from
+<a class="reference external" href="https://arxiv.org/abs/1905.02244">“Searching for MobileNetV”</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
 <li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.densenet.DenseNet</span></code></p></li>
 </ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.densenet161">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">densenet161</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/densenet.html#densenet161"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.densenet161" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-161 model from
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
-<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.densenet.DenseNet</span></code></p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>classification model</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.densenet201">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">densenet201</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/densenet.html#densenet201"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.densenet201" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-201 model from
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
-<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.densenet.DenseNet</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="mobilenet-v2">
-<h2><a class="toc-backref" href="#id17">MobileNet v2</a><a class="headerlink" href="#mobilenet-v2" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="pyrovision.models.mobilenet_v2">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">mobilenet_v2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/mobilenet.html#mobilenet_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.mobilenet_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNetV2 model from
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“MobileNetV2: Inverted Residuals and Linear Bottlenecks”</a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em>) – If True, returns a model pre-trained on ImageNet</p></li>
-<li><p><strong>progress</strong> (<em>bool</em>) – If True, displays a progress bar of the download to stderr</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.mobilenet.MobileNetV2</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="resnext">
-<h2><a class="toc-backref" href="#id18">ResNext</a><a class="headerlink" href="#resnext" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="pyrovision.models.resnext50_32x4d">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnext50_32x4d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnext50_32x4d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnext50_32x4d" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNeXt-50 32x4d model from
-<a class="reference external" href="https://arxiv.org/pdf/1611.05431.pdf">“Aggregated Residual Transformation for Deep Neural Networks”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.resnext101_32x8d">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">resnext101_32x8d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#resnext101_32x8d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.resnext101_32x8d" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNeXt-101 32x8d model from
-<a class="reference external" href="https://arxiv.org/pdf/1611.05431.pdf">“Aggregated Residual Transformation for Deep Neural Networks”</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="wide-resnet">
-<h2><a class="toc-backref" href="#id19">Wide ResNet</a><a class="headerlink" href="#wide-resnet" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="pyrovision.models.wide_resnet50_2">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">wide_resnet50_2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#wide_resnet50_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.wide_resnet50_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wide ResNet-50-2 model from
-<a class="reference external" href="https://arxiv.org/pdf/1605.07146.pdf">“Wide Residual Networks”</a></p>
-<p>The model is the same as ResNet except for the bottleneck number of channels
-which is twice larger in every block. The number of channels in outer 1x1
-convolutions is the same, e.g. last block in ResNet-50 has 2048-512-2048
-channels, and in Wide ResNet-50-2 has 2048-1024-2048.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pyrovision.models.wide_resnet101_2">
-<code class="sig-prename descclassname">pyrovision.models.</code><code class="sig-name descname">wide_resnet101_2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">imagenet_pretrained</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_classes</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">lin_features</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">dropout_prob</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">bn_final</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">concat_pool</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyrovision/models/resnet.html#wide_resnet101_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyrovision.models.wide_resnet101_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wide ResNet-101-2 model from
-<a class="reference external" href="https://arxiv.org/pdf/1605.07146.pdf">“Wide Residual Networks”</a></p>
-<p>The model is the same as ResNet except for the bottleneck number of channels
-which is twice larger in every block. The number of channels in outer 1x1
-convolutions is the same, e.g. last block in ResNet-50 has 2048-512-2048
-channels, and in Wide ResNet-50-2 has 2048-1024-2048.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded (OpenFire training)</p></li>
-<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a progress bar be displayed while downloading pretrained parameters</p></li>
-<li><p><strong>imagenet_pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pretrained parameters be loaded on conv layers (ImageNet training)</p></li>
-<li><p><strong>num_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – number of output classes</p></li>
-<li><p><strong>lin_features</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>list&lt;int&gt;</em><em>]</em><em>, </em><em>optional</em>) – number of nodes in intermediate layers of model’s head</p></li>
-<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – dropout probability of head FC layers</p></li>
-<li><p><strong>bn_final</strong> (<em>bool</em><em>, </em><em>optional</em>) – should a batch norm be added after the last layer</p></li>
-<li><p><strong>concat_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – should pooling be replaced by <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyronear.nn.AdaptiveConcatPool2d</span></code></p></li>
-<li><p><strong>**kwargs</strong> – optional arguments of <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchvision.models.resnet.ResNet</span></code></p></li>
-</ul>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
 </dd>
 </dl>
 </dd></dl>
@@ -619,8 +343,6 @@ channels, and in Wide ResNet-50-2 has 2048-1024-2048.</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="nn.html" class="btn btn-neutral float-right" title="pyrovision.nn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="datasets.html" class="btn btn-neutral float-left" title="pyrovision.datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
