@@ -10,7 +10,6 @@ for wildfire detection tasks.
 
    datasets
    models
-   nn
 
 
 .. automodule:: pyrovision

@@ -34,7 +34,7 @@ Pyrovision aims at providing the means to create a wildfire early detection syst
 You can use the library like any other python package to detect wildfires as follows:
 
 ```python
-from pyrovision.models.rexnet import rexnet1_0x
+from pyrovision.models import rexnet1_0x
 from torchvision import transforms
 import torch
 from PIL import Image

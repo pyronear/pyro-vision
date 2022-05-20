@@ -3,12 +3,15 @@
 # This program is licensed under the Apache License version 2.
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
-from pathlib import Path
-import warnings
 import json
-from PIL import Image, ImageFile
+import logging
+import warnings
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+from PIL import Image, ImageFile
 from torchvision.datasets import VisionDataset
+
 from .utils import download_url, download_urls
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -36,8 +39,16 @@ class OpenFire(VisionDataset):
     url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'  # noqa: E501
     classes = [False, True]
 
-    def __init__(self, root, train=True, download=False, threads=None, num_samples=None,
-                 img_folder=None, **kwargs):
+    def __init__(
+        self,
+        root: str,
+        train: bool = True,
+        download: bool = False,
+        threads: Optional[int] = None,
+        num_samples: Optional[int] = None,
+        img_folder: Optional[Union[str, Path]] = None,
+        **kwargs: Any,
+    ) -> None:
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train
         if img_folder is None:
@@ -56,26 +67,19 @@ class OpenFire(VisionDataset):
         self.data = self._verify_samples(extract)
 
     @property
-    def _images(self):
+    def _images(self) -> Path:
         return self.img_folder
 
     @property
-    def _annotations(self):
+    def _annotations(self) -> Path:
         return Path(self.root, self.__class__.__name__, 'annotations')
 
     @property
-    def class_to_idx(self):
+    def class_to_idx(self) -> Dict[bool, int]:
         return {_class: i for i, _class in enumerate(self.classes)}
 
-    def __getitem__(self, idx):
-        """ Getter function
-
-        Args:
-            index (int): Index
-        Returns:
-            img (torch.Tensor<float>): image tensor
-            target (int): dictionary of bboxes and labels' tensors
-        """
+    def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
+        """ Getter function"""
 
         # Load image
         img = Image.open(self._images.joinpath(self.data[idx]['name']), mode='r').convert('RGB')
@@ -86,10 +90,10 @@ class OpenFire(VisionDataset):
 
         return img, target
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.data)
 
-    def download(self, threads=None, num_samples=None):
+    def download(self, threads: Optional[int] = None, num_samples: Optional[int] = None) -> None:
         """ Download images from a specific extract
 
         Args:
@@ -109,9 +113,9 @@ class OpenFire(VisionDataset):
         # Verify download
         _ = self._verify_samples(extract)
 
-        print('Done!')
+        logging.info('Download complete!')
 
-    def _download_extract(self):
+    def _download_extract(self) -> None:
         """ Download extract file from URL """
 
         self._annotations.mkdir(parents=True, exist_ok=True)
@@ -119,7 +123,7 @@ class OpenFire(VisionDataset):
         # Download annotations
         download_url(self.url, self._annotations, filename=self.url.rpartition('/')[-1], verbose=False)
 
-    def get_extract(self, num_samples=None):
+    def get_extract(self, num_samples: Optional[int] = None) -> List[Dict[str, Any]]:
         """ Load extract into memory
 
         Args:
@@ -138,7 +142,7 @@ class OpenFire(VisionDataset):
 
         return extract
 
-    def _download_images(self, extract, threads=None):
+    def _download_images(self, extract: List[Dict[str, Any]], threads: Optional[int] = None) -> None:
         """ Download images from a specific extract
 
         Args:
@@ -154,7 +158,7 @@ class OpenFire(VisionDataset):
         if len(entries) > 0:
             download_urls(entries, self._images, threads=threads)
 
-    def _verify_samples(self, extract):
+    def _verify_samples(self, extract: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """ Download images from a specific extract
 
         Args:
@@ -194,5 +198,5 @@ class OpenFire(VisionDataset):
 
         return valid_samples
 
-    def extra_repr(self):
+    def extra_repr(self) -> str:
         return "Split: {}".format("Train" if self.train is True else "Test")

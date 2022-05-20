@@ -3,19 +3,21 @@
 # This program is licensed under the Apache License version 2.
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
 
-import requests
 import multiprocessing as mp
+from functools import partial
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from functools import partial
-from tqdm import tqdm
+from typing import Any, Callable, List, Optional, Sequence, Tuple
 from urllib.parse import urlparse
+
+import requests
 from torchvision.datasets.utils import check_integrity
+from tqdm import tqdm
 
 __all__ = ['download_url', 'download_urls']
 
 
-def url_retrieve(url, outfile, timeout=4):
+def url_retrieve(url: str, outfile: Path, timeout: int = 4) -> None:
     """Download the content of an URL request to a specified location
 
     Args:
@@ -31,7 +33,7 @@ def url_retrieve(url, outfile, timeout=4):
     outfile.write_bytes(response.content)
 
 
-def get_fname(url, default_extension='jpg', max_base_length=50):
+def get_fname(url: str, default_extension: str = 'jpg', max_base_length: int = 50) -> str:
     """Find extension of file located by URL
 
     Args:
@@ -57,8 +59,16 @@ def get_fname(url, default_extension='jpg', max_base_length=50):
     return f"{base}.{extension}"
 
 
-def download_url(url, root, filename=None, md5=None, timeout=4,
-                 retries=4, verbose=False, silent=False):
+def download_url(
+    url: str,
+    root: Path,
+    filename: Optional[str] = None,
+    md5: Optional[str] = None,
+    timeout: int = 4,
+    retries: int = 4,
+    verbose: bool = False,
+    silent: bool = False,
+) -> None:
     """Download a file accessible via URL with mutiple retries
 
     Args:
@@ -115,7 +125,12 @@ def download_url(url, root, filename=None, md5=None, timeout=4,
                 break
 
 
-def parallel(func, arr, threads=None, leave=False):
+def parallel(
+    func: Callable[[Any], Any],
+    arr: Sequence[Any],
+    threads: Optional[int] = None,
+    leave: bool = False,
+) -> Optional[Sequence[Any]]:
     """Download a file accessible via URL with mutiple retries
 
     Args:
@@ -138,8 +153,17 @@ def parallel(func, arr, threads=None, leave=False):
     if any([o is not None for o in results]):
         return results
 
+    return None
 
-def download_urls(entries, root, timeout=4, retries=4, threads=None, silent=True):
+
+def download_urls(
+    entries: List[Tuple[str, str]],
+    root: Path,
+    timeout: int = 4,
+    retries: int = 4,
+    threads: Optional[int] = None,
+    silent: bool = True,
+) -> None:
     """Download multiple URLs a file accessible via URL with mutiple retries
 
     Args:

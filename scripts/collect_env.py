@@ -10,11 +10,12 @@ Run it with `python collect_env.py`.
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
+
 import locale
+import os
 import re
 import subprocess
 import sys
-import os
 from collections import namedtuple
 
 try:
@@ -129,7 +130,7 @@ def get_cudnn_version(run_lambda):
     if len(out) == 0 or rc not in (1, 0):
         lib = os.environ.get('CUDNN_LIBRARY')
         if lib is not None and os.path.isfile(lib):
-            return os.path.realpath(l)
+            return os.path.realpath(lib)
         return None
     files = set()
     for fn in out.split('\n'):
