@@ -19,6 +19,7 @@ from torch.utils.data import RandomSampler, SequentialSampler
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
 from torchvision.transforms.functional import InterpolationMode, to_pil_image
+from codecarbon import track_emissions
 
 import pyrovision
 from pyrovision.datasets import OpenFire
@@ -53,6 +54,7 @@ def plot_samples(images, targets, num_samples=4):
     plt.show()
 
 
+@track_emissions()
 def main(args):
 
     print(args)

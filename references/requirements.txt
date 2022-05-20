@@ -1,2 +1,3 @@
 pyrovision
 wandb>=0.10.31
+codecarbon>=2.0.0
