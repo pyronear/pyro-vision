@@ -9,7 +9,7 @@ Everything you need to know to contribute efficiently to the project.
 - [pyrovision](https://github.com/pyronear/pyro-vision/blob/master/pyrovision) - The actual pyrovision library
 - [references](https://github.com/pyronear/pyro-vision/blob/master/references) - Scripts to reproduce performances
 - [docs](https://github.com/pyronear/pyro-vision/blob/master/docs) - Sphinx documentation building
-- [test](https://github.com/pyronear/pyro-vision/blob/master/test) - Python unit tests
+- [tests](https://github.com/pyronear/pyro-vision/blob/master/tests) - Python unit tests
 
 
 
