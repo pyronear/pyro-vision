@@ -108,3 +108,4 @@ conda-dist/
 
 #Ignore version file
 pyrovision/version.py
+.codecarbon.config

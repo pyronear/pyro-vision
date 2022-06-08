@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import wandb
+from codecarbon import track_emissions
 from holocron.models.presets import IMAGENET
 from holocron.optim import AdamP
 from holocron.trainer import BinaryClassificationTrainer
@@ -53,6 +54,7 @@ def plot_samples(images, targets, num_samples=4):
     plt.show()
 
 
+@track_emissions()
 def main(args):
 
     print(args)
