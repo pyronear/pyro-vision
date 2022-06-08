@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import wandb
+from codecarbon import track_emissions
 from holocron.models.presets import IMAGENET
 from holocron.optim import AdamP
 from holocron.trainer import BinaryClassificationTrainer
@@ -19,7 +20,6 @@ from torch.utils.data import RandomSampler, SequentialSampler
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
 from torchvision.transforms.functional import InterpolationMode, to_pil_image
-from codecarbon import track_emissions
 
 import pyrovision
 from pyrovision.datasets import OpenFire
