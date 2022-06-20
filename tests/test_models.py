@@ -15,7 +15,7 @@ def _test_classification_model(name, num_classes=10):
     assert out.shape[0] == x.shape[0]
     assert out.shape[-1] == num_classes
 
-    # Check backprop is OK
+    # Check backprop is OK
     target = torch.zeros(batch_size, dtype=torch.long)
     model.train()
     out = model(x)
@@ -26,9 +26,13 @@ def _test_classification_model(name, num_classes=10):
 @pytest.mark.parametrize(
     "arch",
     [
-        'mobilenet_v3_small', 'mobilenet_v3_large',
-        'resnet18', 'resnet34',
-        'rexnet1_0x', 'rexnet1_3x', 'rexnet1_5x',
+        "mobilenet_v3_small",
+        "mobilenet_v3_large",
+        "resnet18",
+        "resnet34",
+        "rexnet1_0x",
+        "rexnet1_3x",
+        "rexnet1_5x",
     ],
 )
 def test_classification_model(arch):

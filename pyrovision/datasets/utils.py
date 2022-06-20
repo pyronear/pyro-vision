@@ -14,7 +14,7 @@ import requests
 from torchvision.datasets.utils import check_integrity
 from tqdm import tqdm
 
-__all__ = ['download_url', 'download_urls']
+__all__ = ["download_url", "download_urls"]
 
 
 def url_retrieve(url: str, outfile: Path, timeout: int = 4) -> None:
@@ -28,12 +28,12 @@ def url_retrieve(url: str, outfile: Path, timeout: int = 4) -> None:
 
     response = requests.get(url, timeout=timeout, allow_redirects=True)
     if response.status_code != 200:
-        raise requests.exceptions.ConnectionError(f'Error code {response.status_code} - could not download {url}')
+        raise requests.exceptions.ConnectionError(f"Error code {response.status_code} - could not download {url}")
 
     outfile.write_bytes(response.content)
 
 
-def get_fname(url: str, default_extension: str = 'jpg', max_base_length: int = 50) -> str:
+def get_fname(url: str, default_extension: str = "jpg", max_base_length: int = 50) -> str:
     """Find extension of file located by URL
 
     Args:
@@ -45,10 +45,10 @@ def get_fname(url: str, default_extension: str = 'jpg', max_base_length: int = 5
         str: file name
     """
 
-    name_split = urlparse(url).path.rpartition('/')[-1].split('.')
+    name_split = urlparse(url).path.rpartition("/")[-1].split(".")
     # Check if viable extension
     if len(name_split) > 1 and all(c.isalpha() for c in name_split[-1].lower()):
-        base, extension = '.'.join(name_split[:-1]), name_split[-1].lower()
+        base, extension = ".".join(name_split[:-1]), name_split[-1].lower()
     # Fallback on default extension
     else:
         base, extension = name_split[-1], default_extension
@@ -86,7 +86,7 @@ def download_url(
         url, filename = url
 
     if not isinstance(url, str):
-        raise TypeError('expected argument url to be of type <str>')
+        raise TypeError("expected argument url to be of type <str>")
 
     # Root folder
     root = Path(root).expanduser()
@@ -99,7 +99,7 @@ def download_url(
     # Download file
     if check_integrity(fpath, md5):
         if verbose:
-            print(f'Using downloaded and verified file: {fpath}')
+            print(f"Using downloaded and verified file: {fpath}")
     else:
         success = False
         # Allow multiple retries
@@ -109,9 +109,9 @@ def download_url(
                 success = True
             except Exception as e:
                 # Try switching to http
-                if url.startswith('https'):
+                if url.startswith("https"):
                     try:
-                        url_retrieve(url.replace('https:', 'http:'), fpath, timeout)
+                        url_retrieve(url.replace("https:", "http:"), fpath, timeout)
                         success = True
                     except Exception:
                         success = False
@@ -175,5 +175,6 @@ def download_urls(
         silent (bool, optional): whether Exception should be raised upon download failure
     """
 
-    parallel(partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent),
-             entries, threads=threads)
+    parallel(
+        partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent), entries, threads=threads
+    )

@@ -9,24 +9,24 @@ from holocron.models import rexnet as src
 from holocron.models.presets import IMAGENET
 from holocron.models.utils import load_pretrained_params
 
-__all__ = ['rexnet1_0x', 'rexnet1_3x', 'rexnet1_5x']
+__all__ = ["rexnet1_0x", "rexnet1_3x", "rexnet1_5x"]
 
 
 default_cfgs: Dict[str, Dict[str, Any]] = {
-    'rexnet1_0x': {
+    "rexnet1_0x": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
-    'rexnet1_3x': {
+    "rexnet1_3x": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
-    'rexnet1_5x': {
+    "rexnet1_5x": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
 }
 
@@ -42,7 +42,7 @@ def _rexnet(
     model = arch_fn(**kwargs)  # type: ignore[call-arg]
     # Load pretrained parameters
     if pretrained:
-        load_pretrained_params(model, default_cfgs[arch]['url'], progress)
+        load_pretrained_params(model, default_cfgs[arch]["url"], progress)
 
     return model
 

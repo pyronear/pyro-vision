@@ -24,14 +24,14 @@ import pyrovision
 
 # -- Project information -----------------------------------------------------
 
-master_doc = 'index'
-project = 'pyrovision'
-copyright = '2019, Pyronear Contributors'
-author = 'Pyronear Contributors'
+master_doc = "index"
+project = "pyrovision"
+copyright = "2019, Pyronear Contributors"
+author = "Pyronear Contributors"
 
 # The full version, including alpha/beta/rc tags
 version = pyrovision.__version__
-release = pyrovision.__version__ + '-git'
+release = pyrovision.__version__ + "-git"
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,18 +40,18 @@ release = pyrovision.__version__ + '-git'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-	'sphinx.ext.autodoc',
-	'sphinx.ext.napoleon',
-	'sphinx.ext.viewcode',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.mathjax',
-    'sphinx_copybutton',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.mathjax",
+    "sphinx_copybutton",
 ]
 
 napoleon_use_ivar = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -60,15 +60,15 @@ exclude_patterns = []
 
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
-highlight_language = 'python3'
+pygments_style = "sphinx"
+highlight_language = "python3"
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -76,21 +76,18 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # documentation.
 #
 html_theme_options = {
-    'collapse_navigation': False,
-    'display_version': True,
-    'logo_only': True,
+    "collapse_navigation": False,
+    "display_version": True,
+    "logo_only": True,
 }
 
-html_logo = '_static/img/pyronear-logo-dark.png'
+html_logo = "_static/img/pyronear-logo-dark.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 html_context = {
-    'css_files': [
-        'https://fonts.googleapis.com/css?family=Lato',
-        '_static/css/custom_theme.css'
-    ],
+    "css_files": ["https://fonts.googleapis.com/css?family=Lato", "_static/css/custom_theme.css"],
 }
