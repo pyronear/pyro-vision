@@ -2,7 +2,7 @@
 quality:
 	isort . -c -v
 	flake8 ./
-	mypy .
+	mypy
 	pydocstyle pyrovision/
 	black --check .
 

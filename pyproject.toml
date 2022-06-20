@@ -55,8 +55,6 @@ docs = [
     "sphinxemoji>=0.1.8",
     "sphinx-copybutton>=0.3.1",
     "docutils<0.18",
-    "recommonmark>=0.7.1",
-    "sphinx-markdown-tables>=0.0.15",
     # cf. https://github.com/readthedocs/readthedocs.org/issues/9038
     "Jinja2<3.1",
     "furo>=2022.3.4",
@@ -74,14 +72,12 @@ dev = [
     "pydocstyle[toml]>=6.0.0",
     "black>=22.1,<23.0",
     # docs
-    "sphinx<=3.4.3",
-    "sphinx-rtd-theme==0.4.3",
+    "sphinx>=3.0.0,!=3.5.0",
     "sphinxemoji>=0.1.8",
     "sphinx-copybutton>=0.3.1",
     "docutils<0.18",
-    "recommonmark>=0.7.1",
-    "sphinx-markdown-tables>=0.0.15",
     "Jinja2<3.1",
+    "furo>=2022.3.4",
 ]
 
 [project.urls]
@@ -97,7 +93,7 @@ exclude = ["demo*", "docs*", "notebooks*", "scripts*", "tests*"]
 
 
 [tool.mypy]
-files = "pyrovision/*.py"
+files = "pyrovision/"
 show_error_codes = true
 pretty = true
 warn_unused_ignores = true
@@ -108,14 +104,18 @@ implicit_reexport = false
 
 [[tool.mypy.overrides]]
 module = [
+    "holocron.*",
+    "torchvision.*",
+    "requests.*",
+    "tqdm.*",
+    "PIL.*",
 ]
 ignore_missing_imports = true
 
 [tool.isort]
 line_length = 120
-src_paths = ["pyrovision", "tests"]
+src_paths = ["pyrovision", "tests", "references", "docs"]
 skip_glob = "**/__init__.py"
-known_third_party = ["torch", "torchvision"]
 
 [tool.pydocstyle]
 select = "D300,D301,D417"
