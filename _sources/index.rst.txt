@@ -1,5 +1,6 @@
-Pyrovision documentation
-========================
+************************************
+Pyrovision: wildfire early detection
+************************************
 
 The :mod:`pyrovision` package provides datasets and deep learning models
 for wildfire detection tasks.
