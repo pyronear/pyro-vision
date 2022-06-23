@@ -1,4 +1,4 @@
-![PyroNear Logo](docs/source/_static/img/pyronear-logo-dark.png)
+![PyroNear Logo](docs/source/_static/images/logo.png)
 
 <p align="center">
     <a href="LICENSE" alt="License">

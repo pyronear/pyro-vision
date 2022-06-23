@@ -9,19 +9,19 @@ from holocron.models.presets import IMAGENET
 from holocron.models.utils import load_pretrained_params
 from torchvision.models import resnet as src
 
-__all__ = ['resnet18', 'resnet34']
+__all__ = ["resnet18", "resnet34"]
 
 
 default_cfgs: Dict[str, Dict[str, Any]] = {
-    'resnet18': {
+    "resnet18": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
-    'resnet34': {
+    "resnet34": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
 }
 
@@ -37,7 +37,7 @@ def _resnet(
     model = arch_fn(**kwargs)  # type: ignore[call-arg]
     # Load pretrained parameters
     if pretrained:
-        load_pretrained_params(model, default_cfgs[arch]['url'], progress)
+        load_pretrained_params(model, default_cfgs[arch]["url"], progress)
 
     return model
 

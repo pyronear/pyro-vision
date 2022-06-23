@@ -23,4 +23,4 @@ jobs:
           architecture: x64
 
       - name: Run environment collection script
-        run: python scripts/collect_env.py
+        run: python .github/collect_env.py

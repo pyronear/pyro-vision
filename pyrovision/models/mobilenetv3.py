@@ -9,19 +9,19 @@ from holocron.models.presets import IMAGENET
 from holocron.models.utils import load_pretrained_params
 from torchvision.models import mobilenetv3 as src
 
-__all__ = ['mobilenet_v3_small', 'mobilenet_v3_large']
+__all__ = ["mobilenet_v3_small", "mobilenet_v3_large"]
 
 
 default_cfgs: Dict[str, Dict[str, Any]] = {
-    'mobilenet_v3_small': {
+    "mobilenet_v3_small": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
-    'mobilenet_v3_large': {
+    "mobilenet_v3_large": {
         **IMAGENET,
-        'input_shape': (3, 224, 224),
-        'url': None,
+        "input_shape": (3, 224, 224),
+        "url": None,
     },
 }
 
@@ -37,7 +37,7 @@ def _mobilenet_v3(
     model = arch_fn(**kwargs)  # type: ignore[call-arg]
     # Load pretrained parameters
     if pretrained:
-        load_pretrained_params(model, default_cfgs[arch]['url'], progress)
+        load_pretrained_params(model, default_cfgs[arch]["url"], progress)
 
     return model
 

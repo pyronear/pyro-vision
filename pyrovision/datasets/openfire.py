@@ -16,7 +16,7 @@ from .utils import download_url, download_urls
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-__all__ = ['OpenFire']
+__all__ = ["OpenFire"]
 
 
 class OpenFire(VisionDataset):
@@ -36,7 +36,7 @@ class OpenFire(VisionDataset):
         **kwargs: optional arguments of torchvision.datasets.VisionDataset
     """
 
-    url = 'https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json'  # noqa: E501
+    url = "https://gist.githubusercontent.com/frgfm/f53b4f53a1b2dc3bb4f18c006a32ec0d/raw/c0351134e333710c6ce0c631af5198e109ed7a92/openfire_binary.json"  # noqa: E501
     classes = [False, True]
 
     def __init__(
@@ -52,7 +52,7 @@ class OpenFire(VisionDataset):
         super(OpenFire, self).__init__(root, **kwargs)
         self.train = train
         if img_folder is None:
-            self.img_folder = Path(self.root, self.__class__.__name__, 'images')
+            self.img_folder = Path(self.root, self.__class__.__name__, "images")
         else:
             self.img_folder = Path(img_folder)
 
@@ -60,8 +60,7 @@ class OpenFire(VisionDataset):
             self.download(threads, num_samples)
 
         # Load appropriate subset
-        extract = [sample for sample in self.get_extract(num_samples)
-                   if sample['is_test'] == (not train)]
+        extract = [sample for sample in self.get_extract(num_samples) if sample["is_test"] == (not train)]
 
         # Verify samples
         self.data = self._verify_samples(extract)
@@ -72,19 +71,19 @@ class OpenFire(VisionDataset):
 
     @property
     def _annotations(self) -> Path:
-        return Path(self.root, self.__class__.__name__, 'annotations')
+        return Path(self.root, self.__class__.__name__, "annotations")
 
     @property
     def class_to_idx(self) -> Dict[bool, int]:
         return {_class: i for i, _class in enumerate(self.classes)}
 
     def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
-        """ Getter function"""
+        """Getter function"""
 
         # Load image
-        img = Image.open(self._images.joinpath(self.data[idx]['name']), mode='r').convert('RGB')
+        img = Image.open(self._images.joinpath(self.data[idx]["name"]), mode="r").convert("RGB")
         # Load bboxes & encode label
-        target = self.class_to_idx[self.data[idx]['target']]
+        target = self.class_to_idx[self.data[idx]["target"]]
         if self.transforms is not None:
             img, target = self.transforms(img, target)
 
@@ -94,7 +93,7 @@ class OpenFire(VisionDataset):
         return len(self.data)
 
     def download(self, threads: Optional[int] = None, num_samples: Optional[int] = None) -> None:
-        """ Download images from a specific extract
+        """Download images from a specific extract
 
         Args:
             threads (int, optional): number of threads used for parallel downloading
@@ -113,18 +112,18 @@ class OpenFire(VisionDataset):
         # Verify download
         _ = self._verify_samples(extract)
 
-        logging.info('Download complete!')
+        logging.info("Download complete!")
 
     def _download_extract(self) -> None:
-        """ Download extract file from URL """
+        """Download extract file from URL"""
 
         self._annotations.mkdir(parents=True, exist_ok=True)
 
         # Download annotations
-        download_url(self.url, self._annotations, filename=self.url.rpartition('/')[-1], verbose=False)
+        download_url(self.url, self._annotations, filename=self.url.rpartition("/")[-1], verbose=False)
 
     def get_extract(self, num_samples: Optional[int] = None) -> List[Dict[str, Any]]:
-        """ Load extract into memory
+        """Load extract into memory
 
         Args:
             num_samples (int, optional): if specified, takes first num_samples from extract
@@ -133,17 +132,17 @@ class OpenFire(VisionDataset):
         """
 
         # Check extract existence
-        file_path = self._annotations.joinpath(self.url.rpartition('/')[-1])
+        file_path = self._annotations.joinpath(self.url.rpartition("/")[-1])
         if not file_path.is_file():
-            raise RuntimeError('Extract not found. You can use download=True to download it.')
+            raise RuntimeError("Extract not found. You can use download=True to download it.")
         # Take the specified number of samples
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             extract = json.load(f)[:num_samples]
 
         return extract
 
     def _download_images(self, extract: List[Dict[str, Any]], threads: Optional[int] = None) -> None:
-        """ Download images from a specific extract
+        """Download images from a specific extract
 
         Args:
             extract (list<dict>): image extract to download
@@ -152,14 +151,13 @@ class OpenFire(VisionDataset):
 
         self._images.mkdir(parents=True, exist_ok=True)
         # Prepare URL and filenames for multi-processing
-        entries = [(s['url'], s['name']) for s in extract
-                   if not self._images.joinpath(s['name']).is_file()]
+        entries = [(s["url"], s["name"]) for s in extract if not self._images.joinpath(s["name"]).is_file()]
         # Use multiple threads to speed up download
         if len(entries) > 0:
             download_urls(entries, self._images, threads=threads)
 
     def _verify_samples(self, extract: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """ Download images from a specific extract
+        """Download images from a specific extract
 
         Args:
             extract (list<dict>): list of samples
@@ -174,27 +172,28 @@ class OpenFire(VisionDataset):
 
             is_ok = True
             # Verify image
-            if not self._images.joinpath(sample['name']).is_file():
+            if not self._images.joinpath(sample["name"]).is_file():
                 dl_issues += 1
                 is_ok = False
 
             # Verify targets
-            if self.class_to_idx.get(sample['target']) is None:
+            if self.class_to_idx.get(sample["target"]) is None:
                 target_issues += 1
                 is_ok = False
 
             if is_ok:
                 valid_samples.append(sample)
 
-        # HTTP errors
+        # HTTP errors
         if dl_issues == len(extract):
-            raise RuntimeError('Images not found. You can use download=True to download them.')
+            raise RuntimeError("Images not found. You can use download=True to download them.")
         elif dl_issues > 0:
-            warnings.warn(f'{dl_issues}/{len(extract)} sample images are not present on disk. '
-                          'Please retry downloading later.')
-        # Extract errors
+            warnings.warn(
+                f"{dl_issues}/{len(extract)} sample images are not present on disk. " "Please retry downloading later."
+            )
+        # Extract errors
         if target_issues > 0:
-            warnings.warn(f'{target_issues}/{len(extract)} samples have corrupted targets.')
+            warnings.warn(f"{target_issues}/{len(extract)} samples have corrupted targets.")
 
         return valid_samples
 
