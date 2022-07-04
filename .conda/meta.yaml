@@ -1,29 +1,33 @@
-{% set data = load_setup_py_data(setup_file='../setup.py', from_recipe_dir=True) %}
-
+# https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#loading-data-from-other-files
+# https://github.com/conda/conda-build/pull/4480
+# for conda-build > 3.21.9
+# {% set pyproject = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
+# {% set project = pyproject.get('project') %}
+# {% set urls = pyproject.get('project', {}).get('urls') %}
 package:
-  name: {{ data.name }}
-  version: "{{ data.version }}"
+  name: pyrovision
+  version: "{{ environ.get('BUILD_VERSION') }}"
 
 source:
-  fn: {{ data.name }}-{{ data.version }}.tar.gz
-  url: ../dist/{{ data.name }}-{{ data.version }}.tar.gz
+  fn: pyrovision-{{ environ.get('BUILD_VERSION') }}.tar.gz
+  url: ../dist/pyrovision-{{ environ.get('BUILD_VERSION') }}.tar.gz
 
 build:
-  number: 0
   noarch: python
   script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
-
   host:
-    - python>=3.6
+    - python>=3.6, <4.0
+    - setuptools
 
   run:
-    - pytorch>=1.11.0
-    - torchvision>=0.12.0
-    - tqdm>=4.20.0
-    - requests>=2.20.0
-    - pylocron>=0.2.0
+    - python>=3.6, <4.0
+    - pytorch>=1.11.0, <2.0.0
+    - torchvision>=0.12.0, <1.0.0
+    - tqdm>=4.1.0
+    - requests>=2.20.0, <3.0.0
+    - pylocron>=0.2.0, <1.0.0
 
 test:
   # Python imports
@@ -35,12 +39,11 @@ test:
     - python
 
 about:
-  home: {{ data.get('url') }}
-  license: {{ data['license'] }}
-  license_url: https://github.com/pyronear/pyro-vision/blob/master/LICENSE
+  home: https://github.com/pyronear/pyro-vision
+  license: Apache 2.0
   license_file: LICENSE
   summary: {{ data['description'] }}
   description: |
     {{ data['long_description'] | replace("\n", "\n    ") | replace("#", '\#')}}
-  doc_url: https://pyronear.org/pyro-vision/
-  dev_url: {{ data.get('url') }}
+  doc_url: https://pyronear.org/pyro-vision
+  dev_url: https://github.com/pyronear/pyro-vision
