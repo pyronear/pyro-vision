@@ -1,9 +1,9 @@
 # this target runs checks on all files
 quality:
 	isort . -c
-	flake8 ./
+	flake8
 	mypy
-	pydocstyle pyrovision/
+	pydocstyle
 	black --check .
 
 # this target runs checks on all files and potentially modifies some of them
@@ -17,4 +17,7 @@ test:
 
 # Check that docs can build
 docs:
-	cd docs && bash build.sh
+	sphinx-build docs/source docs/_build -a
+
+docker:
+	docker build . -t pyrovision:python3.8.1-slim
