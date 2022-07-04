@@ -5,6 +5,7 @@
 
 
 import datetime
+import logging
 import os
 import time
 
@@ -18,11 +19,16 @@ from holocron.optim import AdamP
 from holocron.trainer import BinaryClassificationTrainer
 from torch.utils.data import RandomSampler, SequentialSampler
 from torchvision.datasets import ImageFolder
-from torchvision.transforms import transforms
+from torchvision.transforms import transforms as T
 from torchvision.transforms.functional import InterpolationMode, to_pil_image
 
 import pyrovision
 from pyrovision.datasets import OpenFire
+
+logging.getLogger("codecarbon").disabled = True
+
+
+CLASSES = ["no-fire", "fire"]
 
 
 def target_transform(target):
@@ -45,10 +51,10 @@ def plot_samples(images, targets, num_samples=4):
         axes[idx].imshow(img)
         axes[idx].axis("off")
         if targets.ndim == 1:
-            axes[idx].set_title(IMAGENET["classes"][targets[idx].item()])
+            axes[idx].set_title(CLASSES[targets[idx].item()])
         else:
             class_idcs = torch.where(targets[idx] > 0)[0]
-            _info = [f"{IMAGENET['classes'][_idx.item()]} ({targets[idx, _idx]:.2f})" for _idx in class_idcs]
+            _info = [f"{CLASSES[_idx.item()]} ({targets[idx, _idx]:.2f})" for _idx in class_idcs]
             axes[idx].set_title(" ".join(_info))
 
     plt.show()
@@ -58,30 +64,38 @@ def plot_samples(images, targets, num_samples=4):
 def main(args):
 
     print(args)
+    logging.getLogger("codecarbon").setLevel(level=logging.WARNING)
 
     torch.backends.cudnn.benchmark = True
 
     # Data loading code
-    normalize = transforms.Normalize(mean=IMAGENET["mean"], std=IMAGENET["std]"])
+    normalize = T.Normalize(mean=IMAGENET["mean"], std=IMAGENET["std"])
 
     interpolation = InterpolationMode.BILINEAR
+    target_size = (args.img_size, args.img_size)
 
-    train_transforms = transforms.Compose(
+    train_transforms = T.Compose(
         [
-            transforms.RandomResizedCrop(size=args.img_size, scale=(0.8, 1.0), interpolation=interpolation),
-            transforms.RandomRotation(degrees=5, interpolation=interpolation),
-            transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
+            # Photometric
+            T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1),
+            T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3)),
+            # Geometric
+            T.RandomHorizontalFlip(),
+            T.RandomResizedCrop(size=target_size, scale=(0.8, 1.0), interpolation=interpolation),
+            T.RandomPerspective(distortion_scale=0.3, interpolation=interpolation, p=0.8),
+            # Conversion
+            T.PILToTensor(),
+            T.ConvertImageDtype(torch.float32),
             normalize,
+            T.RandomErasing(p=0.9, scale=(0.02, 0.2), value="random"),
         ]
     )
 
-    val_transforms = transforms.Compose(
+    val_transforms = T.Compose(
         [
-            transforms.Resize(size=args.img_size, interpolation=interpolation),
-            transforms.CenterCrop(size=args.img_size),
-            transforms.ToTensor(),
+            T.Resize(size=args.img_size, interpolation=interpolation),
+            T.CenterCrop(size=args.img_size),
+            T.ToTensor(),
             normalize,
         ]
     )
