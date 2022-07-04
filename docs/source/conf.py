@@ -97,6 +97,7 @@ html_theme_options = {
     ],
     "source_repository": "https://github.com/pyronear/pyro-vision/",
     "source_branch": "master",
+    "source_directory": "docs/source/",
     "sidebar_hide_name": True,
 }
 

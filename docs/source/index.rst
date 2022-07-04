@@ -7,18 +7,23 @@ for wildfire detection tasks.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Getting Started
+   :hidden:
+
+   installing
+
+
+.. toctree::
+   :maxdepth: 1
    :caption: Package Reference
+   :hidden:
 
    datasets
    models
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Notes
+   :hidden:
 
-.. automodule:: pyrovision
-   :members:
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
+   changelog
