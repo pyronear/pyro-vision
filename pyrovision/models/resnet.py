@@ -15,11 +15,13 @@ __all__ = ["resnet18", "resnet34"]
 default_cfgs: Dict[str, Dict[str, Any]] = {
     "resnet18": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },
     "resnet34": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },

@@ -15,16 +15,19 @@ __all__ = ["rexnet1_0x", "rexnet1_3x", "rexnet1_5x"]
 default_cfgs: Dict[str, Dict[str, Any]] = {
     "rexnet1_0x": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },
     "rexnet1_3x": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },
     "rexnet1_5x": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },

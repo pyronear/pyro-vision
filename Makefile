@@ -18,3 +18,7 @@ test:
 # Check that docs can build
 docs:
 	cd docs && bash build.sh
+
+# Run the Gradio demo
+run-demo:
+	python demo/app.py --port 8080

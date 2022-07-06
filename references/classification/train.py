@@ -50,21 +50,21 @@ def plot_samples(images, targets, num_samples=4):
 
         axes[idx].imshow(img)
         axes[idx].axis("off")
-        if targets.ndim == 1:
-            axes[idx].set_title(CLASSES[targets[idx].item()])
+        _targets = targets.squeeze().to(dtype=torch.long)
+        if _targets.ndim == 1:
+            axes[idx].set_title(CLASSES[_targets[idx].item()])
         else:
-            class_idcs = torch.where(targets[idx] > 0)[0]
-            _info = [f"{CLASSES[_idx.item()]} ({targets[idx, _idx]:.2f})" for _idx in class_idcs]
+            class_idcs = torch.where(_targets[idx] > 0)[0]
+            _info = [f"{CLASSES[_idx.item()]} ({_targets[idx, _idx]:.2f})" for _idx in class_idcs]
             axes[idx].set_title(" ".join(_info))
 
     plt.show()
 
 
-@track_emissions()
+# @track_emissions()
 def main(args):
 
     print(args)
-    logging.getLogger("codecarbon").setLevel(level=logging.WARNING)
 
     torch.backends.cudnn.benchmark = True
 
@@ -82,12 +82,12 @@ def main(args):
             # Geometric
             T.RandomHorizontalFlip(),
             T.RandomResizedCrop(size=target_size, scale=(0.8, 1.0), interpolation=interpolation),
-            T.RandomPerspective(distortion_scale=0.3, interpolation=interpolation, p=0.8),
+            T.RandomPerspective(distortion_scale=0.2, interpolation=interpolation, p=0.8),
             # Conversion
             T.PILToTensor(),
             T.ConvertImageDtype(torch.float32),
             normalize,
-            T.RandomErasing(p=0.9, scale=(0.02, 0.2), value="random"),
+            T.RandomErasing(p=0.9, scale=(0.02, 0.1), value="random"),
         ]
     )
 

@@ -15,11 +15,13 @@ __all__ = ["mobilenet_v3_small", "mobilenet_v3_large"]
 default_cfgs: Dict[str, Dict[str, Any]] = {
     "mobilenet_v3_small": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },
     "mobilenet_v3_large": {
         **IMAGENET,
+        "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
         "url": None,
     },
