@@ -61,7 +61,7 @@ def plot_samples(images, targets, num_samples=4):
     plt.show()
 
 
-# @track_emissions()
+@track_emissions()
 def main(args):
 
     print(args)
