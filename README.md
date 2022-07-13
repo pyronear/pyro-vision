@@ -13,7 +13,7 @@
     <a href="https://pyronear.github.io/pyro-vision">
   		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
     <a href="https://pypi.org/project/pyrovision/" alt="Pypi">
-        <img src="https://img.shields.io/badge/pypi-v0.1.1-blue.svg" /></a>
+        <img src="https://img.shields.io/badge/pypi-v0.1.2-blue.svg" /></a>
 </p>
 
 
