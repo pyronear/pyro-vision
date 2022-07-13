@@ -1,7 +1,7 @@
 # Copyright (C) 2019-2022, Pyronear.
 
-# This program is licensed under the Apache License version 2.
-# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
+# This program is licensed under the Apache License 2.0.
+# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0> for full license details.
 
 """
 Based on https://github.com/pytorch/pytorch/blob/master/torch/utils/collect_env.py
@@ -155,7 +155,15 @@ def get_nvidia_smi():
     # Note: nvidia-smi is currently available only on Windows and Linux
     smi = "nvidia-smi"
     if get_platform() == "win32":
-        smi = '"C:\\Program Files\\NVIDIA Corporation\\NVSMI\\%s"' % smi
+        system_root = os.environ.get("SYSTEMROOT", "C:\\Windows")
+        program_files_root = os.environ.get("PROGRAMFILES", "C:\\Program Files")
+        legacy_path = os.path.join(program_files_root, "NVIDIA Corporation", "NVSMI", smi)
+        new_path = os.path.join(system_root, "System32", smi)
+        smis = [new_path, legacy_path]
+        for candidate_smi in smis:
+            if os.path.exists(candidate_smi):
+                smi = '"{}"'.format(candidate_smi)
+                break
     return smi
 
 

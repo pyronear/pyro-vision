@@ -1,7 +1,7 @@
 # Copyright (C) 2019-2022, Pyronear.
 
-# This program is licensed under the Apache License version 2.
-# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0.txt> for full license details.
+# This program is licensed under the Apache License 2.0.
+# See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0> for full license details.
 
 
 import datetime
@@ -21,7 +21,7 @@ from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
 from torchvision.transforms.functional import InterpolationMode, to_pil_image
 
-import pyrovision
+from pyrovision import models
 from pyrovision.datasets import OpenFire
 
 
@@ -121,7 +121,7 @@ def main(args):
     )
 
     print("Creating model")
-    model = pyrovision.models.__dict__[args.arch](args.pretrained, num_classes=1)
+    model = models.__dict__[args.arch](args.pretrained, num_classes=1)
 
     criterion = nn.BCEWithLogitsLoss()
 

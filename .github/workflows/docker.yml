@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build docker image
-        run: docker build . -t pyrovision:latest-py3.8.1-slim
+        run: docker build . -t pyrovision:python3.8.1-slim
       - name: Run docker container
-        run: docker run pyrovision:latest-py3.8.1-slim python -c 'import pyrovision'
+        run: docker run pyrovision:python3.8.1-slim python -c 'import pyrovision'
