@@ -1,9 +1,9 @@
 # this target runs checks on all files
 quality:
 	isort . -c
-	flake8 ./
+	flake8
 	mypy
-	pydocstyle pyrovision/
+	pydocstyle
 	black --check .
 
 # this target runs checks on all files and potentially modifies some of them
@@ -18,7 +18,3 @@ test:
 # Check that docs can build
 docs:
 	cd docs && bash build.sh
-
-# Run the Gradio demo
-run-demo:
-	python demo/app.py --port 8080
