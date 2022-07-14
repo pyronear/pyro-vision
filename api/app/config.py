@@ -5,9 +5,7 @@
 
 import os
 
-import pyrovision
-
 PROJECT_NAME: str = "PyroVision API template"
 PROJECT_DESCRIPTION: str = "Template API for Computer Vision"
-VERSION: str = pyrovision.__version__
+VERSION: str = "0.2.0.dev0"
 DEBUG: bool = os.environ.get("DEBUG", "") != "False"
