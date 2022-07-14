@@ -115,3 +115,6 @@ wandb/
 # Checkpoints
 *.pth
 *.onnx
+# Poetry generated requirements
+api/requirements-dev.txt
+api/requirements.txt
