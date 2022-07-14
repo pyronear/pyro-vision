@@ -110,3 +110,4 @@ conda-dist/
 pyrovision/version.py
 .codecarbon.config
 emissions.csv
+flagged/
