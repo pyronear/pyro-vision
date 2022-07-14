@@ -114,6 +114,7 @@ ignore_missing_imports = true
 line_length = 120
 src_paths = ["pyrovision", "tests", "references", "docs", ".github"]
 skip_glob = "**/__init__.py"
+known_first_party = ["app"]
 
 [tool.pydocstyle]
 select = "D300,D301,D417"
