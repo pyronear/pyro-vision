@@ -39,10 +39,11 @@ def _rexnet(
     arch: str,
     pretrained: bool,
     progress: bool,
+    num_classes: int = 1,
     **kwargs: Any,
 ) -> src.ReXNet:
     # Build the model
-    model = arch_fn(**kwargs)  # type: ignore[call-arg]
+    model = arch_fn(num_classes=num_classes, **kwargs)  # type: ignore[call-arg]
     # Load pretrained parameters
     if pretrained:
         load_pretrained_params(model, default_cfgs[arch]["url"], progress)
