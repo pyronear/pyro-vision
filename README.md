@@ -91,6 +91,16 @@ pip install -e pyro-vision/.
 
 The full package documentation is available [here](https://pyronear.org/pyro-vision/) for detailed specifications.
 
+### Demo app
+
+The project includes a minimal demo app using [Gradio](https://gradio.app/)
+
+![demo_app](https://user-images.githubusercontent.com/26927750/179017766-326fbbff-771d-4680-a230-b2785ee89c4d.png)
+
+You can check the live demo, hosted on :hugs: [HuggingFace Spaces](https://huggingface.co/spaces) :hugs: over here :point_down:
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/pyronear/vision)
+
+
 ### Docker container
 
 If you wish to deploy containerized environments, a Dockerfile is provided for you build a docker image:
