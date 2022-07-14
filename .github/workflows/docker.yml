@@ -7,7 +7,7 @@ on:
     branches: master
 
 jobs:
-  docker-package:
+  package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,3 +15,38 @@ jobs:
         run: docker build . -t pyrovision:python3.8.1-slim
       - name: Run docker container
         run: docker run pyrovision:python3.8.1-slim python -c 'import pyrovision'
+
+  api:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.13
+      - name: Lock the requirements
+        run: |
+          cd api
+          poetry lock
+          poetry export -f requirements.txt --without-hashes --output requirements.txt
+          poetry export -f requirements.txt --without-hashes --dev --output requirements-dev.txt
+      - name: Build & run docker
+        run: cd api && docker-compose up -d --build
+      - name: Docker sanity check
+        run: sleep 10 && nc -vz localhost 8080
+      - name: Ping server
+        run: curl http://localhost:8080/docs
+      - name: Run docker test
+        run: |
+          docker cp api/requirements-dev.txt api_backend_1:/app/requirements-dev.txt
+          docker-compose -f api/docker-compose.yml exec -T backend pip install -r requirements-dev.txt
+          docker cp api/tests api_backend_1:/app/tests
+          docker-compose -f api/docker-compose.yml exec -T backend pytest tests/
