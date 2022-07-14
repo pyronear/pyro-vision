@@ -4,7 +4,7 @@ import torch
 from pyrovision import models
 
 
-def _test_classification_model(name, num_classes=10):
+def _test_classification_model(name, num_classes=1):
 
     batch_size = 2
     x = torch.rand((batch_size, 3, 224, 224))
@@ -36,4 +36,4 @@ def _test_classification_model(name, num_classes=10):
     ],
 )
 def test_classification_model(arch):
-    _test_classification_model(arch, 10 if arch.startswith("rexnet_") else 1000)
+    _test_classification_model(arch, 1)
