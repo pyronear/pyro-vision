@@ -32,7 +32,7 @@ You will find detailed instructions in the live documentation when your server i
 #### Image classification
 
 Using the following image:
-<img src="https://m.media-amazon.com/images/I/517Nh08xqkL._AC_SX425_.jpg" width="50%" height="50%">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/The_Rim_Fire_in_the_Stanislaus_National_Forest_near_in_California_began_on_Aug._17%2C_2013-0004.jpg" width="50%" height="50%">
 
 with this snippet:
 
@@ -45,5 +45,5 @@ print(requests.post("http://localhost:8080/classification", files={'file': data}
 
 should yield
 ```
-{'value': 'French horn', 'confidence': 0.9186984300613403}
+{'value': 'Wildfire', 'confidence': 0.9981765747070312}
 ```
