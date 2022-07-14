@@ -111,3 +111,7 @@ pyrovision/version.py
 .codecarbon.config
 emissions.csv
 flagged/
+wandb/
+# Checkpoints
+*.pth
+*.onnx
