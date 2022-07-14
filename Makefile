@@ -19,5 +19,9 @@ test:
 docs:
 	sphinx-build docs/source docs/_build -a
 
+# Run the Gradio demo
+run-demo:
+	python demo/app.py --port 8080
+
 docker:
 	docker build . -t pyrovision:python3.8.1-slim
