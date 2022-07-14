@@ -17,7 +17,7 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": None,
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/resnet18_224-aa7b3886.pth",
     },
     "resnet34": {
         **IMAGENET,
