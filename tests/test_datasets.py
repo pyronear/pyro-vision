@@ -7,6 +7,20 @@ from torchvision.datasets import VisionDataset
 from pyrovision import datasets
 
 
+@pytest.mark.parametrize(
+    "url, max_base_length, expected_name",
+    [
+        ["https://pyronear.org/img/logo_letters.png", None, "logo_letters.png"],
+        ["https://pyronear.org/img/logo_letters.png?height=300", None, "logo_letters.png"],
+        ["https://pyronear.org/img/logo_letters.png?height=300&width=400", None, "logo_letters.png"],
+        ["https://pyronear.org/img/logo_letters", None, "logo_letters.jpg"],
+        ["https://pyronear.org/img/very_long_file_name.png", 10, "very_long_.png"],
+    ],
+)
+def test_get_fname(url, max_base_length, expected_name):
+    assert datasets.utils.get_fname(url, max_base_length=max_base_length) == expected_name
+
+
 def test_openfire(tmpdir_factory):
     num_samples = 100
     ds_folder = str(tmpdir_factory.mktemp("datasets"))
