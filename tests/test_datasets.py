@@ -34,7 +34,8 @@ def test_openfire(tmpdir_factory):
     assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in test_set.data)
 
     # Check against number of samples in extract (limit to num_samples)
-    assert abs((len(train_set) + len(test_set)) - num_samples) <= 5
+    assert abs(len(train_set) - num_samples) <= 5
+    assert abs(len(test_set) - num_samples) <= 5
 
     # Check integrity of samples
     img, target = train_set[0]
