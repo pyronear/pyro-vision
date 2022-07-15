@@ -119,19 +119,23 @@ class OpenFire(VisionDataset):
 
             assert sha_hash == subset_url[1], f"corrupted download: {extract_path}"
 
-            # Download the images
-            with open(extract_path, "rb") as f:
-                extract = json.load(f)
-            # Only consider num_samples
-            if isinstance(num_samples, int):
-                num_cat = len(extract)
-                cat_size = num_samples // num_cat
-                final_size = num_samples - (num_cat - 1) * cat_size
-                cats = list(extract.keys())
-                for k in cats[:-1]:
-                    extract[k] = extract[k][:cat_size]
-                extract[cats[-1]] = extract[cats[-1]][:final_size]
+        if not extract_path.is_file():
+            raise FileNotFoundError("Extract not found. You can use download=True to download it.")
+        with open(extract_path, "rb") as f:
+            extract = json.load(f)
 
+        # Only consider num_samples
+        if isinstance(num_samples, int):
+            num_cat = len(extract)
+            cat_size = num_samples // num_cat
+            final_size = num_samples - (num_cat - 1) * cat_size
+            cats = list(extract.keys())
+            for k in cats[:-1]:
+                extract[k] = extract[k][:cat_size]
+            extract[cats[-1]] = extract[cats[-1]][:final_size]
+
+        if download:
+            # Download the images
             for label, urls in extract.items():
                 _folder = self.img_folder.joinpath(label)
                 _folder.mkdir(parents=True, exist_ok=True)
@@ -150,10 +154,6 @@ class OpenFire(VisionDataset):
         if len(files) == 0:
             raise FileNotFoundError("Images not found. You can use download=True to download them.")
 
-        if not extract_path.is_file():
-            raise FileNotFoundError("Extract not found. You can use download=True to download it.")
-        with open(extract_path, "rb") as f:
-            extract = json.load(f)
         num_files = sum(len(v) for _, v in extract.items())
 
         # Load & verify the images
