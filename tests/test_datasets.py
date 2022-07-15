@@ -35,12 +35,7 @@ def test_openfire(tmpdir_factory):
     assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in test_set.data)
 
     # Check against number of samples in extract (limit to num_samples)
-    datasets.utils.download_url(train_set.TRAIN[0], ds_folder, filename="extract.json", verbose=False)
-    with open(Path(ds_folder).joinpath("extract.json"), "rb") as f:
-        extract = json.load(f)[:num_samples]
-    # Test if not more than 15 downloads failed.
-    # Change to assertEqual when download issues are resolved
-    assert abs((len(train_set) + len(test_set)) - len(extract)) <= 5
+    assert abs((len(train_set) + len(test_set)) - num_samples) <= 5
 
     # Check integrity of samples
     img, target = train_set[0]
