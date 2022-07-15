@@ -33,7 +33,7 @@ def url_retrieve(url: str, outfile: Path, timeout: int = 4) -> None:
     outfile.write_bytes(response.content)
 
 
-def get_fname(url: str, default_extension: str = "jpg", max_base_length: int = 50) -> str:
+def get_fname(url: str, default_extension: str = "jpg", max_base_length: Optional[int] = None) -> str:
     """Find extension of file located by URL
 
     Args:
@@ -45,15 +45,15 @@ def get_fname(url: str, default_extension: str = "jpg", max_base_length: int = 5
         str: file name
     """
 
-    name_split = urlparse(url).path.rpartition("/")[-1].split(".")
+    name_split = urlparse(url).path.rpartition("/")[-1].split("?")[0].split("&")[0].split(";")[0].split(".")
     # Check if viable extension
-    if len(name_split) > 1 and all(c.isalpha() for c in name_split[-1].lower()):
+    if len(name_split) > 1 and all(c.isalpha() or c.isdigit() for c in name_split[-1].lower()):
         base, extension = ".".join(name_split[:-1]), name_split[-1].lower()
     # Fallback on default extension
     else:
         base, extension = name_split[-1], default_extension
     # Check base length
-    if len(base) > max_base_length:
+    if isinstance(max_base_length, int) and len(base) > max_base_length:
         base = base[:max_base_length]
 
     return f"{base}.{extension}"
