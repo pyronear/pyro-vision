@@ -77,12 +77,12 @@ class OpenFire(VisionDataset):
     """
 
     TRAIN = (
-        "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/openfire_train-92e9cf25.json",
-        "92e9cf25a8600e5e511cee5f2d6d90dba84a701bcd3d7118641b3651d335493c",
+        "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/openfire_train-d912c0b4.json",
+        "d912c0b4c4fb89f482c1ad8e4b47c79202efbeedc832a29f779944afd17118be",
     )
     VAL = (
-        "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/openfire_val-0a514867.json",
-        "0a514867e052a5149996afee3acf13b7976c03c26b589c5908efe700e496105f",
+        "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/openfire_val-31235919.json",
+        "31235919c7ed278731f6511eae42c7d27756a88e86a9b32d7b1ff105dc31097d",
     )
     CLASSES = [False, True]
 
@@ -104,20 +104,20 @@ class OpenFire(VisionDataset):
 
         # Images
         self.img_folder = _root.joinpath("images")
-        subset_url = self.TRAIN if train else self.VAL
-        extract_name = subset_url[0].rpartition("/")[-1]
+        url, sha256 = self.TRAIN if train else self.VAL
+        extract_name = url.rpartition("/")[-1]
         extract_path = _root.joinpath(extract_name)
 
         # Download & verify the subset URLs
         if download:
             # Check whether the file exist
             if not extract_path.is_file():
-                download_url(subset_url[0], self.root, filename=extract_name, verbose=False)
+                download_url(url, self.root, filename=extract_name, verbose=False)
             # Check integrity
             with open(extract_path, "rb") as f:
                 sha_hash = hashlib.sha256(f.read()).hexdigest()
 
-            assert sha_hash == subset_url[1], f"corrupted download: {extract_path}"
+            assert sha_hash == sha256, f"corrupted download: {extract_path}"
 
         if not extract_path.is_file():
             raise FileNotFoundError("Extract not found. You can use download=True to download it.")
