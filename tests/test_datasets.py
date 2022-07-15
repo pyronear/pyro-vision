@@ -41,7 +41,3 @@ def test_openfire(tmpdir_factory):
     img, target = train_set[0]
     assert isinstance(img, Image)
     assert isinstance(target, int) and 0 <= target <= len(train_set.CLASSES)
-
-    # Check unicity of sample across all splits
-    train_paths = [sample[0] for sample in train_set.data]
-    assert all(sample[0] not in train_paths for sample in test_set.data)
