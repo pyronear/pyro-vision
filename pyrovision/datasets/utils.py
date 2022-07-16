@@ -130,6 +130,7 @@ def parallel(
     arr: Sequence[Any],
     num_threads: Optional[int] = None,
     leave: bool = False,
+    progress: bool = False,
     **kwargs: Any,
 ) -> Optional[Sequence[Any]]:
     """Download a file accessible via URL with mutiple retries
@@ -148,14 +149,20 @@ def parallel(
     if num_threads is None:
         num_threads = min(16, mp.cpu_count())
     if num_threads < 2:
-        results = [func(arg) for arg in tqdm(arr, total=len(arr), leave=leave, **kwargs)]
+        if progress:
+            results = [func(arg) for arg in tqdm(arr, total=len(arr), leave=leave, **kwargs)]
+        else:
+            results = map(func, arr)
     else:
         with ThreadPool(num_threads) as tp:
-            results = list(tqdm(tp.imap_unordered(func, arr), total=len(arr), **kwargs))
-    if any([o is not None for o in results]):
-        return results
+            if progress:
+                results = tqdm(tp.imap(func, arr), total=len(arr), **kwargs)
+            else:
+                results = tp.map(func, arr)
+    # if any([o is not None for o in results]):
+    #     return list(results)
 
-    return None
+    return results
 
 
 def download_urls(
@@ -165,6 +172,7 @@ def download_urls(
     retries: int = 4,
     num_threads: Optional[int] = None,
     silent: bool = True,
+    progress: bool = True,
 ) -> None:
     """Download multiple URLs a file accessible via URL with mutiple retries
 
@@ -175,6 +183,7 @@ def download_urls(
         retries (int, optional): number of additional allowed download attempts
         num_threads (int, optional): number of threads to be used for multiprocessing
         silent (bool, optional): whether Exception should be raised upon download failure
+        progress (bool, optional): whether progress should be displayed
     """
 
     parallel(
@@ -182,4 +191,5 @@ def download_urls(
         entries,
         num_threads=num_threads,
         desc="Downloading files",
+        progress=progress,
     )
