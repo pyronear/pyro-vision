@@ -132,7 +132,7 @@ def parallel(
     leave: bool = False,
     progress: bool = False,
     **kwargs: Any,
-) -> Optional[Sequence[Any]]:
+) -> Optional[map[Any]]:
     """Download a file accessible via URL with mutiple retries
 
     Args:
@@ -149,18 +149,13 @@ def parallel(
     if num_threads is None:
         num_threads = min(16, mp.cpu_count())
     if num_threads < 2:
-        if progress:
-            results = [func(arg) for arg in tqdm(arr, total=len(arr), leave=leave, **kwargs)]
-        else:
-            results = map(func, arr)
+        results = map(func, tqdm(arr, total=len(arr), leave=leave, **kwargs) if progress else arr)
     else:
         with ThreadPool(num_threads) as tp:
-            if progress:
-                results = tqdm(tp.imap(func, arr), total=len(arr), **kwargs)
-            else:
-                results = tp.map(func, arr)
-    # if any([o is not None for o in results]):
-    #     return list(results)
+            results = tp.map(  # type: ignore[assignment]
+                func,
+                tqdm(arr, total=len(arr), leave=leave, **kwargs) if progress else arr,
+            )
 
     return results
 
