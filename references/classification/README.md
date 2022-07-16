@@ -27,6 +27,10 @@ You can also use freely our open-source dataset:
 python train.py path/to/dataset/folder --openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --device 0
 ```
 
+If you prefer to run this in Google Colab, we have a starter notebook for you!
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyronear/notebooks/blob/main/pyro-vision/classification_training.ipynb)
+
 
 ### Custom datasets
 
