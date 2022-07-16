@@ -157,7 +157,7 @@ class OpenFire(VisionDataset):
         # Check that image can be read
         _paths, _ = zip(*self.data)
         file_paths = list(map(self.img_folder.joinpath, _paths))
-        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images")
+        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images", leave=False)
         self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]  # type: ignore[arg-type]
 
         if len(self.data) < num_files:
