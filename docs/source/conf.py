@@ -48,8 +48,6 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinxemoji.sphinxemoji",  # cf. https://sphinxemojicodes.readthedocs.io/en/stable/
     "sphinx_copybutton",
-    "recommonmark",
-    "sphinx_markdown_tables",
 ]
 
 napoleon_use_ivar = True
