@@ -21,6 +21,19 @@ def test_get_fname(url, max_base_length, expected_name):
     assert datasets.utils.get_fname(url, max_base_length=max_base_length) == expected_name
 
 
+@pytest.mark.parametrize(
+    "arr, num_threads, progress, expected",
+    [
+        [[1, 2, 3, 4, 5], None, False, [1, 4, 9, 16, 25]],
+        [[1, 2, 3, 4, 5], None, True, [1, 4, 9, 16, 25]],
+        [[1, 2, 3, 4, 5], 1, False, [1, 4, 9, 16, 25]],
+        [[1, 2, 3, 4, 5], 2, False, [1, 4, 9, 16, 25]],
+    ],
+)
+def test_parallel(arr, num_threads, progress, expected):
+    assert list(datasets.utils.parallel(lambda x: x ** 2, arr, num_threads=num_threads, progress=progress)) == expected
+
+
 def test_openfire(tmpdir_factory):
     num_samples = 100
     ds_folder = str(tmpdir_factory.mktemp("datasets"))
