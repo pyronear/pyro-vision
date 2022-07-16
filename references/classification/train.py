@@ -75,7 +75,7 @@ def main(args):
         [
             # Photometric
             T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1),
-            T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3)),
+            T.RandomApply([T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3))], p=0.5),
             # Geometric
             T.RandomHorizontalFlip(),
             T.RandomResizedCrop(size=target_size, scale=(0.8, 1.0), interpolation=interpolation),
@@ -98,8 +98,9 @@ def main(args):
     )
 
     print("Loading data")
+    st = time.time()
     if args.openfire:
-        train_set = OpenFire(root=args.data_path, train=True, download=True, transform=train_transforms)
+        train_set = OpenFire(args.data_path, train=True, download=True, transform=train_transforms)
     else:
         train_dir = os.path.join(args.data_path, "train")
         train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
@@ -113,13 +114,16 @@ def main(args):
         pin_memory=True,
     )
 
+    print(f"Training set loaded in {time.time() - st:.2f}s ({len(train_set)} samples in {len(train_loader)} batches)")
+
     if args.show_samples:
         x, target = next(iter(train_loader))
         plot_samples(x, target)
         return
 
+    st = time.time()
     if args.openfire:
-        val_set = OpenFire(root=args.data_path, train=False, download=True, transform=val_transforms)
+        val_set = OpenFire(args.data_path, train=False, download=True, transform=val_transforms)
     else:
         val_dir = os.path.join(args.data_path, "val")
         val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
@@ -132,6 +136,7 @@ def main(args):
         num_workers=args.workers,
         pin_memory=True,
     )
+    print(f"Validation set loaded in {time.time() - st:.2f}s ({len(val_set)} samples in {len(val_loader)} batches)")
 
     print("Creating model")
     model = models.__dict__[args.arch](args.pretrained, num_classes=1)

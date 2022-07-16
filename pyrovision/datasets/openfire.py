@@ -32,30 +32,11 @@ def _resolve_img_extension(url: str) -> str:
     return DEFAULT_EXT
 
 
-def _find_ext_files(dir, ext):
-    # borrowed from
-    # https://stackoverflow.com/questions/18394147/how-to-do-a-recursive-sub-folder-search-and-return-files-in-a-list
-    subfolders, files = [], []
-
-    for f in os.scandir(dir):
-        if f.is_dir():
-            subfolders.append(f.path)
-        if f.is_file():
-            if os.path.splitext(f.name)[1].lower() in ext:
-                files.append(f.path)
-
-    for dir in list(subfolders):
-        sf, f = _find_ext_files(dir, ext)
-        subfolders.extend(sf)
-        files.extend(f)  # type: ignore[arg-type]
-    return subfolders, files
-
-
 def _validate_img_file(file_path: Union[str, Path]) -> bool:
     try:
         Image.open(file_path, mode="r").convert("RGB")
     except Exception:
-        pass
+        return False
     return True
 
 
@@ -135,37 +116,39 @@ class OpenFire(VisionDataset):
                 extract[k] = extract[k][:cat_size]
             extract[cats[-1]] = extract[cats[-1]][:final_size]
 
+        file_names = {
+            label: [f"{idx:04d}.{_resolve_img_extension(url)}" for idx, url in enumerate(v)]
+            for label, v in extract.items()
+        }
+
         if download:
             # Download the images
             for label, urls in extract.items():
                 _folder = self.img_folder.joinpath(label)
                 _folder.mkdir(parents=True, exist_ok=True)
                 # Prepare URL and filenames for multi-processing
-                file_names = [f"{idx:04d}.{_resolve_img_extension(url)}" for idx, url in enumerate(urls)]
                 entries = [
                     (url, file_name)
-                    for url, file_name in zip(urls, file_names)
+                    for url, file_name in zip(urls, file_names[label])
                     if not _folder.joinpath(file_name).is_file()
                 ]
                 # Use multiple threads to speed up download
                 if len(entries) > 0:
                     download_urls(entries, _folder, num_threads=num_threads)
 
-        _, files = _find_ext_files(self.img_folder, [f".{ext}" for ext in IMG_EXTS])
-        if len(files) == 0:
-            raise FileNotFoundError("Images not found. You can use download=True to download them.")
-
         num_files = sum(len(v) for _, v in extract.items())
 
         # Load & verify the images
         self.data = [
-            (os.path.join(label, file), int(label))
-            for label in extract
-            for file in os.listdir(self.img_folder.joinpath(label))
-            if self.img_folder.joinpath(label, file).is_file()
+            (os.path.join(label, file_name), int(label))
+            for label, file_names in file_names.items()
+            for file_name in file_names
+            if self.img_folder.joinpath(label, file_name).is_file()
         ]
 
-        if len(self.data) < num_files:
+        if len(self.data) == 0:
+            raise FileNotFoundError("Images not found. You can use download=True to download them.")
+        elif len(self.data) < num_files:
             warnings.warn(f"number of files that couldn't be found: {num_files - len(self.data)}")
 
         # Enforce image validation
@@ -174,7 +157,7 @@ class OpenFire(VisionDataset):
         # Check that image can be read
         _paths, _ = zip(*self.data)
         file_paths = list(map(self.img_folder.joinpath, _paths))
-        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images")
+        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images", leave=False)
         self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]  # type: ignore[arg-type]
 
         if len(self.data) < num_files:
@@ -183,10 +166,10 @@ class OpenFire(VisionDataset):
     def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
         """Getter function"""
 
+        file_path, target = self.data[idx]
         # Load image
-        img = Image.open(self.img_folder.joinpath(self.data[idx][0]), mode="r").convert("RGB")
-        # Load bboxes & encode label
-        target = self.data[idx][1]
+        img = Image.open(self.img_folder.joinpath(file_path), mode="r").convert("RGB")
+
         if self.transforms is not None:
             img, target = self.transforms(img, target)
 

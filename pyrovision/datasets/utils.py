@@ -129,7 +129,7 @@ def parallel(
     func: Callable[[Any], Any],
     arr: Sequence[Any],
     num_threads: Optional[int] = None,
-    leave: bool = False,
+    progress: bool = False,
     **kwargs: Any,
 ) -> Optional[Sequence[Any]]:
     """Download a file accessible via URL with mutiple retries
@@ -138,7 +138,6 @@ def parallel(
         func (callable): function to be executed on multiple workers
         arr (iterable): function argument's values
         num_threads (int, optional): number of workers to be used for multiprocessing
-        leave (bool, optional): whether traces of progressbar should be kept upon termination
         kwargs: keyword arguments of tqdm
 
     Returns:
@@ -148,14 +147,18 @@ def parallel(
     if num_threads is None:
         num_threads = min(16, mp.cpu_count())
     if num_threads < 2:
-        results = [func(arg) for arg in tqdm(arr, total=len(arr), leave=leave, **kwargs)]
+        if progress:
+            results = list(map(func, tqdm(arr, total=len(arr), **kwargs)))
+        else:
+            results = map(func, arr)  # type: ignore[assignment]
     else:
         with ThreadPool(num_threads) as tp:
-            results = list(tqdm(tp.imap_unordered(func, arr), total=len(arr), **kwargs))
-    if any([o is not None for o in results]):
-        return results
+            if progress:
+                results = list(tp.map(func, tqdm(arr, total=len(arr), **kwargs)))
+            else:
+                results = tp.map(func, arr)
 
-    return None
+    return results
 
 
 def download_urls(
@@ -165,6 +168,7 @@ def download_urls(
     retries: int = 4,
     num_threads: Optional[int] = None,
     silent: bool = True,
+    progress: bool = True,
 ) -> None:
     """Download multiple URLs a file accessible via URL with mutiple retries
 
@@ -175,6 +179,7 @@ def download_urls(
         retries (int, optional): number of additional allowed download attempts
         num_threads (int, optional): number of threads to be used for multiprocessing
         silent (bool, optional): whether Exception should be raised upon download failure
+        progress (bool, optional): whether progress should be displayed
     """
 
     parallel(
@@ -182,4 +187,6 @@ def download_urls(
         entries,
         num_threads=num_threads,
         desc="Downloading files",
+        progress=progress,
+        leave=False,
     )
