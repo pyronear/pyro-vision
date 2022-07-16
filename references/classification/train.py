@@ -101,9 +101,9 @@ def main(args):
     )
 
     print("Loading data")
-    if args.dataset == "openfire":
-        train_set = OpenFire(root=args.data_path, train=True, download=True, transform=train_transforms)
-        val_set = OpenFire(root=args.data_path, train=False, download=True, transform=val_transforms)
+    if args.openfire:
+        train_set = OpenFire(root=args.data_path, train=True, download=True, transform=train_transforms, validate_images=not args.disable_check)
+        val_set = OpenFire(root=args.data_path, train=False, download=True, transform=val_transforms, validate_images=not args.disable_check)
 
     else:
         train_dir = os.path.join(args.data_path, "train")
@@ -201,7 +201,7 @@ def main(args):
                 "architecture": args.arch,
                 "input_size": args.img_size,
                 "optimizer": args.opt,
-                "dataset": args.dataset,
+                "dataset": "openfire" if args.openfire else "custom",
                 "loss": "bce",
             },
         )
@@ -226,7 +226,8 @@ def parse_args():
     parser.add_argument("data_path", type=str, help="path to dataset folder")
     parser.add_argument("--name", type=str, default=None, help="Name of your training experiment")
     parser.add_argument("--arch", default="rexnet1_0x", type=str, help="model")
-    parser.add_argument("--dataset", default="openfire", type=str, help="dataset to train on")
+    parser.add_argument("--openfire", help="whether OpenFire should be used", action="store_true")
+    parser.add_argument("--disable-check", help="Disables image verification when OpenFire if used", action="store_true")
     parser.add_argument("--freeze-until", default=None, type=str, help="Last layer to freeze")
     parser.add_argument("--device", default=None, type=int, help="device")
     parser.add_argument("-b", "--batch-size", default=32, type=int, help="batch size")
