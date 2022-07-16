@@ -13,7 +13,7 @@ from typing import Any, Optional, Tuple, Union
 from PIL import Image, ImageFile
 from torchvision.datasets import VisionDataset
 
-from .utils import download_url, download_urls
+from .utils import download_url, download_urls, parallel
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -69,7 +69,7 @@ class OpenFire(VisionDataset):
     Args:
         root: Root directory where 'OpenFire' is located.
         train: If True, returns training subset, else validation set.
-        download: If true, downloads the dataset from the internet and puts it in root directory. If dataset is
+        download: If True, downloads the dataset from the internet and puts it in root directory. If dataset is
             already downloaded, it is not downloaded again.
         num_samples: Number of samples to download (all by default)
         num_threads: If download is set to True, use this amount of threads for downloading the dataset.
@@ -84,13 +84,14 @@ class OpenFire(VisionDataset):
         "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/openfire_val-31235919.json",
         "31235919c7ed278731f6511eae42c7d27756a88e86a9b32d7b1ff105dc31097d",
     )
-    CLASSES = [False, True]
+    CLASSES = ["Wildfire"]
 
     def __init__(
         self,
         root: str,
         train: bool = True,
         download: bool = False,
+        validate_images: bool = True,
         num_samples: Optional[int] = None,
         num_threads: Optional[int] = None,
         **kwargs: Any,
@@ -167,14 +168,14 @@ class OpenFire(VisionDataset):
         if len(self.data) < num_files:
             warnings.warn(f"number of files that couldn't be found: {num_files - len(self.data)}")
 
+        # Enforce image validation
         num_files = len(self.data)
 
         # Check that image can be read
-        self.data = [
-            (file_path, label)
-            for file_path, label in self.data
-            if _validate_img_file(self.img_folder.joinpath(file_path))
-        ]
+        _paths, _ = zip(*self.data)
+        file_paths = list(map(self.img_folder.joinpath, _paths))
+        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images")
+        self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]  # type: ignore[arg-type]
 
         if len(self.data) < num_files:
             warnings.warn(f"number of unreadable files: {num_files - len(self.data)}")

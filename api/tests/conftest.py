@@ -13,10 +13,7 @@ from app.main import app
 
 @pytest.fixture(scope="session")
 def mock_classification_image(tmpdir_factory):
-    url = (
-        "https://upload.wikimedia.org/wikipedia/commons/a/a6/The_Rim_Fire_in_the_Stanislaus_National_Forest_"
-        "near_in_California_began_on_Aug._17%2C_2013-0004.jpg"
-    )
+    url = "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/fire_sample_image.jpg"
     return requests.get(url).content
 
 

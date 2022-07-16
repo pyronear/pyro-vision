@@ -39,7 +39,7 @@ def test_openfire(tmpdir_factory):
         download=True,
         num_samples=num_samples,
     )
-    test_set = datasets.OpenFire(root=ds_folder, train=False, download=True, num_samples=num_samples)
+    test_set = datasets.OpenFire(ds_folder, train=False, download=True, num_samples=num_samples)
     # Check inherited properties
     assert isinstance(train_set, VisionDataset)
 

@@ -28,9 +28,6 @@ from pyrovision.datasets import OpenFire
 logging.getLogger("codecarbon").disabled = True
 
 
-CLASSES = ["no-fire", "fire"]
-
-
 def target_transform(target):
 
     target = torch.tensor(target, dtype=torch.float32)
@@ -50,12 +47,12 @@ def plot_samples(images, targets, num_samples=4):
 
         axes[idx].imshow(img)
         axes[idx].axis("off")
-        _targets = targets.squeeze().to(dtype=torch.long)
+        _targets = targets.squeeze()
         if _targets.ndim == 1:
-            axes[idx].set_title(CLASSES[_targets[idx].item()])
+            axes[idx].set_title(_targets[idx].item())
         else:
             class_idcs = torch.where(_targets[idx] > 0)[0]
-            _info = [f"{CLASSES[_idx.item()]} ({_targets[idx, _idx]:.2f})" for _idx in class_idcs]
+            _info = [f"{_idx.item()} ({_targets[idx, _idx]:.2f})" for _idx in class_idcs]
             axes[idx].set_title(" ".join(_info))
 
     plt.show()
@@ -101,15 +98,11 @@ def main(args):
     )
 
     print("Loading data")
-    if args.dataset == "openfire":
+    if args.openfire:
         train_set = OpenFire(root=args.data_path, train=True, download=True, transform=train_transforms)
-        val_set = OpenFire(root=args.data_path, train=False, download=True, transform=val_transforms)
-
     else:
         train_dir = os.path.join(args.data_path, "train")
-        val_dir = os.path.join(args.data_path, "val")
         train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
-        val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
 
     train_loader = torch.utils.data.DataLoader(
         train_set,
@@ -124,6 +117,12 @@ def main(args):
         x, target = next(iter(train_loader))
         plot_samples(x, target)
         return
+
+    if args.openfire:
+        val_set = OpenFire(root=args.data_path, train=False, download=True, transform=val_transforms)
+    else:
+        val_dir = os.path.join(args.data_path, "val")
+        val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
 
     val_loader = torch.utils.data.DataLoader(
         val_set,
@@ -201,7 +200,7 @@ def main(args):
                 "architecture": args.arch,
                 "input_size": args.img_size,
                 "optimizer": args.opt,
-                "dataset": args.dataset,
+                "dataset": "openfire" if args.openfire else "custom",
                 "loss": "bce",
             },
         )
@@ -216,7 +215,7 @@ def main(args):
         run.finish()
 
 
-def parse_args():
+def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -226,7 +225,7 @@ def parse_args():
     parser.add_argument("data_path", type=str, help="path to dataset folder")
     parser.add_argument("--name", type=str, default=None, help="Name of your training experiment")
     parser.add_argument("--arch", default="rexnet1_0x", type=str, help="model")
-    parser.add_argument("--dataset", default="openfire", type=str, help="dataset to train on")
+    parser.add_argument("--openfire", help="whether OpenFire should be used", action="store_true")
     parser.add_argument("--freeze-until", default=None, type=str, help="Last layer to freeze")
     parser.add_argument("--device", default=None, type=int, help="device")
     parser.add_argument("-b", "--batch-size", default=32, type=int, help="batch size")
@@ -249,11 +248,9 @@ def parse_args():
     parser.add_argument("--amp", help="Use Automatic Mixed Precision", action="store_true")
     parser.add_argument("--wb", action="store_true", help="Log to Weights & Biases")
 
-    args = parser.parse_args()
-
-    return args
+    return parser
 
 
 if __name__ == "__main__":
-    args = parse_args()
+    args = get_parser().parse_args()
     main(args)
