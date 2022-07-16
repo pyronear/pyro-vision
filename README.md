@@ -59,7 +59,7 @@ with torch.no_grad():
 
 ## Setup
 
-Python 3.6 (or higher) and [pip](https://pip.pypa.io/en/stable/)/[conda](https://docs.conda.io/en/latest/miniconda.html) are required to install Holocron.
+Python 3.6 (or higher) and [pip](https://pip.pypa.io/en/stable/)/[conda](https://docs.conda.io/en/latest/miniconda.html) are required to install PyroVision.
 
 ### Stable release
 
@@ -109,34 +109,15 @@ If you wish to deploy containerized environments, a Dockerfile is provided for y
 docker build . -t <YOUR_IMAGE_TAG>
 ```
 
+### Minimal API template
+
+Looking for a boilerplate to deploy a model from PyroVision with a REST API? Thanks to the wonderful [FastAPI](https://github.com/tiangolo/fastapi) framework, you can do this easily. Follow the instructions in [`./api`](api) to get your own API running!
+
 
 ### Reference scripts
 
-You are free to use any training script, but some are already provided for reference. In order to use them, install the specific requirements and check script options as follows:
-
-```shell
-pip install -r references/requirements.txt
-python references/classification/train.py --help
-```
-
-You can then use the script to train tour model on one of our datasets:
-
-
-#### OpenFire
-
-You can also use out opensource dataset without password
-
-```
-python train.py OpenFire/ --dataset openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --opt radam --sched onecycle --device 0
-```
-
-You can use our dataset as follow:
-
-```python
-from pyrovision.datasets import OpenFire
-dataset = OpenFire('./data', download=True)
-```
-
+If you wish to train models on your own, we provide training scripts for multiple tasks!
+Please refer to the [`./references`](references) folder if that's the case.
 
 
 ## Citation
