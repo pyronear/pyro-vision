@@ -55,7 +55,7 @@ def _validate_img_file(file_path: Union[str, Path]) -> bool:
     try:
         Image.open(file_path, mode="r").convert("RGB")
     except Exception:
-        pass
+        return False
     return True
 
 
@@ -183,10 +183,10 @@ class OpenFire(VisionDataset):
     def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
         """Getter function"""
 
+        file_path, target = self.data[idx]
         # Load image
-        img = Image.open(self.img_folder.joinpath(self.data[idx][0]), mode="r").convert("RGB")
-        # Load bboxes & encode label
-        target = self.data[idx][1]
+        img = Image.open(self.img_folder.joinpath(file_path), mode="r").convert("RGB")
+
         if self.transforms is not None:
             img, target = self.transforms(img, target)
 
