@@ -1,7 +1,9 @@
-# Copyright (C) 2019-2022, François-Guillaume Fernandez.
+# Copyright (C) 2022, Pyronear.
 
 # This program is licensed under the Apache License 2.0.
 # See LICENSE or go to <https://www.apache.org/licenses/LICENSE-2.0> for full license details.
+
+# Borrowed from https://github.com/frgfm/Holocron/blob/main/references/clean_checkpoint.py
 
 import hashlib
 
