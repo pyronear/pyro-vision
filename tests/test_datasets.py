@@ -31,7 +31,7 @@ def test_get_fname(url, max_base_length, expected_name):
     ],
 )
 def test_parallel(arr, num_threads, progress, expected):
-    assert list(datasets.utils.parallel(lambda x: x ** 2, arr, num_threads=num_threads, progress=progress)) == expected
+    assert list(datasets.utils.parallel(lambda x: x**2, arr, num_threads=num_threads, progress=progress)) == expected
 
 
 def test_openfire(tmpdir_factory):
