@@ -100,9 +100,7 @@ def main(args):
     print("Loading data")
     st = time.time()
     if args.openfire:
-        train_set = OpenFire(
-            root=args.data_path, train=True, download=True, transform=train_transforms,
-        )
+        train_set = OpenFire(args.data_path, train=True, download=True, transform=train_transforms)
     else:
         train_dir = os.path.join(args.data_path, "train")
         train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
@@ -125,7 +123,7 @@ def main(args):
 
     st = time.time()
     if args.openfire:
-        val_set = OpenFire(root=args.data_path, train=False, download=True, transform=val_transforms)
+        val_set = OpenFire(args.data_path, train=False, download=True, transform=val_transforms)
     else:
         val_dir = os.path.join(args.data_path, "val")
         val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
