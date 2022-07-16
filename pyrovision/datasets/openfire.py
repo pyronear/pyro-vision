@@ -172,10 +172,10 @@ class OpenFire(VisionDataset):
         num_files = len(self.data)
 
         # Check that image can be read
-        file_paths, _ = zip(*self.data)
-        file_paths = map(self.img_folder.joinpath, file_paths)
-        is_valid = parallel(_validate_img_file, list(file_paths), desc="Verifying images")
-        self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]
+        _paths, _ = zip(*self.data)
+        file_paths = list(map(self.img_folder.joinpath, _paths))
+        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images")
+        self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]  # type: ignore[arg-type]
 
         if len(self.data) < num_files:
             warnings.warn(f"number of unreadable files: {num_files - len(self.data)}")
