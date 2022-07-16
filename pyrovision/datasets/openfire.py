@@ -69,8 +69,9 @@ class OpenFire(VisionDataset):
     Args:
         root: Root directory where 'OpenFire' is located.
         train: If True, returns training subset, else validation set.
-        download: If true, downloads the dataset from the internet and puts it in root directory. If dataset is
+        download: If True, downloads the dataset from the internet and puts it in root directory. If dataset is
             already downloaded, it is not downloaded again.
+        validate_images: If True, check that all images can be opened correctly.
         num_samples: Number of samples to download (all by default)
         num_threads: If download is set to True, use this amount of threads for downloading the dataset.
         **kwargs: optional arguments of torchvision.datasets.VisionDataset
@@ -91,6 +92,7 @@ class OpenFire(VisionDataset):
         root: str,
         train: bool = True,
         download: bool = False,
+        validate_images: bool = True,
         num_samples: Optional[int] = None,
         num_threads: Optional[int] = None,
         **kwargs: Any,
@@ -167,17 +169,19 @@ class OpenFire(VisionDataset):
         if len(self.data) < num_files:
             warnings.warn(f"number of files that couldn't be found: {num_files - len(self.data)}")
 
-        num_files = len(self.data)
+        # Enforce image validation
+        if validate_images:
+            num_files = len(self.data)
 
-        # Check that image can be read
-        self.data = [
-            (file_path, label)
-            for file_path, label in self.data
-            if _validate_img_file(self.img_folder.joinpath(file_path))
-        ]
+            # Check that image can be read
+            self.data = [
+                (file_path, label)
+                for file_path, label in self.data
+                if _validate_img_file(self.img_folder.joinpath(file_path))
+            ]
 
-        if len(self.data) < num_files:
-            warnings.warn(f"number of unreadable files: {num_files - len(self.data)}")
+            if len(self.data) < num_files:
+                warnings.warn(f"number of unreadable files: {num_files - len(self.data)}")
 
     def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
         """Getter function"""
