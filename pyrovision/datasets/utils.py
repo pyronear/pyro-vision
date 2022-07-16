@@ -33,7 +33,7 @@ def url_retrieve(url: str, outfile: Path, timeout: int = 4) -> None:
     outfile.write_bytes(response.content)
 
 
-def get_fname(url: str, default_extension: str = "jpg", max_base_length: int = 50) -> str:
+def get_fname(url: str, default_extension: str = "jpg", max_base_length: Optional[int] = None) -> str:
     """Find extension of file located by URL
 
     Args:
@@ -45,15 +45,15 @@ def get_fname(url: str, default_extension: str = "jpg", max_base_length: int = 5
         str: file name
     """
 
-    name_split = urlparse(url).path.rpartition("/")[-1].split(".")
+    name_split = urlparse(url).path.rpartition("/")[-1].split("?")[0].split("&")[0].split(";")[0].split(".")
     # Check if viable extension
-    if len(name_split) > 1 and all(c.isalpha() for c in name_split[-1].lower()):
+    if len(name_split) > 1 and all(c.isalpha() or c.isdigit() for c in name_split[-1].lower()):
         base, extension = ".".join(name_split[:-1]), name_split[-1].lower()
     # Fallback on default extension
     else:
         base, extension = name_split[-1], default_extension
     # Check base length
-    if len(base) > max_base_length:
+    if isinstance(max_base_length, int) and len(base) > max_base_length:
         base = base[:max_base_length]
 
     return f"{base}.{extension}"
@@ -128,7 +128,7 @@ def download_url(
 def parallel(
     func: Callable[[Any], Any],
     arr: Sequence[Any],
-    threads: Optional[int] = None,
+    num_threads: Optional[int] = None,
     leave: bool = False,
 ) -> Optional[Sequence[Any]]:
     """Download a file accessible via URL with mutiple retries
@@ -136,19 +136,19 @@ def parallel(
     Args:
         func (callable): function to be executed on multiple workers
         arr (iterable): function argument's values
-        threads (int, optional): number of workers to be used for multiprocessing
+        num_threads (int, optional): number of workers to be used for multiprocessing
         leave (bool, optional): whether traces of progressbar should be kept upon termination
 
     Returns:
         list: list of function's results
     """
 
-    if threads is None:
-        threads = min(16, mp.cpu_count())
-    if threads < 2:
+    if num_threads is None:
+        num_threads = min(16, mp.cpu_count())
+    if num_threads < 2:
         results = [func(arg) for arg in tqdm(arr, total=len(arr), leave=leave)]
     else:
-        with ThreadPool(threads) as tp:
+        with ThreadPool(num_threads) as tp:
             results = list(tqdm(tp.imap_unordered(func, arr), total=len(arr)))
     if any([o is not None for o in results]):
         return results
@@ -161,7 +161,7 @@ def download_urls(
     root: Path,
     timeout: int = 4,
     retries: int = 4,
-    threads: Optional[int] = None,
+    num_threads: Optional[int] = None,
     silent: bool = True,
 ) -> None:
     """Download multiple URLs a file accessible via URL with mutiple retries
@@ -171,10 +171,12 @@ def download_urls(
         root (pathlib.Path): folder where the files will be saved in
         timeout (float, optional): number of seconds before the request times out
         retries (int, optional): number of additional allowed download attempts
-        threads (int, optional): number of threads to be used for multiprocessing
+        num_threads (int, optional): number of threads to be used for multiprocessing
         silent (bool, optional): whether Exception should be raised upon download failure
     """
 
     parallel(
-        partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent), entries, threads=threads
+        partial(download_url, root=root, timeout=timeout, retries=retries, silent=silent),
+        entries,
+        num_threads=num_threads,
     )
