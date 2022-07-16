@@ -216,7 +216,7 @@ def main(args):
         run.finish()
 
 
-def parse_args():
+def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -250,11 +250,9 @@ def parse_args():
     parser.add_argument("--amp", help="Use Automatic Mixed Precision", action="store_true")
     parser.add_argument("--wb", action="store_true", help="Log to Weights & Biases")
 
-    args = parser.parse_args()
-
-    return args
+    return parser
 
 
 if __name__ == "__main__":
-    args = parse_args()
+    args = get_parser().parse_args()
     main(args)
