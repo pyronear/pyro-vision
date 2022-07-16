@@ -13,7 +13,7 @@ from typing import Any, Optional, Tuple, Union
 from PIL import Image, ImageFile
 from torchvision.datasets import VisionDataset
 
-from .utils import download_url, download_urls
+from .utils import download_url, download_urls, parallel
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -85,7 +85,7 @@ class OpenFire(VisionDataset):
         "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/openfire_val-31235919.json",
         "31235919c7ed278731f6511eae42c7d27756a88e86a9b32d7b1ff105dc31097d",
     )
-    CLASSES = [False, True]
+    CLASSES = ["Wildfire"]
 
     def __init__(
         self,
@@ -174,11 +174,10 @@ class OpenFire(VisionDataset):
             num_files = len(self.data)
 
             # Check that image can be read
-            self.data = [
-                (file_path, label)
-                for file_path, label in self.data
-                if _validate_img_file(self.img_folder.joinpath(file_path))
-            ]
+            file_paths, _ = zip(*self.data)
+            file_paths = map(self.img_folder.joinpath, file_paths)
+            is_valid = parallel(_validate_img_file, list(file_paths), desc="Verifying images")
+            self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]
 
             if len(self.data) < num_files:
                 warnings.warn(f"number of unreadable files: {num_files - len(self.data)}")
