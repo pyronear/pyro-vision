@@ -8,7 +8,7 @@ import json
 import os
 import warnings
 from pathlib import Path
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Tuple, Union
 
 from PIL import Image, ImageFile
 from torchvision.datasets import ImageFolder
@@ -16,6 +16,7 @@ from torchvision.datasets import ImageFolder
 from .utils import download_url, download_urls, parallel
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+HybridPath = Union[Path, str]
 
 __all__ = ["OpenFire"]
 
@@ -76,7 +77,7 @@ class OpenFire(ImageFolder):
         validate_images: bool = True,
         num_samples: Optional[int] = None,
         num_threads: Optional[int] = None,
-        prefetch_fn: Optional[Callable[[str, str], None]] = None,
+        prefetch_fn: Optional[Callable[[Tuple[HybridPath, HybridPath]], None]] = None,
         **kwargs: Any,
     ) -> None:
         # Folder management

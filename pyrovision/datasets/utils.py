@@ -7,12 +7,15 @@ import multiprocessing as mp
 from functools import partial
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from typing import Any, Callable, List, Optional, Sequence, Tuple
+from typing import Any, Callable, List, Optional, Sequence, Tuple, TypeVar
 from urllib.parse import urlparse
 
 import requests
 from torchvision.datasets.utils import check_integrity
 from tqdm import tqdm
+
+Inp = TypeVar("Inp")
+Out = TypeVar("Out")
 
 __all__ = ["download_url", "download_urls"]
 
@@ -126,12 +129,12 @@ def download_url(
 
 
 def parallel(
-    func: Callable[[Any], Any],
-    arr: Sequence[Any],
+    func: Callable[[Inp], Out],
+    arr: Sequence[Inp],
     num_threads: Optional[int] = None,
     progress: bool = False,
     **kwargs: Any,
-) -> Optional[Sequence[Any]]:
+) -> Sequence[Out]:
     """Download a file accessible via URL with mutiple retries
 
     Args:

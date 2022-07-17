@@ -1,8 +1,10 @@
 from pathlib import Path
 
 import pytest
-from PIL.Image import Image
-from torchvision.datasets import VisionDataset
+from PIL import Image
+from torchvision.datasets import ImageFolder
+from shutil import copyfile
+from torchvision.transforms.functional import resize, InterpolationMode
 
 from pyrovision import datasets
 
@@ -54,7 +56,7 @@ def test_openfire(tmpdir_factory):
     )
     test_set = datasets.OpenFire(ds_folder, train=False, download=True, num_samples=num_samples)
     # Check inherited properties
-    assert isinstance(train_set, VisionDataset)
+    assert isinstance(train_set, ImageFolder)
 
     # Assert valid extensions of every image
     assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in train_set.data)
@@ -66,5 +68,30 @@ def test_openfire(tmpdir_factory):
 
     # Check integrity of samples
     img, target = train_set[0]
-    assert isinstance(img, Image)
+    assert isinstance(img, Image.Image)
     assert isinstance(target, int) and 0 <= target <= len(train_set.CLASSES)
+
+    # Test prefetching
+    def prefetch_fn(img_paths):
+        # Unpack paths
+        src_path, dest_path = img_paths
+        img = Image.open(src_path, mode="r").convert("RGB")
+        # Resize & save
+        if all(dim > args.prefetch_size for dim in img.size):
+            resized_img = resize(img, 512, interpolation=InterpolationMode.BILINEAR)
+            resized_img.save(dest_path)
+        # Copy
+        else:
+            copyfile(src_path, dest_path)
+
+    num_samples = len(train_set)
+    train_set = datasets.OpenFire(
+        root=ds_folder,
+        train=True,
+        download=True,
+        num_samples=num_samples,
+        prefetch_fn=prefetch_fn,
+    )
+
+    assert len(train_set) == num_samples
+    assert "prefetch/" in train_set.samples[0][0]
