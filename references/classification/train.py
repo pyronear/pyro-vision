@@ -8,6 +8,7 @@ import datetime
 import logging
 import os
 import time
+from shutil import copyfile
 
 import matplotlib.pyplot as plt
 import torch
@@ -17,10 +18,11 @@ from codecarbon import track_emissions
 from holocron.models.presets import IMAGENET
 from holocron.optim import AdamP
 from holocron.trainer import BinaryClassificationTrainer
+from PIL import Image
 from torch.utils.data import RandomSampler, SequentialSampler
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms as T
-from torchvision.transforms.functional import InterpolationMode, to_pil_image
+from torchvision.transforms.functional import InterpolationMode, resize, to_pil_image
 
 from pyrovision import models
 from pyrovision.datasets import OpenFire
@@ -100,7 +102,26 @@ def main(args):
     print("Loading data")
     st = time.time()
     if args.openfire:
-        train_set = OpenFire(args.data_path, train=True, download=True, transform=train_transforms)
+
+        # Prefetch images and resize them to avoid RAM overload
+        prefetch_fn = None
+        if isinstance(args.prefetch_size, int):
+
+            def prefetch_fn(img_paths):
+                # Unpack paths
+                src_path, dest_path = img_paths
+                img = Image.open(src_path, mode="r").convert("RGB")
+                # Resize & save
+                if all(dim > args.prefetch_size for dim in img.size):
+                    resized_img = resize(img, args.prefetch_size, interpolation=interpolation)
+                    resized_img.save(dest_path)
+                # Copy
+                else:
+                    copyfile(src_path, dest_path)
+
+        train_set = OpenFire(
+            args.data_path, train=True, download=True, transform=train_transforms, prefetch_fn=prefetch_fn
+        )
     else:
         train_dir = os.path.join(args.data_path, "train")
         train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
@@ -123,7 +144,9 @@ def main(args):
 
     st = time.time()
     if args.openfire:
-        val_set = OpenFire(args.data_path, train=False, download=True, transform=val_transforms)
+        val_set = OpenFire(
+            args.data_path, train=False, download=True, transform=val_transforms, prefetch_fn=prefetch_fn
+        )
     else:
         val_dir = os.path.join(args.data_path, "val")
         val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
@@ -174,10 +197,7 @@ def main(args):
     if args.test_only:
         print("Running evaluation")
         eval_metrics = trainer.evaluate()
-        print(
-            f"Validation loss: {eval_metrics['val_loss']:.4} "
-            f"(Acc@1: {eval_metrics['acc1']:.2%}, Acc@5: {eval_metrics['acc5']:.2%})"
-        )
+        print(trainer._eval_metrics_str(eval_metrics))
         return
 
     if args.find_lr:
@@ -204,6 +224,7 @@ def main(args):
                 "batch_size": args.batch_size,
                 "architecture": args.arch,
                 "input_size": args.img_size,
+                "prefetch_size": args.prefetch_size,
                 "optimizer": args.opt,
                 "dataset": "openfire" if args.openfire else "custom",
                 "loss": "bce",
@@ -237,6 +258,9 @@ def get_parser():
     parser.add_argument("--epochs", default=20, type=int, help="number of total epochs to run")
     parser.add_argument("-j", "--workers", default=16, type=int, help="number of data loading workers")
     parser.add_argument("--img-size", default=224, type=int, help="image size")
+    parser.add_argument(
+        "--prefetch-size", default=None, type=int, help="prefetched images will be resized to lower RAM usage"
+    )
     parser.add_argument("--opt", default="adamp", type=str, help="optimizer")
     parser.add_argument("--sched", default="onecycle", type=str, help="Scheduler to be used")
     parser.add_argument("--lr", default=1e-3, type=float, help="initial learning rate")
