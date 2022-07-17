@@ -154,7 +154,7 @@ def parallel(
     else:
         with ThreadPool(num_threads) as tp:
             if progress:
-                results = list(tp.map(func, tqdm(arr, total=len(arr), **kwargs)))
+                results = list(tqdm(tp.imap(func, arr), total=len(arr), **kwargs))
             else:
                 results = tp.map(func, arr)
 
