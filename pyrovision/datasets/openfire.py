@@ -22,7 +22,7 @@ __all__ = ["OpenFire"]
 
 
 DEFAULT_EXT = "jpg"
-IMG_EXTS = ["jpg", "jpeg", "png", "gif"]
+IMG_EXTS = ("jpg", "jpeg", "png", "ppm", "bmp", "pgm", "tif", "tiff", "webp")
 
 
 def _resolve_img_extension(url: str) -> str:
