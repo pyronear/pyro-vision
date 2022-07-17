@@ -26,7 +26,7 @@ def _test_classification_hub_model(hub_repo, num_classes=1):
 @pytest.mark.parametrize(
     "hub_repo",
     [
-        "rexnet1_0x",
+        "pyronear/rexnet1_0x",
     ],
 )
 def test_model_from_hf_hub(hub_repo):
