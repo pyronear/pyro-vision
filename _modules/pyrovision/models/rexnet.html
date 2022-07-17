@@ -222,19 +222,19 @@
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Wildfire&quot;</span><span class="p">],</span>
         <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
-        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_0x_224-2b7c6298.pth&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_0x_224-6822e18d.pth&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s2">&quot;rexnet1_3x&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Wildfire&quot;</span><span class="p">],</span>
         <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
-        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_3x_224-3c0f28c3.pth&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s2">&quot;rexnet1_5x&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Wildfire&quot;</span><span class="p">],</span>
         <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
-        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_5x_224-7f149109.pth&quot;</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -249,6 +249,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">:</span>
     <span class="c1"># Build the model</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">arch_fn</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[call-arg]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">default_cfg</span> <span class="o">=</span> <span class="n">default_cfgs</span><span class="p">[</span><span class="n">arch</span><span class="p">]</span>
     <span class="c1"># Load pretrained parameters</span>
     <span class="k">if</span> <span class="n">pretrained</span><span class="p">:</span>
         <span class="n">load_pretrained_params</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">default_cfgs</span><span class="p">[</span><span class="n">arch</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">],</span> <span class="n">progress</span><span class="p">)</span>

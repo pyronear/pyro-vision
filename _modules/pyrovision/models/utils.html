@@ -2,15 +2,15 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
-        <title>Overview: module code - PyroVision</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
+        <title>pyrovision.models.utils - PyroVision</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">PyroVision</div></a>
+      <a href="../../../index.html"><div class="brand">PyroVision</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -144,14 +144,14 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
+    <img class="sidebar-logo" src="../../../_static/logo.png" alt="Logo"/>
   </div>
   
   
-</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -159,16 +159,16 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installing.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../datasets.html">pyrovision.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../models.html">pyrovision.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../datasets.html">pyrovision.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../models.html">pyrovision.models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 
 </div>
@@ -202,13 +202,50 @@
           </label>
         </div>
         <article role="main">
-          <h1>All modules for which code is available</h1>
-<ul><li><a href="pyrovision/datasets/openfire.html">pyrovision.datasets.openfire</a></li>
-<li><a href="pyrovision/models/mobilenetv3.html">pyrovision.models.mobilenetv3</a></li>
-<li><a href="pyrovision/models/resnet.html">pyrovision.models.resnet</a></li>
-<li><a href="pyrovision/models/rexnet.html">pyrovision.models.rexnet</a></li>
-<li><a href="pyrovision/models/utils.html">pyrovision.models.utils</a></li>
-</ul>
+          <h1>Source code for pyrovision.models.utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2022, Pyronear.</span>
+
+<span class="c1"># This program is licensed under the Apache License 2.0.</span>
+<span class="c1"># See LICENSE or go to &lt;https://www.apache.org/licenses/LICENSE-2.0&gt; for full license details.</span>
+
+<span class="c1"># Borrowed from https://github.com/frgfm/Holocron/blob/main/holocron/models/utils.py</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
+
+<span class="kn">from</span> <span class="nn">pyrovision</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;model_from_hf_hub&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="model_from_hf_hub"><a class="viewcode-back" href="../../../models.html#pyrovision.models.utils.model_from_hf_hub">[docs]</a><span class="k">def</span> <span class="nf">model_from_hf_hub</span><span class="p">(</span><span class="n">repo_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Instantiate &amp; load a pretrained model from HF hub.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        repo_id: HuggingFace model hub repo</span>
+<span class="sd">        kwargs: kwargs of `hf_hub_download`</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Model loaded with the checkpoint</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the config</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span><span class="n">repo_id</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;config.json&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;arch&quot;</span><span class="p">]](</span><span class="n">num_classes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">]),</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Patch the config</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">default_cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+    <span class="c1"># Load the checkpoint</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">hf_hub_download</span><span class="p">(</span><span class="n">repo_id</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;pytorch_model.bin&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+</pre></div>
         </article>
       </div>
       <footer>
@@ -247,14 +284,14 @@
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/js/custom.js"></script>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/custom.js"></script>
     </body>
 </html>
