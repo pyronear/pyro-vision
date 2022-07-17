@@ -1,0 +1,8 @@
+architecture,input_shape,dataset,val_loss,err1
+rexnet1_0x,"(224, 224)",openfire,0.2456,0.0937
+rexnet1_3x,"(224, 224)",openfire,0.2343,0.0784
+rexnet1_5x,"(224, 224)",openfire,0.2445,0.1029
+mobilenet_v3_small,"(224, 224)",openfire,0.2969,0.1152
+mobilenet_v3_large,"(224, 224)",openfire,0.2692,0.0980
+resnet18,"(224, 224)",openfire,0.2566,0.0993
+resnet34,"(224, 224)",openfire,0.2838,0.1152
