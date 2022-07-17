@@ -17,13 +17,13 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/mobilenet_v3_small_224-3eb8394c.pth",
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/mobilenet_v3_small_224-619caf97.pth",
     },
     "mobilenet_v3_large": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": None,
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/mobilenet_v3_large_224-33e1b104.pth",
     },
 }
 
@@ -39,6 +39,7 @@ def _mobilenet_v3(
 
     # Build the model
     model = arch_fn(num_classes=num_classes, **kwargs)  # type: ignore[call-arg]
+    model.default_cfg = default_cfgs[arch]
     # Load pretrained parameters
     if pretrained:
         load_pretrained_params(model, default_cfgs[arch]["url"], progress)

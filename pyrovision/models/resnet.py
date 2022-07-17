@@ -17,13 +17,13 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/resnet18_224-aa7b3886.pth",
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/resnet18_224-40b9e7d9.pth",
     },
     "resnet34": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": None,
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/resnet34_224-e5dc3b01.pth",
     },
 }
 
@@ -38,6 +38,7 @@ def _resnet(
 ) -> src.ResNet:
     # Build the model
     model = arch_fn(num_classes=num_classes, **kwargs)  # type: ignore[call-arg]
+    model.default_cfg = default_cfgs[arch]
     # Load pretrained parameters
     if pretrained:
         load_pretrained_params(model, default_cfgs[arch]["url"], progress)

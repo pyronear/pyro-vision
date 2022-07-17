@@ -17,19 +17,19 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_0x_224-2b7c6298.pth",
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_0x_224-6822e18d.pth",
     },
     "rexnet1_3x": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": None,
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_3x_224-3c0f28c3.pth",
     },
     "rexnet1_5x": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
-        "url": None,
+        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_5x_224-7f149109.pth",
     },
 }
 
@@ -44,6 +44,7 @@ def _rexnet(
 ) -> src.ReXNet:
     # Build the model
     model = arch_fn(num_classes=num_classes, **kwargs)  # type: ignore[call-arg]
+    model.default_cfg = default_cfgs[arch]
     # Load pretrained parameters
     if pretrained:
         load_pretrained_params(model, default_cfgs[arch]["url"], progress)
