@@ -82,7 +82,7 @@ def test_openfire(tmpdir_factory):
     train_set = datasets.OpenFire(
         root=ds_folder,
         train=True,
-        download=True,
+        download=False,
         num_samples=num_samples,
         prefetch_fn=prefetch_fn,
     )
