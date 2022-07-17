@@ -213,20 +213,21 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageFile</span>
-<span class="kn">from</span> <span class="nn">torchvision.datasets</span> <span class="kn">import</span> <span class="n">VisionDataset</span>
+<span class="kn">from</span> <span class="nn">torchvision.datasets</span> <span class="kn">import</span> <span class="n">ImageFolder</span>
 
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">download_url</span><span class="p">,</span> <span class="n">download_urls</span><span class="p">,</span> <span class="n">parallel</span>
 
 <span class="n">ImageFile</span><span class="o">.</span><span class="n">LOAD_TRUNCATED_IMAGES</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">HybridPath</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OpenFire&quot;</span><span class="p">]</span>
 
 
-<span class="n">DEFAULT_EXT</span> <span class="o">=</span> <span class="s2">&quot;jpg&quot;</span>
-<span class="n">IMG_EXTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">]</span>
+<span class="n">IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;.png&quot;</span><span class="p">,</span> <span class="s2">&quot;.ppm&quot;</span><span class="p">,</span> <span class="s2">&quot;.bmp&quot;</span><span class="p">,</span> <span class="s2">&quot;.pgm&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;.tiff&quot;</span><span class="p">,</span> <span class="s2">&quot;.webp&quot;</span><span class="p">,</span> <span class="s2">&quot;.gif&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_EXT</span> <span class="o">=</span> <span class="n">IMG_EXTS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">_resolve_img_extension</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -245,7 +246,7 @@
     <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="OpenFire"><a class="viewcode-back" href="../../../datasets.html#pyrovision.datasets.OpenFire">[docs]</a><span class="k">class</span> <span class="nc">OpenFire</span><span class="p">(</span><span class="n">VisionDataset</span><span class="p">):</span>
+<div class="viewcode-block" id="OpenFire"><a class="viewcode-back" href="../../../datasets.html#pyrovision.datasets.OpenFire">[docs]</a><span class="k">class</span> <span class="nc">OpenFire</span><span class="p">(</span><span class="n">ImageFolder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Implements an image classification dataset for wildfire detection, collected from web searches.</span>
 
 <span class="sd">    &gt;&gt;&gt; from pyrovision.datasets import OpenFire</span>
@@ -259,6 +260,7 @@
 <span class="sd">            already downloaded, it is not downloaded again.</span>
 <span class="sd">        num_samples: Number of samples to download (all by default)</span>
 <span class="sd">        num_threads: If download is set to True, use this amount of threads for downloading the dataset.</span>
+<span class="sd">        prefetch_fn: optional function that will be applied to all images before data loading</span>
 <span class="sd">        **kwargs: optional arguments of torchvision.datasets.VisionDataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -280,17 +282,17 @@
         <span class="n">validate_images</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">num_samples</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num_threads</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prefetch_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">HybridPath</span><span class="p">,</span> <span class="n">HybridPath</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Folder management</span>
         <span class="n">_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="n">_root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="n">train</span> <span class="k">else</span> <span class="s2">&quot;val&quot;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_root</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">train</span>
 
         <span class="c1"># Images</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">img_folder</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">)</span>
+        <span class="n">img_folder</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">)</span>
         <span class="n">url</span><span class="p">,</span> <span class="n">sha256</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TRAIN</span> <span class="k">if</span> <span class="n">train</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">VAL</span>
         <span class="n">extract_name</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">extract_path</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">extract_name</span><span class="p">)</span>
@@ -299,7 +301,7 @@
         <span class="k">if</span> <span class="n">download</span><span class="p">:</span>
             <span class="c1"># Check whether the file exist</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">extract_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-                <span class="n">download_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">extract_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">download_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">extract_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="c1"># Check integrity</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">extract_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">sha_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
@@ -322,14 +324,14 @@
             <span class="n">extract</span><span class="p">[</span><span class="n">cats</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">extract</span><span class="p">[</span><span class="n">cats</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]][:</span><span class="n">final_size</span><span class="p">]</span>
 
         <span class="n">file_names</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">label</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">_resolve_img_extension</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
+            <span class="n">label</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">04d</span><span class="si">}{</span><span class="n">_resolve_img_extension</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">extract</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">download</span><span class="p">:</span>
             <span class="c1"># Download the images</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">urls</span> <span class="ow">in</span> <span class="n">extract</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                <span class="n">_folder</span> <span class="o">=</span> <span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
                 <span class="n">_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="c1"># Prepare URL and filenames for multi-processing</span>
                 <span class="n">entries</span> <span class="o">=</span> <span class="p">[</span>
@@ -344,44 +346,54 @@
         <span class="n">num_files</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">extract</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
         <span class="c1"># Load &amp; verify the images</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">file_name</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">label</span><span class="p">))</span>
+        <span class="n">existing_paths</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">file_names</span> <span class="ow">in</span> <span class="n">file_names</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
         <span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Images not found. You can use download=True to download them.&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_files</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number of files that couldn&#39;t be found: </span><span class="si">{</span><span class="n">num_files</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_paths</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_files</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number of files that couldn&#39;t be found: </span><span class="si">{</span><span class="n">num_files</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_paths</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Enforce image validation</span>
-        <span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_paths</span><span class="p">)</span>
 
         <span class="c1"># Check that image can be read</span>
-        <span class="n">_paths</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">file_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">,</span> <span class="n">_paths</span><span class="p">))</span>
-        <span class="n">is_valid</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span><span class="n">_validate_img_file</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Verifying images&quot;</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample</span> <span class="k">for</span> <span class="n">sample</span><span class="p">,</span> <span class="n">_valid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">is_valid</span><span class="p">)</span> <span class="k">if</span> <span class="n">_valid</span><span class="p">]</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">is_valid</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span><span class="n">_validate_img_file</span><span class="p">,</span> <span class="n">existing_paths</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Verifying images&quot;</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">num_valid</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">is_valid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_valid</span> <span class="o">&lt;</span> <span class="n">num_files</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number of unreadable files: </span><span class="si">{</span><span class="n">num_files</span> <span class="o">-</span> <span class="n">num_valid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Remove invalid files (so that they can be restored upon next download)</span>
+        <span class="n">parallel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">,</span> <span class="p">[</span><span class="n">_path</span> <span class="k">for</span> <span class="n">_path</span><span class="p">,</span> <span class="n">_valid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">existing_paths</span><span class="p">,</span> <span class="n">is_valid</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">_valid</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_files</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number of unreadable files: </span><span class="si">{</span><span class="n">num_files</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Allow prefetch operations</span>
+        <span class="k">if</span> <span class="n">prefetch_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Create prefetched folders</span>
+            <span class="n">prefetch_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;prefetch&quot;</span><span class="p">,</span> <span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="n">train</span> <span class="k">else</span> <span class="s2">&quot;val&quot;</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">extract</span><span class="p">:</span>
+                <span class="n">prefetch_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># Perform the prefetching operation</span>
+            <span class="n">parallel</span><span class="p">(</span>
+                <span class="n">prefetch_fn</span><span class="p">,</span>
+                <span class="p">[</span>
+                    <span class="p">(</span><span class="n">_path</span><span class="p">,</span> <span class="n">prefetch_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">_path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">_path</span><span class="p">,</span> <span class="n">_valid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">existing_paths</span><span class="p">,</span> <span class="n">is_valid</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_valid</span>
+                <span class="p">],</span>
+                <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Prefetching images&quot;</span><span class="p">,</span>
+                <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">img_folder</span> <span class="o">=</span> <span class="n">prefetch_folder</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Getter function&quot;&quot;&quot;</span>
-
-        <span class="n">file_path</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="c1"># Load image</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">img</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transforms</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">target</span>
-
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">img_folder</span><span class="p">,</span>
+            <span class="n">is_valid_file</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">IMG_EXTS</span><span class="p">),</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;train=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="si">}</span><span class="s2">&quot;</span></div>
