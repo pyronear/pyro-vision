@@ -1,10 +1,10 @@
 from pathlib import Path
+from shutil import copyfile
 
 import pytest
 from PIL import Image
 from torchvision.datasets import ImageFolder
-from shutil import copyfile
-from torchvision.transforms.functional import resize, InterpolationMode
+from torchvision.transforms.functional import InterpolationMode, resize
 
 from pyrovision import datasets
 
@@ -43,24 +43,16 @@ def test_openfire(tmpdir_factory):
     with pytest.raises(FileNotFoundError):
         datasets.OpenFire(ds_folder, download=False)
 
-    ds = datasets.OpenFire(ds_folder, download=True, num_samples=num_samples)
-    assert isinstance(ds.img_folder, Path)
+    train_set = datasets.OpenFire(ds_folder, download=True, num_samples=num_samples)
+    assert isinstance(train_set.root, Path)
 
-    # Working case
-    # Test img_folder as Path and str
-    train_set = datasets.OpenFire(
-        root=ds_folder,
-        train=True,
-        download=True,
-        num_samples=num_samples,
-    )
     test_set = datasets.OpenFire(ds_folder, train=False, download=True, num_samples=num_samples)
     # Check inherited properties
     assert isinstance(train_set, ImageFolder)
 
     # Assert valid extensions of every image
-    assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in train_set.data)
-    assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in test_set.data)
+    assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in train_set.samples)
+    assert all(sample[0].rpartition(".")[-1] in ["jpg", "jpeg", "png", "gif"] for sample in test_set.samples)
 
     # Check against number of samples in extract (limit to num_samples)
     assert abs(len(train_set) - num_samples) <= 5
@@ -72,13 +64,15 @@ def test_openfire(tmpdir_factory):
     assert isinstance(target, int) and 0 <= target <= len(train_set.CLASSES)
 
     # Test prefetching
+    prefetch_size = 512
+
     def prefetch_fn(img_paths):
         # Unpack paths
         src_path, dest_path = img_paths
         img = Image.open(src_path, mode="r").convert("RGB")
         # Resize & save
-        if all(dim > args.prefetch_size for dim in img.size):
-            resized_img = resize(img, 512, interpolation=InterpolationMode.BILINEAR)
+        if all(dim > prefetch_size for dim in img.size):
+            resized_img = resize(img, prefetch_size, interpolation=InterpolationMode.BILINEAR)
             resized_img.save(dest_path)
         # Copy
         else:
