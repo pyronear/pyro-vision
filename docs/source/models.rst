@@ -25,3 +25,11 @@ MobileNet v3
 
 .. autofunction:: mobilenet_v3_small
 .. autofunction:: mobilenet_v3_large
+
+
+Utils
+-----
+
+.. currentmodule:: pyrovision.models.utils
+
+.. autofunction:: model_from_hf_hub
