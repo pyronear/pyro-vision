@@ -22,7 +22,7 @@ __all__ = ["OpenFire"]
 
 
 DEFAULT_EXT = "jpg"
-IMG_EXTS = ("jpg", "jpeg", "png", "ppm", "bmp", "pgm", "tif", "tiff", "webp")
+IMG_EXTS = ("jpg", "jpeg", "png", "ppm", "bmp", "pgm", "tif", "tiff", "webp", "gif")
 
 
 def _resolve_img_extension(url: str) -> str:
@@ -184,7 +184,7 @@ class OpenFire(ImageFolder):
             )
             img_folder = prefetch_folder
 
-        super().__init__(img_folder, **kwargs)
+        super().__init__(img_folder, extensions=[f".{ext}" for ext in IMG_EXTS], **kwargs)
 
     def extra_repr(self) -> str:
         return f"train={self.train}"
