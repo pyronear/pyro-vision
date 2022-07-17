@@ -8,20 +8,21 @@ import json
 import os
 import warnings
 from pathlib import Path
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Tuple, Union
 
 from PIL import Image, ImageFile
-from torchvision.datasets import VisionDataset
+from torchvision.datasets import ImageFolder
 
 from .utils import download_url, download_urls, parallel
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+HybridPath = Union[Path, str]
 
 __all__ = ["OpenFire"]
 
 
-DEFAULT_EXT = "jpg"
-IMG_EXTS = ["jpg", "jpeg", "png", "gif"]
+IMG_EXTS = (".jpg", ".jpeg", ".png", ".ppm", ".bmp", ".pgm", ".tif", ".tiff", ".webp", ".gif")
+DEFAULT_EXT = IMG_EXTS[0]
 
 
 def _resolve_img_extension(url: str) -> str:
@@ -40,7 +41,7 @@ def _validate_img_file(file_path: Union[str, Path]) -> bool:
     return True
 
 
-class OpenFire(VisionDataset):
+class OpenFire(ImageFolder):
     """Implements an image classification dataset for wildfire detection, collected from web searches.
 
     >>> from pyrovision.datasets import OpenFire
@@ -54,6 +55,7 @@ class OpenFire(VisionDataset):
             already downloaded, it is not downloaded again.
         num_samples: Number of samples to download (all by default)
         num_threads: If download is set to True, use this amount of threads for downloading the dataset.
+        prefetch_fn: optional function that will be applied to all images before data loading
         **kwargs: optional arguments of torchvision.datasets.VisionDataset
     """
 
@@ -75,17 +77,17 @@ class OpenFire(VisionDataset):
         validate_images: bool = True,
         num_samples: Optional[int] = None,
         num_threads: Optional[int] = None,
+        prefetch_fn: Optional[Callable[[Tuple[HybridPath, HybridPath]], None]] = None,
         **kwargs: Any,
     ) -> None:
         # Folder management
         _root = Path(root, self.__class__.__name__)
         _root.mkdir(parents=True, exist_ok=True)
         _root = _root.joinpath("train" if train else "val")
-        super().__init__(_root, **kwargs)
         self.train = train
 
         # Images
-        self.img_folder = _root.joinpath("images")
+        img_folder = _root.joinpath("images")
         url, sha256 = self.TRAIN if train else self.VAL
         extract_name = url.rpartition("/")[-1]
         extract_path = _root.joinpath(extract_name)
@@ -94,7 +96,7 @@ class OpenFire(VisionDataset):
         if download:
             # Check whether the file exist
             if not extract_path.is_file():
-                download_url(url, self.root, filename=extract_name, verbose=False)
+                download_url(url, _root, filename=extract_name, verbose=False)
             # Check integrity
             with open(extract_path, "rb") as f:
                 sha_hash = hashlib.sha256(f.read()).hexdigest()
@@ -117,14 +119,14 @@ class OpenFire(VisionDataset):
             extract[cats[-1]] = extract[cats[-1]][:final_size]
 
         file_names = {
-            label: [f"{idx:04d}.{_resolve_img_extension(url)}" for idx, url in enumerate(v)]
+            label: [f"{idx:04d}{_resolve_img_extension(url)}" for idx, url in enumerate(v)]
             for label, v in extract.items()
         }
 
         if download:
             # Download the images
             for label, urls in extract.items():
-                _folder = self.img_folder.joinpath(label)
+                _folder = img_folder.joinpath(label)
                 _folder.mkdir(parents=True, exist_ok=True)
                 # Prepare URL and filenames for multi-processing
                 entries = [
@@ -139,44 +141,54 @@ class OpenFire(VisionDataset):
         num_files = sum(len(v) for _, v in extract.items())
 
         # Load & verify the images
-        self.data = [
-            (os.path.join(label, file_name), int(label))
+        existing_paths = [
+            img_folder.joinpath(label, file_name)
             for label, file_names in file_names.items()
             for file_name in file_names
-            if self.img_folder.joinpath(label, file_name).is_file()
+            if img_folder.joinpath(label, file_name).is_file()
         ]
 
-        if len(self.data) == 0:
+        if len(existing_paths) == 0:
             raise FileNotFoundError("Images not found. You can use download=True to download them.")
-        elif len(self.data) < num_files:
-            warnings.warn(f"number of files that couldn't be found: {num_files - len(self.data)}")
+        elif len(existing_paths) < num_files:
+            warnings.warn(f"number of files that couldn't be found: {num_files - len(existing_paths)}")
 
         # Enforce image validation
-        num_files = len(self.data)
+        num_files = len(existing_paths)
 
         # Check that image can be read
-        _paths, _ = zip(*self.data)
-        file_paths = list(map(self.img_folder.joinpath, _paths))
-        is_valid = parallel(_validate_img_file, file_paths, desc="Verifying images", leave=False)
-        self.data = [sample for sample, _valid in zip(self.data, is_valid) if _valid]  # type: ignore[arg-type]
+        is_valid = parallel(_validate_img_file, existing_paths, desc="Verifying images", progress=True, leave=False)
+        num_valid = sum(is_valid)
+        if num_valid < num_files:
+            warnings.warn(f"number of unreadable files: {num_files - num_valid}")
+        # Remove invalid files (so that they can be restored upon next download)
+        parallel(os.remove, [_path for _path, _valid in zip(existing_paths, is_valid) if not _valid])
 
-        if len(self.data) < num_files:
-            warnings.warn(f"number of unreadable files: {num_files - len(self.data)}")
+        # Allow prefetch operations
+        if prefetch_fn is not None:
+            # Create prefetched folders
+            prefetch_folder = Path(root, self.__class__.__name__, "prefetch", "train" if train else "val", "images")
+            for label in extract:
+                prefetch_folder.joinpath(label).mkdir(parents=True, exist_ok=True)
+            # Perform the prefetching operation
+            parallel(
+                prefetch_fn,
+                [
+                    (_path, prefetch_folder.joinpath(_path.parent.name, _path.name))
+                    for _path, _valid in zip(existing_paths, is_valid)
+                    if _valid
+                ],
+                desc="Prefetching images",
+                progress=True,
+                leave=False,
+            )
+            img_folder = prefetch_folder
 
-    def __getitem__(self, idx: int) -> Tuple[Image.Image, int]:
-        """Getter function"""
-
-        file_path, target = self.data[idx]
-        # Load image
-        img = Image.open(self.img_folder.joinpath(file_path), mode="r").convert("RGB")
-
-        if self.transforms is not None:
-            img, target = self.transforms(img, target)
-
-        return img, target
-
-    def __len__(self) -> int:
-        return len(self.data)
+        super().__init__(
+            img_folder,
+            is_valid_file=lambda x: any(x.endswith(ext) for ext in IMG_EXTS),
+            **kwargs,
+        )
 
     def extra_repr(self) -> str:
         return f"train={self.train}"
