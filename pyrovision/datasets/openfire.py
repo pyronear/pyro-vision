@@ -170,7 +170,7 @@ class OpenFire(ImageFolder):
             for label in extract:
                 prefetch_folder.joinpath(label).mkdir(parents=True, exist_ok=True)
             # Perform the prefetching operation
-            new_paths = parallel(
+            parallel(
                 prefetch_fn,
                 [
                     (_path, prefetch_folder.joinpath(_path.parent.name, _path.name))
