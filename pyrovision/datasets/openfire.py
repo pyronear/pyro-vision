@@ -21,8 +21,8 @@ HybridPath = Union[Path, str]
 __all__ = ["OpenFire"]
 
 
-DEFAULT_EXT = "jpg"
-IMG_EXTS = ("jpg", "jpeg", "png", "ppm", "bmp", "pgm", "tif", "tiff", "webp", "gif")
+IMG_EXTS = (".jpg", ".jpeg", ".png", ".ppm", ".bmp", ".pgm", ".tif", ".tiff", ".webp", ".gif")
+DEFAULT_EXT = IMG_EXTS[0]
 
 
 def _resolve_img_extension(url: str) -> str:
@@ -119,7 +119,7 @@ class OpenFire(ImageFolder):
             extract[cats[-1]] = extract[cats[-1]][:final_size]
 
         file_names = {
-            label: [f"{idx:04d}.{_resolve_img_extension(url)}" for idx, url in enumerate(v)]
+            label: [f"{idx:04d}{_resolve_img_extension(url)}" for idx, url in enumerate(v)]
             for label, v in extract.items()
         }
 
@@ -184,7 +184,11 @@ class OpenFire(ImageFolder):
             )
             img_folder = prefetch_folder
 
-        super().__init__(img_folder, extensions=[f".{ext}" for ext in IMG_EXTS], **kwargs)
+        super().__init__(
+            img_folder,
+            is_valid_file=lambda x: any(x.endswith(ext) for ext in IMG_EXTS),
+            **kwargs,
+        )
 
     def extra_repr(self) -> str:
         return f"train={self.train}"
