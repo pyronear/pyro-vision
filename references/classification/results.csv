@@ -1,8 +1,8 @@
-architecture,input_shape,dataset,val_loss,err1
-rexnet1_0x,"(256, 384)",openfire,0.2234,0.0747
-rexnet1_3x,"(256, 384)",openfire,0.2257,0.0930
-rexnet1_5x,"(256, 384)",openfire,0.2013,0.0759
-mobilenet_v3_small,"(224, 224)",openfire,0.2969,0.1152
-mobilenet_v3_large,"(224, 224)",openfire,0.2692,0.0980
-resnet18,"(224, 224)",openfire,0.2566,0.0993
-resnet34,"(224, 224)",openfire,0.2838,0.1152
+architecture,input_shape,resize_mode,dataset,val_loss,err1
+rexnet1_0x,"(256, 384)",pad,openfire,0.2253,0.0747
+rexnet1_3x,"(256, 384)",pad,openfire,0.2264,0.0930
+rexnet1_5x,"(256, 384)",pad,openfire,0.2036,0.0759
+mobilenet_v3_small,"(224, 224)",squish,openfire,0.2785,0.0967
+mobilenet_v3_large,"(224, 224)",squish,openfire,0.2689,0.1077
+resnet18,"(224, 224)",squish,openfire,0.2353,0.0796
+resnet34,"(224, 224)",squish,openfire,0.2748,0.1126
