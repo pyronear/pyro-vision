@@ -16,20 +16,20 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
     "rexnet1_0x": {
         **IMAGENET,
         "classes": ["Wildfire"],
-        "input_shape": (3, 224, 224),
+        "input_shape": (3, 256, 384),
         "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_0x_224-6822e18d.pth",
     },
     "rexnet1_3x": {
         **IMAGENET,
         "classes": ["Wildfire"],
-        "input_shape": (3, 224, 224),
-        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_3x_224-3c0f28c3.pth",
+        "input_shape": (3, 256, 384),
+        "url": None,
     },
     "rexnet1_5x": {
         **IMAGENET,
         "classes": ["Wildfire"],
-        "input_shape": (3, 224, 224),
-        "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_5x_224-7f149109.pth",
+        "input_shape": (3, 256, 384),
+        "url": None,
     },
 }
 
@@ -79,7 +79,7 @@ def rexnet1_3x(pretrained: bool = False, progress: bool = True, **kwargs: Any) -
     Returns:
         torch.nn.Module: classification model
     """
-    return _rexnet(src.rexnet1_0x, "rexnet1_0x", pretrained, progress, **kwargs)
+    return _rexnet(src.rexnet1_3x, "rexnet1_3x", pretrained, progress, **kwargs)
 
 
 def rexnet1_5x(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> src.ReXNet:
@@ -94,4 +94,4 @@ def rexnet1_5x(pretrained: bool = False, progress: bool = True, **kwargs: Any) -
     Returns:
         torch.nn.Module: classification model
     """
-    return _rexnet(src.rexnet1_0x, "rexnet1_0x", pretrained, progress, **kwargs)
+    return _rexnet(src.rexnet1_5x, "rexnet1_5x", pretrained, progress, **kwargs)
