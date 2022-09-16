@@ -83,23 +83,26 @@ def main(args):
     interpolation = InterpolationMode.BILINEAR
     target_size = (args.height, args.width)
 
-    train_transforms = T.Compose(
-        [
-            # Photometric
-            T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1),
-            T.RandomApply([T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3))], p=0.5),
-            # Geometric
-            T.RandomHorizontalFlip(),
-            # RandomZoomOut(target_size, scale=(0.3, 1.0), interpolation=interpolation),
-            Resize(target_size, mode=ResizeMethod.PAD, interpolation=interpolation),
-            T.RandomPerspective(distortion_scale=0.2, interpolation=interpolation, p=0.8),
-            # Conversion
-            T.PILToTensor(),
-            T.ConvertImageDtype(torch.float32),
-            normalize,
-            T.RandomErasing(p=0.9, scale=(0.01, 0.05), value="random"),
-        ]
-    ) if not args.find_size else None
+    train_transforms = (
+        T.Compose(
+            [
+                # Photometric
+                T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.1),
+                T.RandomApply([T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3))], p=0.5),
+                # Geometric
+                T.RandomHorizontalFlip(),
+                RandomZoomOut(target_size, scale=(0.3, 1.0), interpolation=interpolation),
+                T.RandomPerspective(distortion_scale=0.2, interpolation=interpolation, p=0.8),
+                # Conversion
+                T.PILToTensor(),
+                T.ConvertImageDtype(torch.float32),
+                normalize,
+                T.RandomErasing(p=0.9, scale=(0.01, 0.05), value="random"),
+            ]
+        )
+        if not args.find_size
+        else None
+    )
 
     val_transforms = T.Compose(
         [
@@ -122,7 +125,7 @@ def main(args):
                     img = Image.open(dest_path, mode="r").convert("RGB")
                     if min(img.size) <= args.prefetch_size:
                         return
-                except:
+                except Exception:
                     pass
 
             img = Image.open(src_path, mode="r").convert("RGB")
@@ -133,7 +136,8 @@ def main(args):
             # Copy
             else:
                 copyfile(src_path, dest_path)
-    if not (args.find_size or args.test_only): 
+
+    if not (args.find_size or args.test_only):
         st = time.time()
         if args.openfire:
 
@@ -159,7 +163,9 @@ def main(args):
             pin_memory=True,
         )
 
-        print(f"Training set loaded in {time.time() - st:.2f}s ({len(train_set)} samples in {len(train_loader)} batches)")
+        print(
+            f"Training set loaded in {time.time() - st:.2f}s ({len(train_set)} samples in {len(train_loader)} batches)"
+        )
 
     if args.show_samples:
         x, target = next(iter(train_loader))
