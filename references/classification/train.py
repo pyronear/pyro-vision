@@ -37,25 +37,30 @@ def target_transform(target):
     return target.unsqueeze(dim=0)
 
 
-def plot_samples(images, targets, num_samples=4):
+def plot_samples(images, targets, num_samples=12):
     # Unnormalize image
     nb_samples = min(num_samples, images.shape[0])
-    _, axes = plt.subplots(1, nb_samples, figsize=(20, 5))
+    num_cols = min(nb_samples, 4)
+    num_rows = int(math.ceil(nb_samples / num_cols))
+    _, axes = plt.subplots(num_rows, num_cols, figsize=(20, 5))
     for idx in range(nb_samples):
         img = images[idx]
         img *= torch.tensor(IMAGENET["std"]).view(-1, 1, 1)
         img += torch.tensor(IMAGENET["mean"]).view(-1, 1, 1)
         img = to_pil_image(img)
 
-        axes[idx].imshow(img)
-        axes[idx].axis("off")
+        _row = int(idx / num_cols)
+        _col = idx - _row * num_cols
+
+        axes[_row][_col].imshow(img)
+        axes[_row][_col].axis("off")
         _targets = targets.squeeze()
         if _targets.ndim == 1:
-            axes[idx].set_title(_targets[idx].item())
+            axes[_row][_col].set_title(_targets[idx].item())
         else:
             class_idcs = torch.where(_targets[idx] > 0)[0]
             _info = [f"{_idx.item()} ({_targets[idx, _idx]:.2f})" for _idx in class_idcs]
-            axes[idx].set_title(" ".join(_info))
+            axes[_row][_col].set_title(" ".join(_info))
 
     plt.show()
 
