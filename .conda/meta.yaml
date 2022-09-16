@@ -4,30 +4,35 @@
 # {% set pyproject = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
 # {% set project = pyproject.get('project') %}
 # {% set urls = pyproject.get('project', {}).get('urls') %}
+{% set name = "pyrovision" %}
+
 package:
-  name: pyrovision
+  name: {{ name|lower }}
   version: "{{ environ.get('BUILD_VERSION') }}"
 
 source:
-  fn: pyrovision-{{ environ.get('BUILD_VERSION') }}.tar.gz
-  url: ../dist/pyrovision-{{ environ.get('BUILD_VERSION') }}.tar.gz
+  fn: {{ name }}-{{ environ.get('BUILD_VERSION') }}.tar.gz
+  url: ../dist/{{ name }}-{{ environ.get('BUILD_VERSION') }}.tar.gz
 
 build:
+  number: 0
   noarch: python
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  script: {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
   host:
-    - python>=3.6, <4.0
+    - python>=3.6,<4.0
+    - pip
     - setuptools
-
+    - wheel
   run:
-    - python>=3.6, <4.0
-    - pytorch>=1.11.0, <2.0.0
-    - torchvision>=0.12.0, <1.0.0
+    - python>=3.6,<4.0
+    #- huggingface-hub>=0.4.0
+    - pylocron>=0.2.0,<1.0.0
+    - pytorch>=1.11.0,<2.0.0
+    - requests>=2.20.0,<3.0.0
+    - torchvision>=0.12.0,<1.0.0
     - tqdm>=4.1.0
-    - requests>=2.20.0, <3.0.0
-    - pylocron>=0.2.0, <1.0.0
 
 test:
   # Python imports
@@ -36,11 +41,14 @@ test:
     - pyrovision.models
     - pyrovision.datasets
   requires:
-    - python
+    - pip
+  commands:
+    - pip check
 
 about:
   home: https://github.com/pyronear/pyro-vision
-  license: Apache 2.0
+  license: Apache-2.0
+  license_family: Apache
   license_file: LICENSE
   summary: {{ data['description'] }}
   description: |
