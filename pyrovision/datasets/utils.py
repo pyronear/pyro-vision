@@ -147,8 +147,7 @@ def parallel(
         list: list of function's results
     """
 
-    if num_threads is None:
-        num_threads = min(16, mp.cpu_count())
+    num_threads = num_threads if isinstance(num_threads, int) else min(16, mp.cpu_count())
     if num_threads < 2:
         if progress:
             results = list(map(func, tqdm(arr, total=len(arr), **kwargs)))
