@@ -6,6 +6,7 @@
 
 import datetime
 import logging
+import math
 import os
 import time
 from shutil import copyfile
@@ -18,6 +19,8 @@ from codecarbon import track_emissions
 from holocron.models.presets import IMAGENET
 from holocron.optim import AdamP
 from holocron.trainer import BinaryClassificationTrainer
+from holocron.transforms.interpolation import RandomZoomOut, Resize, ResizeMethod
+from holocron.utils.misc import find_image_size
 from PIL import Image
 from torch.utils.data import RandomSampler, SequentialSampler
 from torchvision.datasets import ImageFolder
@@ -71,12 +74,14 @@ def main(args):
     print(args)
 
     torch.backends.cudnn.benchmark = True
+    # Data loading
+    train_loader, val_loader = None, None
 
     # Data loading code
     normalize = T.Normalize(mean=IMAGENET["mean"], std=IMAGENET["std"])
 
     interpolation = InterpolationMode.BILINEAR
-    target_size = (args.img_size, args.img_size)
+    target_size = (args.height, args.width)
 
     train_transforms = T.Compose(
         [
@@ -85,86 +90,101 @@ def main(args):
             T.RandomApply([T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3))], p=0.5),
             # Geometric
             T.RandomHorizontalFlip(),
-            T.RandomResizedCrop(size=target_size, scale=(0.8, 1.0), interpolation=interpolation),
+            # RandomZoomOut(target_size, scale=(0.3, 1.0), interpolation=interpolation),
+            Resize(target_size, mode=ResizeMethod.PAD, interpolation=interpolation),
             T.RandomPerspective(distortion_scale=0.2, interpolation=interpolation, p=0.8),
             # Conversion
             T.PILToTensor(),
             T.ConvertImageDtype(torch.float32),
             normalize,
-            T.RandomErasing(p=0.9, scale=(0.02, 0.1), value="random"),
+            T.RandomErasing(p=0.9, scale=(0.01, 0.05), value="random"),
         ]
-    )
+    ) if not args.find_size else None
 
     val_transforms = T.Compose(
         [
-            T.Resize(size=args.img_size, interpolation=interpolation),
-            T.CenterCrop(size=args.img_size),
+            Resize(target_size, mode=ResizeMethod.PAD, interpolation=interpolation),
             T.ToTensor(),
             normalize,
         ]
     )
 
     print("Loading data")
-    st = time.time()
-    if args.openfire:
+    # Prefetch images and resize them to avoid RAM overload
+    prefetch_fn = None
+    if isinstance(args.prefetch_size, int):
 
-        # Prefetch images and resize them to avoid RAM overload
-        prefetch_fn = None
-        if isinstance(args.prefetch_size, int):
+        def prefetch_fn(img_paths):
+            # Unpack paths
+            src_path, dest_path = img_paths
+            if os.path.exists(dest_path):
+                try:
+                    img = Image.open(dest_path, mode="r").convert("RGB")
+                    if min(img.size) <= args.prefetch_size:
+                        return
+                except:
+                    pass
 
-            def prefetch_fn(img_paths):
-                # Unpack paths
-                src_path, dest_path = img_paths
-                img = Image.open(src_path, mode="r").convert("RGB")
-                # Resize & save
-                if all(dim > args.prefetch_size for dim in img.size):
-                    resized_img = resize(img, args.prefetch_size, interpolation=interpolation)
-                    resized_img.save(dest_path)
-                # Copy
-                else:
-                    copyfile(src_path, dest_path)
+            img = Image.open(src_path, mode="r").convert("RGB")
+            # Resize & save
+            if all(dim > args.prefetch_size for dim in img.size):
+                resized_img = resize(img, args.prefetch_size, interpolation=interpolation)
+                resized_img.save(dest_path)
+            # Copy
+            else:
+                copyfile(src_path, dest_path)
+    if not (args.find_size or args.test_only): 
+        st = time.time()
+        if args.openfire:
 
-        train_set = OpenFire(
-            args.data_path, train=True, download=True, transform=train_transforms, prefetch_fn=prefetch_fn
+            train_set = OpenFire(
+                args.data_path, train=True, download=True, transform=train_transforms, prefetch_fn=prefetch_fn
+            )
+        else:
+            train_dir = os.path.join(args.data_path, "train")
+            train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
+
+        # Suggest size
+        if args.find_size:
+            print("Looking for optimal image size")
+            find_image_size(train_set)
+            return
+
+        train_loader = torch.utils.data.DataLoader(
+            train_set,
+            batch_size=args.batch_size,
+            drop_last=True,
+            sampler=RandomSampler(train_set),
+            num_workers=args.workers,
+            pin_memory=True,
         )
-    else:
-        train_dir = os.path.join(args.data_path, "train")
-        train_set = ImageFolder(train_dir, train_transforms, target_transform=target_transform)
 
-    train_loader = torch.utils.data.DataLoader(
-        train_set,
-        batch_size=args.batch_size,
-        drop_last=True,
-        sampler=RandomSampler(train_set),
-        num_workers=args.workers,
-        pin_memory=True,
-    )
-
-    print(f"Training set loaded in {time.time() - st:.2f}s ({len(train_set)} samples in {len(train_loader)} batches)")
+        print(f"Training set loaded in {time.time() - st:.2f}s ({len(train_set)} samples in {len(train_loader)} batches)")
 
     if args.show_samples:
         x, target = next(iter(train_loader))
         plot_samples(x, target)
         return
 
-    st = time.time()
-    if args.openfire:
-        val_set = OpenFire(
-            args.data_path, train=False, download=True, transform=val_transforms, prefetch_fn=prefetch_fn
-        )
-    else:
-        val_dir = os.path.join(args.data_path, "val")
-        val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
+    if not (args.find_lr):
+        st = time.time()
+        if args.openfire:
+            val_set = OpenFire(
+                args.data_path, train=False, download=True, transform=val_transforms, prefetch_fn=prefetch_fn
+            )
+        else:
+            val_dir = os.path.join(args.data_path, "val")
+            val_set = ImageFolder(val_dir, val_transforms, target_transform=target_transform)
 
-    val_loader = torch.utils.data.DataLoader(
-        val_set,
-        batch_size=args.batch_size,
-        drop_last=False,
-        sampler=SequentialSampler(val_set),
-        num_workers=args.workers,
-        pin_memory=True,
-    )
-    print(f"Validation set loaded in {time.time() - st:.2f}s ({len(val_set)} samples in {len(val_loader)} batches)")
+        val_loader = torch.utils.data.DataLoader(
+            val_set,
+            batch_size=args.batch_size,
+            drop_last=False,
+            sampler=SequentialSampler(val_set),
+            num_workers=args.workers,
+            pin_memory=True,
+        )
+        print(f"Validation set loaded in {time.time() - st:.2f}s ({len(val_set)} samples in {len(val_loader)} batches)")
 
     print("Creating model")
     model = models.__dict__[args.arch](args.pretrained, num_classes=1)
@@ -191,9 +211,11 @@ def main(args):
         optimizer,
         args.device,
         args.output_file,
+        gradient_acc=args.grad_acc,
         amp=args.amp,
         on_epoch_end=log_wb,
     )
+
     if args.resume:
         print(f"Resuming {args.resume}")
         checkpoint = torch.load(args.resume, map_location="cpu")
@@ -227,6 +249,7 @@ def main(args):
                 "weight_decay": args.weight_decay,
                 "epochs": args.epochs,
                 "batch_size": args.batch_size,
+                "gradient_accumulation": args.grad_acc,
                 "architecture": args.arch,
                 "input_size": args.img_size,
                 "prefetch_size": args.prefetch_size,
@@ -260,9 +283,11 @@ def get_parser():
     parser.add_argument("--freeze-until", default=None, type=str, help="Last layer to freeze")
     parser.add_argument("--device", default=None, type=int, help="device")
     parser.add_argument("-b", "--batch-size", default=32, type=int, help="batch size")
+    parser.add_argument("--grad-acc", default=1, type=int, help="Number of batches to accumulate the gradient of")
     parser.add_argument("--epochs", default=20, type=int, help="number of total epochs to run")
     parser.add_argument("-j", "--workers", default=16, type=int, help="number of data loading workers")
-    parser.add_argument("--img-size", default=224, type=int, help="image size")
+    parser.add_argument("--height", default=256, type=int, help="image height")
+    parser.add_argument("--width", default=384, type=int, help="image width")
     parser.add_argument(
         "--prefetch-size", default=None, type=int, help="prefetched images will be resized to lower RAM usage"
     )
@@ -272,8 +297,9 @@ def get_parser():
     parser.add_argument("--wd", "--weight-decay", default=0, type=float, help="weight decay", dest="weight_decay")
     parser.add_argument("--norm-wd", default=None, type=float, help="weight decay of norm parameters")
     parser.add_argument("--find-lr", dest="find_lr", action="store_true", help="Should you run LR Finder")
+    parser.add_argument("--find-size", dest="find_size", action="store_true", help="Should you run Image size Finder")
     parser.add_argument("--show-samples", action="store_true", help="Whether training samples should be displayed")
-    parser.add_argument("--output-file", default="./model.pth", help="path where to save")
+    parser.add_argument("--output-file", default="./checkpoint.pth", help="path where to save")
     parser.add_argument("--resume", default="", help="resume from checkpoint")
     parser.add_argument("--test-only", dest="test_only", help="Only test the model", action="store_true")
     parser.add_argument(
