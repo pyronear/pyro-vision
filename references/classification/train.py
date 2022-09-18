@@ -82,6 +82,7 @@ def main(args):
 
     interpolation = InterpolationMode.BILINEAR
     target_size = (args.height, args.width)
+    resize_mode = ResizeMethod.PAD if args.resize_mode == "pad" else ResizeMethod.SQUISH
 
     train_transforms = (
         T.Compose(
@@ -106,7 +107,7 @@ def main(args):
 
     val_transforms = T.Compose(
         [
-            Resize(target_size, mode=ResizeMethod.PAD, interpolation=interpolation),
+            Resize(target_size, mode=resize_mode, interpolation=interpolation),
             T.PILToTensor(),
             T.ConvertImageDtype(torch.float32),
             normalize,
@@ -264,6 +265,7 @@ def main(args):
                 "gradient_accumulation": args.grad_acc,
                 "architecture": args.arch,
                 "input_size": target_size,
+                "resize_mode": resize_mode,
                 "prefetch_size": args.prefetch_size,
                 "optimizer": args.opt,
                 "dataset": "openfire" if args.openfire else "custom",
@@ -300,6 +302,7 @@ def get_parser():
     parser.add_argument("-j", "--workers", default=16, type=int, help="number of data loading workers")
     parser.add_argument("--height", default=256, type=int, help="image height")
     parser.add_argument("--width", default=384, type=int, help="image width")
+    parser.add_argument("--resize-mode", default="pad", type=str, help="resize mode")
     parser.add_argument(
         "--prefetch-size", default=None, type=int, help="prefetched images will be resized to lower RAM usage"
     )
