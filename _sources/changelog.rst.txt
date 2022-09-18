@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.2.0 (2022-07-20)
+-------------------
+Release note: `v0.2.0 <https://github.com/pyronear/pyro-vision/releases/tag/v0.2.0>`_
+
 v0.1.2 (2021-05-26)
 -------------------
 Release note: `v0.1.2 <https://github.com/pyronear/pyro-vision/releases/tag/v0.1.2>`_
