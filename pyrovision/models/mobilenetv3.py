@@ -17,12 +17,14 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
+        "resize_mode": "squish",
         "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/mobilenet_v3_small_224-619caf97.pth",
     },
     "mobilenet_v3_large": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 224, 224),
+        "resize_mode": "squish",
         "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/mobilenet_v3_large_224-33e1b104.pth",
     },
 }

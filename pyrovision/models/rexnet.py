@@ -17,18 +17,21 @@ default_cfgs: Dict[str, Dict[str, Any]] = {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 256, 384),
+        "resize_mode": "pad",
         "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.2.0/rexnet1_0x_256-ff0c2ca1.pth",
     },
     "rexnet1_3x": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 256, 384),
+        "resize_mode": "pad",
         "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.2.0/rexnet1_3x_256-6445365e.pth",
     },
     "rexnet1_5x": {
         **IMAGENET,
         "classes": ["Wildfire"],
         "input_shape": (3, 256, 384),
+        "resize_mode": "pad",
         "url": "https://github.com/pyronear/pyro-vision/releases/download/v0.2.0/rexnet1_5x_256-c3891115.pth",
     },
 }
