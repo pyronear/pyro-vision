@@ -91,7 +91,7 @@ def main(args):
                 T.RandomApply([T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 3))], p=0.5),
                 # Geometric
                 T.RandomHorizontalFlip(),
-                RandomZoomOut(target_size, scale=(0.3, 1.0), interpolation=interpolation),
+                RandomZoomOut(target_size, scale=(0.5, 1.0), interpolation=interpolation),
                 T.RandomPerspective(distortion_scale=0.2, interpolation=interpolation, p=0.8),
                 # Conversion
                 T.PILToTensor(),
