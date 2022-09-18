@@ -107,7 +107,8 @@ def main(args):
     val_transforms = T.Compose(
         [
             Resize(target_size, mode=ResizeMethod.PAD, interpolation=interpolation),
-            T.ToTensor(),
+            T.PILToTensor(),
+            T.ConvertImageDtype(torch.float32),
             normalize,
         ]
     )
