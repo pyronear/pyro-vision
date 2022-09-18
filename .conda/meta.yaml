@@ -13,6 +13,7 @@ source:
   url: ../dist/pyrovision-{{ environ.get('BUILD_VERSION') }}.tar.gz
 
 build:
+  number: 0
   noarch: python
   script: python setup.py install --single-version-externally-managed --record=record.txt
 
@@ -26,24 +27,21 @@ requirements:
     - pytorch>=1.11.0, <2.0.0
     - torchvision>=0.12.0, <1.0.0
     - tqdm>=4.1.0
-    - requests>=2.20.0, <3.0.0
+    - requests>=2.20.0
     - pylocron>=0.2.0, <1.0.0
 
 test:
-  # Python imports
   imports:
     - pyrovision
     - pyrovision.models
     - pyrovision.datasets
-  requires:
-    - python
 
 about:
   home: https://github.com/pyronear/pyro-vision
   license: Apache 2.0
   license_file: LICENSE
-  summary: {{ data['description'] }}
-  description: |
-    {{ data['long_description'] | replace("\n", "\n    ") | replace("#", '\#')}}
+  summary: 'Computer vision library for wildfire detection'
+  # description: |
+  #   {{ data['long_description'] | replace("\n", "\n    ") | replace("#", '\#')}}
   doc_url: https://pyronear.org/pyro-vision
   dev_url: https://github.com/pyronear/pyro-vision

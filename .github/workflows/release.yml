@@ -78,9 +78,9 @@ jobs:
         run: |
           python setup.py sdist
           mkdir conda-dist
-          conda-build .conda/ -c pytorch --output-folder conda-dist
+          conda-build .conda/ -c conda-forge -c pytorch -c frgfm --output-folder conda-dist
           ls -l conda-dist/noarch/*tar.bz2
-          anaconda upload conda-dist/noarch/*tar.bz2 -u pyronear
+          anaconda upload conda-dist/noarch/*tar.bz2
 
   conda-check:
     if: "!github.event.release.prerelease"
