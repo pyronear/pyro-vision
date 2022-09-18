@@ -24,7 +24,7 @@ python references/classification/train.py --help
 You can also use freely our open-source dataset:
 
 ```bash
-python train.py path/to/dataset/folder --openfire --model rexnet1_0x --lr 1e-3 -b 16 --epochs 20 --device 0
+python references/classification/train.py path/to/dataset/folder --openfire --arch rexnet1_0x --lr 1e-3 -b 32 --grad-acc 2 --epochs 100 --device 0 --prefetch-size 512
 ```
 
 If you prefer to run this in Google Colab, we have a starter notebook for you!
