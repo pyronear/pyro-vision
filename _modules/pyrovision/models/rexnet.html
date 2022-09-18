@@ -221,20 +221,23 @@
     <span class="s2">&quot;rexnet1_0x&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Wildfire&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
-        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_0x_224-6822e18d.pth&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">384</span><span class="p">),</span>
+        <span class="s2">&quot;resize_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;pad&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.2.0/rexnet1_0x_256-ff0c2ca1.pth&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s2">&quot;rexnet1_3x&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Wildfire&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
-        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_3x_224-3c0f28c3.pth&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">384</span><span class="p">),</span>
+        <span class="s2">&quot;resize_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;pad&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.2.0/rexnet1_3x_256-6445365e.pth&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s2">&quot;rexnet1_5x&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">IMAGENET</span><span class="p">,</span>
         <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Wildfire&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span>
-        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.1.2/rexnet1_5x_224-7f149109.pth&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">384</span><span class="p">),</span>
+        <span class="s2">&quot;resize_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;pad&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/pyronear/pyro-vision/releases/download/v0.2.0/rexnet1_5x_256-c3891115.pth&quot;</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -284,7 +287,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_0x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_0x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_3x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_3x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="rexnet1_5x"><a class="viewcode-back" href="../../../models.html#pyrovision.models.rexnet1_5x">[docs]</a><span class="k">def</span> <span class="nf">rexnet1_5x</span><span class="p">(</span><span class="n">pretrained</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">src</span><span class="o">.</span><span class="n">ReXNet</span><span class="p">:</span>
@@ -299,7 +302,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        torch.nn.Module: classification model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_0x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_0x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_rexnet</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">rexnet1_5x</span><span class="p">,</span> <span class="s2">&quot;rexnet1_5x&quot;</span><span class="p">,</span> <span class="n">pretrained</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
         </article>
       </div>
