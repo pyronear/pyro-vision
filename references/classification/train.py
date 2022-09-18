@@ -234,6 +234,11 @@ def main(args):
         print(trainer._eval_metrics_str(eval_metrics))
         return
 
+    if args.plot_loss:
+        print("Checking top losses")
+        trainer.plot_top_losses(IMAGENET["mean"], IMAGENET["std"])
+        return
+
     if args.find_lr:
         print("Looking for optimal LR")
         trainer.find_lr(args.freeze_until, num_it=min(len(train_loader), 100), norm_weight_decay=args.norm_wd)
@@ -258,7 +263,7 @@ def main(args):
                 "batch_size": args.batch_size,
                 "gradient_accumulation": args.grad_acc,
                 "architecture": args.arch,
-                "input_size": args.img_size,
+                "input_size": target_size,
                 "prefetch_size": args.prefetch_size,
                 "optimizer": args.opt,
                 "dataset": "openfire" if args.openfire else "custom",
@@ -309,6 +314,7 @@ def get_parser():
     parser.add_argument("--output-file", default="./checkpoint.pth", help="path where to save")
     parser.add_argument("--resume", default="", help="resume from checkpoint")
     parser.add_argument("--test-only", dest="test_only", help="Only test the model", action="store_true")
+    parser.add_argument("--plot-loss", help="Check the top losses of the model", action="store_true")
     parser.add_argument(
         "--pretrained", dest="pretrained", help="Use pre-trained models from the modelzoo", action="store_true"
     )
