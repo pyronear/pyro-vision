@@ -35,7 +35,6 @@ requirements:
     - tqdm>=4.1.0
 
 test:
-  # Python imports
   imports:
     - pyrovision
     - pyrovision.models
@@ -50,8 +49,8 @@ about:
   license: Apache-2.0
   license_family: Apache
   license_file: LICENSE
-  summary: {{ data['description'] }}
-  description: |
-    {{ data['long_description'] | replace("\n", "\n    ") | replace("#", '\#')}}
+  summary: 'Computer vision library for wildfire detection'
+  # description: |
+  #   {{ data['long_description'] | replace("\n", "\n    ") | replace("#", '\#')}}
   doc_url: https://pyronear.org/pyro-vision
   dev_url: https://github.com/pyronear/pyro-vision

@@ -1,22 +1,33 @@
 ![PyroNear Logo](docs/source/_static/images/logo.png)
 
 <p align="center">
-    <a href="LICENSE" alt="License">
-        <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" /></a>
-    <a href="https://www.codacy.com/gh/pyronear/pyro-vision/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade">
-        <img src="https://app.codacy.com/project/badge/Grade/7f17d9f2448248dd93d84331e93523e1"/></a>
-    <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Apython-package">
-        <img src="https://github.com/pyronear/pyro-vision/workflows/python-package/badge.svg" /></a>
-    <a href="https://codecov.io/gh/pyronear/pyro-vision">
-  		<img src="https://codecov.io/gh/pyronear/pyro-vision/branch/master/graph/badge.svg" />
-	</a>
-    <a href="https://pyronear.github.io/pyro-vision">
-  		<img src="https://img.shields.io/badge/docs-available-blue.svg" /></a>
-    <a href="https://pypi.org/project/pyrovision/" alt="Pypi">
-        <img src="https://img.shields.io/badge/pypi-v0.1.2-blue.svg" /></a>
+  <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Abuilds">
+    <img alt="CI Status" src="https://img.shields.io/github/workflow/status/pyronear/pyro-vision/builds?label=CI&logo=github&style=flat-square">
+  </a>
+  <a href="https://pyronear.org/pyro-vision/">
+    <img src="https://img.shields.io/github/workflow/status/pyronear/pyro-vision/docs?label=docs&logo=read-the-docs&style=flat-square" alt="Documentation Status">
+  </a>
+  <a href="https://codecov.io/gh/pyronear/pyro-vision">
+    <img src="https://img.shields.io/codecov/c/github/pyronear/pyro-vision.svg?logo=codecov&style=flat-square" alt="Test coverage percentage">
+  </a>
+  <a href="https://github.com/ambv/black">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square" alt="black">
+  </a>
+  <a href="https://www.codacy.com/gh/pyronear/pyro-vision/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/7f17d9f2448248dd93d84331e93523e1"/></a>
 </p>
-
-
+<p align="center">
+  <a href="https://pypi.org/project/pyrovision/">
+    <img src="https://img.shields.io/pypi/v/pyrovision.svg?logo=python&logoColor=fff&style=flat-square" alt="PyPi Status">
+  </a>
+  <a href="https://anaconda.org/pyronear/pyrovision">
+    <img alt="Anaconda" src="https://img.shields.io/conda/vn/pyronear/pyrovision?style=flat-square?style=flat-square&logo=Anaconda&logoColor=white&label=conda">
+  </a>
+  <a href="https://hub.docker.com/r/pyronear/pyro-vision">
+    <img alt="Docker Image Version" src="https://img.shields.io/docker/v/pyronear/pyro-vision?style=flat-square&logo=Docker&logoColor=white&label=docker">
+  </a>
+  <img src="https://img.shields.io/pypi/pyversions/pyrovision.svg?style=flat-square" alt="pyversions">
+  <img src="https://img.shields.io/pypi/l/pyrovision.svg?style=flat-square" alt="license">
+</p>
 
 
 # Pyrovision: wildfire early detection
