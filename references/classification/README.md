@@ -1,6 +1,6 @@
 # Image classification
 
-The goal here is to propose a training script and a dataset to train a wildfire classification model. 
+The goal here is to propose a training script and a dataset to train a wildfire classification model.
 
 ## Setup
 
