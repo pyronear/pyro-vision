@@ -1,11 +1,11 @@
 ![PyroNear Logo](docs/source/_static/images/logo.png)
 
 <p align="center">
-  <a href="https://github.com/pyronear/pyro-vision/actions?query=workflow%3Abuilds">
-    <img alt="CI Status" src="https://img.shields.io/github/workflow/status/pyronear/pyro-vision/builds?label=CI&logo=github&style=flat-square">
+  <a href="https://github.com/pyronear/pyro-vision/actions/workflows/builds.yml">
+    <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/pyronear/pyro-vision/builds.yml?branch=main&label=CI&logo=github&style=flat-square">
   </a>
   <a href="https://pyronear.org/pyro-vision/">
-    <img src="https://img.shields.io/github/workflow/status/pyronear/pyro-vision/docs?label=docs&logo=read-the-docs&style=flat-square" alt="Documentation Status">
+    <img src="https://img.shields.io/github/actions/workflow/status/pyronear/pyro-vision/docs.yaml?branch=main&label=docs&logo=read-the-docs&style=flat-square" alt="Documentation Status">
   </a>
   <a href="https://codecov.io/gh/pyronear/pyro-vision">
     <img src="https://img.shields.io/codecov/c/github/pyronear/pyro-vision.svg?logo=codecov&style=flat-square" alt="Test coverage percentage">
@@ -13,7 +13,7 @@
   <a href="https://github.com/ambv/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square" alt="black">
   </a>
-  <a href="https://www.codacy.com/gh/pyronear/pyro-vision/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/7f17d9f2448248dd93d84331e93523e1"/></a>
+  <a href="https://www.codacy.com/gh/pyronear/pyro-vision/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pyronear/pyro-vision&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/6835021037b04e8da919c646c1599f29"/></a>
 </p>
 <p align="center">
   <a href="https://pypi.org/project/pyrovision/">
