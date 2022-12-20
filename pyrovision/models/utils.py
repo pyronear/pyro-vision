@@ -10,7 +10,7 @@ from typing import Any
 
 import torch
 import torch.nn as nn
-from huggingface_hub import hf_hub_download
+from huggingface_hub.file_download import hf_hub_download
 
 from pyrovision import models
 
