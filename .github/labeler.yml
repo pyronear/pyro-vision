@@ -1,0 +1,41 @@
+'module: datasets':
+- torchvision/datasets/*
+
+'module: models':
+- torchvision/models/*
+
+'ext: api':
+- api/*
+
+'ext: demo':
+- demo/*
+
+'ext: docs':
+- docs/*
+
+'ext: references':
+- references/*
+
+'ext: tests':
+- tests/*
+
+'topic: ci':
+- .github/*
+
+'topic: documentation':
+- notebooks/*
+- README.md
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+
+'topic: docker':
+- Dockerfile
+- api/Dockerfile
+- api/docker-compose.yml
+
+'topic: build':
+- setup.py
+- pyproject.toml
+- api/pyproject.toml
+- api/poetry.lock
+- .conda/*
